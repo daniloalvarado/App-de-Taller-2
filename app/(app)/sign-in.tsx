@@ -3,8 +3,10 @@ import SignInWithGoogle from "@/components/SignInWithGoogle";
 import { useModal } from "@/contexts/ModalContext";
 import { isClerkAPIResponseError, useSignIn } from "@clerk/clerk-expo";
 import { ClerkAPIResponseError } from "@clerk/types";
-import { Link, useRouter } from "expo-router";
+import { Feather } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
+import { KeyboardAvoidingView, Platform, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   Button,
@@ -13,7 +15,6 @@ import {
   Input,
   Label,
   Paragraph,
-  ScrollView,
   Spacer,
   XStack,
   YStack,
@@ -25,6 +26,7 @@ export default function Page() {
 
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const { showModal } = useModal();
@@ -59,13 +61,25 @@ export default function Page() {
         ? (err as ClerkAPIResponseError)
         : null;
 
+      const errorCode = clerkError?.errors[0]?.code;
+      const originalMessage = clerkError?.errors[0]?.longMessage || clerkError?.errors[0]?.message || "";
+
+      let errorMessage = "Ups, ocurrió un error, ¡por favor intenta de nuevo!";
+
+      if (errorCode === "form_identifier_invalid" || originalMessage.toLowerCase().includes("identifier is invalid")) {
+        errorMessage = "El correo electrónico no es válido. Ejemplo: usuario@correo.com";
+      } else if (errorCode === "form_password_incorrect" || originalMessage.toLowerCase().includes("password is incorrect")) {
+        errorMessage = "La contraseña es incorrecta. Por favor, inténtalo de nuevo.";
+      } else if (errorCode === "form_identifier_not_found") {
+        errorMessage = "No se encontró ninguna cuenta con este correo electrónico.";
+      } else if (clerkError?.errors[0]) {
+        errorMessage = originalMessage; // Fallback to original message if not specifically handled
+      }
+
       showModal({
         type: "dialog",
         title: "Error",
-        description:
-          clerkError?.errors[0]?.longMessage ||
-          clerkError?.errors[0]?.message ||
-          "Ups, ocurrió un error, ¡por favor intenta de nuevo!", 
+        description: errorMessage,
         onCancel: () => {
           setIsLoading(false);
         },
@@ -76,98 +90,122 @@ export default function Page() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
-      <ScrollView flex={1} bg="$background" contentContainerStyle={{ flex: 1 }}>
-        <YStack
-          flex={1}
-          p="$4"
-          gap="$4"
-          style={{ justifyContent: "center", minHeight: "100%" }}
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#08130D" }}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "android" ? 30 : 0}
+      >
+        <ScrollView
+          style={{ flex: 1, backgroundColor: "#08130D" }}
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
         >
-          <Logo />
-
-          <YStack gap="$2" style={{ alignItems: "center" }}>
-            <H1 color="$color" style={{ textAlign: "center" }}>
-              Bienvenido 
-            </H1>
-            <Paragraph
-              color="$color"
-              opacity={0.7}
-              style={{ textAlign: "center" }}
-            >
-              Inicia sesión en Diario.IA para continuar 
-            </Paragraph>
-          </YStack>
-
-          <Card elevate padding="$4" gap="$2" backgroundColor="$background">
-            <YStack gap="$2">
-              <YStack gap="$2">
-                <Label color="$color">Correo electrónico</Label> 
-                <Input
-                  autoCapitalize="none"
-                  keyboardType="email-address"
-                  value={emailAddress}
-                  placeholder="Ingresa tu correo" 
-                  onChangeText={setEmailAddress}
-                  borderColor="$borderColor"
-                  focusStyle={{
-                    borderColor: "$purple10",
-                  }}
-                />
-              </YStack>
-
-              <YStack gap="$2">
-                <Label color="$color">Contraseña</Label> 
-                <Input
-                  secureTextEntry
-                  value={password}
-                  placeholder="Ingresa tu contraseña" 
-                  onChangeText={setPassword}
-                  borderColor="$borderColor"
-                  focusStyle={{
-                    borderColor: "$purple10",
-                  }}
-                />
-              </YStack>
-
-              <Spacer size="$2" />
-
-              <Button
-                size="$4"
-                bg="#904BFF"
-                color="white"
-                borderColor="#904BFF"
-                onPress={onSignInPress}
-                disabled={!isLoaded || isLoading}
-                opacity={!isLoaded || isLoading ? 0.5 : 1}
-              >
-                {isLoading ? "Iniciando sesión..." : "Iniciar Sesión"} {/* TRADUCIDO */}
-              </Button>
-
-              <SignInWithGoogle />
-            </YStack>
-          </Card>
-
-          <XStack
-            gap="$2"
-            style={{ justifyContent: "center", alignItems: "center" }}
+          <YStack
+            flex={1}
+            p="$4"
+            gap="$4"
+            style={{ justifyContent: "center", minHeight: "100%" }}
           >
-            <Paragraph color="$color" opacity={0.7}>
-              ¿No tienes una cuenta? 
-            </Paragraph>
-            <Link href="/sign-up" asChild>
+            <Logo />
+
+            <YStack gap="$2" style={{ alignItems: "center" }}>
+              <H1 color="#ffffff" style={{ textAlign: "center" }}>
+                Bienvenido
+              </H1>
+              <Paragraph
+                color="rgba(255,255,255,0.7)"
+                style={{ textAlign: "center" }}
+              >
+                Inicia sesión en Catálogo Flora para explorar
+              </Paragraph>
+            </YStack>
+
+            <Card padding="$4" gap="$2" backgroundColor="rgba(255,255,255,0.05)" borderWidth={0}>
+              <YStack gap="$2">
+                <YStack gap="$2">
+                  <Label color="#ffffff">Correo electrónico</Label>
+                  <Input
+                    autoCapitalize="none"
+                    keyboardType="email-address"
+                    value={emailAddress}
+                    placeholder="Ingresa tu correo"
+                    onChangeText={setEmailAddress}
+                    borderWidth={0}
+                    bg="rgba(255,255,255,0.05)"
+                    color="#ffffff"
+                    placeholderTextColor="rgba(255,255,255,0.5)"
+                    focusStyle={{
+                      borderColor: "#1FC451",
+                    }}
+                  />
+                </YStack>
+
+                <YStack gap="$2">
+                  <Label color="#ffffff">Contraseña</Label>
+                  <YStack style={{ position: "relative", width: "100%", justifyContent: "center" }}>
+                  <Input
+                    secureTextEntry={!showPassword}
+                    value={password}
+                    placeholder="Ingresa tu contraseña"
+                    onChangeText={setPassword}
+                    borderWidth={0}
+                    bg="rgba(255,255,255,0.05)"
+                    color="#ffffff"
+                    placeholderTextColor="rgba(255,255,255,0.5)"
+                    focusStyle={{
+                      borderColor: "#1FC451",
+                    }}
+                    style={{ paddingRight: 45 }}
+                  />
+                  <Button
+                    style={{ position: "absolute", right: 4 }}
+                    size="$3"
+                    chromeless
+                    onPress={() => setShowPassword(!showPassword)}
+                    icon={<Feather name={showPassword ? "eye" : "eye-off"} size={20} color="rgba(255,255,255,0.5)" />}
+                  />
+                </YStack>
+                </YStack>
+
+                <Spacer size="$2" />
+
+                <Button
+                  size="$4"
+                  bg="#1FC451"
+                  color="white"
+                  borderColor="#1FC451"
+                  onPress={onSignInPress}
+                  disabled={!isLoaded || isLoading}
+                  opacity={!isLoaded || isLoading ? 0.5 : 1}
+                >
+                  {isLoading ? "Iniciando sesión..." : "Iniciar Sesión"} {/* TRADUCIDO */}
+                </Button>
+
+                <SignInWithGoogle />
+              </YStack>
+            </Card>
+
+            <XStack
+              gap="$2"
+              style={{ justifyContent: "center", alignItems: "center" }}
+            >
+              <Paragraph color="rgba(255,255,255,0.7)">
+                ¿No tienes una cuenta?
+              </Paragraph>
               <Button
                 variant="outlined"
                 size="$3"
-                borderColor="#904BFF"
-                color="#904BFF"
+                borderColor="#1FC451"
+                color="#1FC451"
+                onPress={() => router.push("/sign-up")}
               >
-                Regístrate 
+                Regístrate
               </Button>
-            </Link>
-          </XStack>
-        </YStack>
-      </ScrollView>
+            </XStack>
+          </YStack>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

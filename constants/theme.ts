@@ -5,13 +5,13 @@
 
 import { Platform } from "react-native";
 
-const tintColorLight = "#904BFF";
-const tintColorDark = "#904BFF";
+const tintColorLight = "#1FC451";
+const tintColorDark = "#1FC451";
 
 export const Colors = {
   light: {
-    text: "#11181C",
-    background: "#fff",
+    text: "#152518",
+    background: "#f0fdf4",
     tint: tintColorLight,
     icon: "#687076",
     tabIconDefault: "#687076",
@@ -19,7 +19,7 @@ export const Colors = {
   },
   dark: {
     text: "#ECEDEE",
-    background: "#151718",
+    background: "#08130D",
     tint: tintColorDark,
     icon: "#9BA1A6",
     tabIconDefault: "#9BA1A6",
@@ -32,9 +32,9 @@ export const Colors = {
  */
 export const AppColors = {
   // Primary brand color
-  primary: "#904BFF",
-  primaryLight: "#7B3FD9",
-  primaryDark: "#6A2ED9",
+  primary: "#1FC451",
+  primaryLight: "#4FE076",
+  primaryDark: "#139B3A",
 
   // Grays
   gray50: "#f9fafb",
@@ -58,16 +58,8 @@ export const AppColors = {
   warning: "#f59e0b",
   info: "#3b82f6",
 
-  // Mood colors (matching mood constants)
-  moodVerySad: "#ef4444",
-  moodSad: "#f97316",
-  moodNeutral: "#6b7280",
-  moodHappy: "#22c55e",
-  moodVeryHappy: "#eab308",
-
-  // Special colors
-  flameOrange: "#f59e0b",
-  trophyGold: "#fbbf24",
+  // Theme accents
+  accent: "#1FC451",
 } as const;
 
 /**

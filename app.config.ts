@@ -1,18 +1,18 @@
 export default {
   expo: {
-    name: "Diario IA",
-    slug: "diario-ia",
+    name: "Catálogo Flora",
+    slug: "catalogo-flora",
     version: "1.0.0",
     orientation: "portrait",
-    icon: "./assets/images/icon.png",
-    scheme: "sanityclerkbillingjournalappexpo",
+    icon: "./assets/images/logo_unap.png",
+    scheme: "catalogofloraiquitos",
     userInterfaceStyle: "automatic",
     newArchEnabled: true,
     ios: {
       supportsTablet: true,
     },
     android: {
-      package: "com.diarioia.app",
+      package: "com.catalogoflora.app",
       adaptiveIcon: {
         backgroundColor: "#E6F4FE",
         foregroundImage: "./assets/images/android-icon-foreground.png",
@@ -24,7 +24,7 @@ export default {
     },
     web: {
       output: "server",
-      favicon: "./assets/images/favicon.png",
+      favicon: "./assets/images/logo_unap.png",
     },
     plugins: [
       "expo-router",
@@ -33,13 +33,10 @@ export default {
       [
         "expo-splash-screen",
         {
-          image: "./assets/images/splash-icon.png",
+          image: "./assets/images/logo_unap.png",
           imageWidth: 200,
           resizeMode: "contain",
           backgroundColor: "#ffffff",
-          dark: {
-            backgroundColor: "#000000",
-          },
         },
       ],
     ],

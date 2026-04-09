@@ -1,13 +1,13 @@
 import { SignOutButton } from "@/components/SignOutButton";
-import { AppColors } from "@/constants/theme";
-import { useStreaks } from "@/hooks/use-streaks";
+import { Colors } from "@/constants/theme";
+import { useColorScheme } from "@/hooks/use-color-scheme";
 import { getUserDisplayName, getUserInitials } from "@/lib/utils/user";
-import { Protect, useUser } from "@clerk/clerk-expo";
-import { Image, Linking, StyleSheet } from "react-native";
+import { useUser } from "@clerk/clerk-expo";
+import { Feather } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import { Image, Pressable, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Trophy, Flame } from '@tamagui/lucide-icons';
 import {
-  Button,
   Card,
   H1,
   H2,
@@ -16,13 +16,17 @@ import {
   Text,
   View,
   XStack,
-  YStack,
+  YStack
 } from "tamagui";
+
+let isNavigatingToAbout = false;
 
 export default function Profile() {
   const { user, isLoaded } = useUser();
   const insets = useSafeAreaInsets();
-  const { currentStreak, longestStreak } = useStreaks();
+  const colorScheme = useColorScheme() ?? "dark";
+  const theme = Colors[colorScheme];
+  const router = useRouter();
 
   if (!isLoaded) {
     return (
@@ -38,21 +42,20 @@ export default function Profile() {
   const displayName = getUserDisplayName(user);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background, paddingTop: insets.top }]}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{
-          paddingTop: insets.top + 20,
+          paddingTop: 20,
         }}
       >
         <YStack px="$4" gap="$4" pb={insets.bottom + 100}>
           {/* Profile Header Card */}
           <Card
-            elevate
             size="$4"
             bordered
-            bg="$background"
-            borderColor="$borderColor"
+            bg="rgba(255,255,255,0.05)"
+            borderColor="rgba(255,255,255,0.1)"
             padding="$6"
           >
             <YStack gap="$4" style={{ alignItems: "center" }}>
@@ -85,135 +88,73 @@ export default function Profile() {
                 <H1
                   fontSize={28}
                   fontWeight="700"
+                  color="#ffffff"
                   style={{ textAlign: "center" }}
                 >
                   {displayName}
                 </H1>
                 {user?.primaryEmailAddress?.emailAddress && (
-                  <Text fontSize={14} color="$color10">
+                  <Text fontSize={14} color="rgba(255,255,255,0.7)">
                     {user.primaryEmailAddress.emailAddress}
                   </Text>
                 )}
               </YStack>
 
               {/* Plan Badge */}
-              <Protect
-                plan="pro"
-              // fallback={
-              //   <View style={styles.planBadge}>
-              //     <Text fontSize={13} fontWeight="600" color="$color11">
-              //       Plan Gratuito
-              //     </Text>
-              //   </View>
-              // }
-              >
-                <View style={styles.proPlanBadge}>
-                  <Text fontSize={13} fontWeight="700" color="#904BFF">
-                    ✨ Pro Plan
-                  </Text>
-                </View>
-              </Protect>
+              <View style={styles.proPlanBadge}>
+                <Text fontSize={13} fontWeight="700" color="#1FC451">
+                  🌱 Botánico Observador
+                </Text>
+              </View>
             </YStack>
           </Card>
 
-          {/* Stats Cards */}
-          <XStack gap="$4">
-            {/* Current Streak Card */}
-            <Card
-              elevate
-              size="$4"
-              bordered
-              bg="$background"
-              borderColor="$borderColor"
-              padding="$5"
-              flex={1}
-            >
-              <YStack gap="$3" style={{ alignItems: "center" }}>
-                <View style={styles.streakIconContainer}>
-                  <Flame size={24} color={AppColors.flameOrange} fill={AppColors.flameOrange} />
-
-                </View>
-                <Text fontSize={36} fontWeight="800" color="$color12">
-                  {currentStreak}
-                </Text>
-                <Text fontSize={12} color="$color10" fontWeight="600">
-                  Racha de Días
-                </Text>
-              </YStack>
-            </Card>
-
-            {/* Best Streak Card */}
-            <Card
-              elevate
-              size="$4"
-              bordered
-              bg="$background"
-              borderColor="$borderColor"
-              padding="$5"
-              flex={1}
-            >
-              <YStack gap="$3" style={{ alignItems: "center" }}>
-                <View style={styles.bestStreakIconContainer}>
-                  <Trophy size={24} color={AppColors.primary} />
-                </View>
-                <Text fontSize={36} fontWeight="800" color="$color12">
-                  {longestStreak}
-                </Text>
-                <Text fontSize={12} color="$color10" fontWeight="600">
-                  Mejor Racha
-                </Text>
-              </YStack>
-            </Card>
-          </XStack>
-
-          {/* Subscription Card */}
-          {/* <Card
-            elevate
-            size="$4"
-            bordered
-            bg="$background"
-            borderColor="$borderColor"
-            padding="$5"
+          {/* Acerca de Section */}
+          <Pressable 
+            onPress={() => {
+              if (isNavigatingToAbout) return;
+              isNavigatingToAbout = true;
+              router.push("/about");
+              setTimeout(() => { isNavigatingToAbout = false; }, 800);
+            }}
           >
-            <YStack gap="$4">
-              <YStack gap="$2">
-                <H2 fontSize={18} fontWeight="700" color="$color12">
-                  Subscripción
-                </H2>
-                <Text fontSize={13} color="$color10" lineHeight={18}>
-                  Gestiona tu plan y facturación
-                </Text>
+            <Card
+              size="$4"
+              bordered
+              bg="rgba(255,255,255,0.05)"
+              borderColor="rgba(255,255,255,0.1)"
+              padding="$5"
+            >
+              <YStack gap="$4">
+                <YStack gap="$2">
+                  <XStack style={{ justifyContent: "space-between", alignItems: "center" }}>
+                    <H2 fontSize={18} fontWeight="700" color="#ffffff">
+                      Acerca del Proyecto
+                    </H2>
+                    <Feather name="chevron-right" size={20} color="rgba(255,255,255,0.4)" />
+                  </XStack>
+                  <Text fontSize={14} color="rgba(255,255,255,0.7)" lineHeight={22}>
+                    Catálogo virtual de flora ornamental de Iquitos · Responsabilidad Social Universitaria
+                  </Text>
+                </YStack>
               </YStack>
-              <Button
-                size="$4"
-                bg="$purple9"
-                color="white"
-                pressStyle={{ opacity: 0.8 }}
-                fontWeight="600"
-                onPress={() => {
-                  Linking.openURL("http://localhost:8081/pricing");
-                }}
-              >
-                Ver Planes y Precios
-              </Button>
-            </YStack>
-          </Card> */}
+            </Card>
+          </Pressable>
 
           {/* Account Section */}
           <Card
-            elevate
             size="$4"
             bordered
-            bg="$background"
-            borderColor="$borderColor"
+            bg="rgba(255,255,255,0.05)"
+            borderColor="rgba(255,255,255,0.1)"
             padding="$5"
           >
             <YStack gap="$4">
               <YStack gap="$2">
-                <H2 fontSize={18} fontWeight="700" color="$color12">
+                <H2 fontSize={18} fontWeight="700" color="#ffffff">
                   Cuenta
                 </H2>
-                <Text fontSize={13} color="$color10" lineHeight={18}>
+                <Text fontSize={13} color="rgba(255,255,255,0.7)" lineHeight={18}>
                   Administrar la configuración de tu cuenta
                 </Text>
               </YStack>
@@ -229,7 +170,6 @@ export default function Profile() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white"
   },
   loadingContainer: {
     flex: 1,
@@ -253,23 +193,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: "rgba(144, 75, 255, 0.4)",
-    backgroundColor: "rgba(144, 75, 255, 0.15)",
-  },
-  streakIconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: "rgba(245, 158, 11, 0.15)",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  bestStreakIconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: "rgba(144, 75, 255, 0.15)",
-    alignItems: "center",
-    justifyContent: "center",
+    borderColor: "rgba(31, 196, 81, 0.4)",
+    backgroundColor: "transparent",
   },
 });

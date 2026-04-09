@@ -1,8 +1,10 @@
 import Logo from "@/components/Logo";
 import { useModal } from "@/contexts/ModalContext";
-import { useSignUp, isClerkAPIResponseError } from "@clerk/clerk-expo"; // IMPORTANTE: Agregué isClerkAPIResponseError
+import { isClerkAPIResponseError, useSignUp } from "@clerk/clerk-expo";
+import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import * as React from "react";
+import { KeyboardAvoidingView, Platform, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   Button,
@@ -11,7 +13,6 @@ import {
   Input,
   Label,
   Paragraph,
-  ScrollView,
   Spacer,
   XStack,
   YStack,
@@ -23,6 +24,7 @@ export default function SignUpScreen() {
 
   const [emailAddress, setEmailAddress] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [showPassword, setShowPassword] = React.useState(false);
   const [pendingVerification, setPendingVerification] = React.useState(false);
   const [code, setCode] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
@@ -50,28 +52,29 @@ export default function SignUpScreen() {
       // --- BLOQUE DE ERROR MEJORADO ---
       console.log(JSON.stringify(err, null, 2));
 
+      const clerkError = isClerkAPIResponseError(err)
+        ? (err as any)
+        : null;
+
+      const errorCode = clerkError?.errors[0]?.code;
+      const originalMessage = (clerkError?.errors[0]?.longMessage || clerkError?.errors[0]?.message || "").toLowerCase();
+
       let errorMessage = "Ups, ocurrió un error, ¡por favor intenta de nuevo!";
 
-      // Si el error viene de Clerk, sacamos el mensaje detallado
-      if (isClerkAPIResponseError(err)) {
-        const msg = err.errors[0]?.message || "";
-
-        if (msg.includes("Password")) {
-          errorMessage = "La contraseña debe tener al menos 8 caracteres.";
-        } else {
-          errorMessage = msg;
-        }
-      }
-
-      // Si es otro tipo de error con mensaje
-      else if (err instanceof Error) {
-        errorMessage = err.message;
+      if (errorCode === "form_identifier_exists" || originalMessage.includes("taken") || originalMessage.includes("already exists")) {
+        errorMessage = "Este correo electrónico ya está registrado.";
+      } else if (errorCode === "form_password_validation_failed" || originalMessage.includes("password")) {
+        errorMessage = "La contraseña debe tener al menos 8 caracteres.";
+      } else if (errorCode === "form_identifier_invalid" || originalMessage.includes("identifier is invalid")) {
+        errorMessage = "El correo electrónico no es válido. Ejemplo: usuario@correo.com";
+      } else if (clerkError?.errors[0]) {
+        errorMessage = clerkError.errors[0].longMessage || clerkError.errors[0].message;
       }
 
       showModal({
         type: "alert",
-        title: "Atención", // Cambiado a "Atención" o "Error"
-        description: errorMessage, // Aquí mostramos "Passwords must be 8 characters..."
+        title: "Atención",
+        description: errorMessage,
       });
       // -------------------------------
     } finally {
@@ -122,11 +125,108 @@ export default function SignUpScreen() {
 
   if (pendingVerification) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: "#08130D" }}>
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          keyboardVerticalOffset={Platform.OS === "android" ? 30 : 0}
+        >
+          <ScrollView
+            style={{ flex: 1, backgroundColor: "#08130D" }}
+            contentContainerStyle={{ flexGrow: 1 }}
+            keyboardShouldPersistTaps="handled"
+          >
+            <YStack
+              flex={1}
+              p="$4"
+              gap="$4"
+              style={{ justifyContent: "center", minHeight: "100%" }}
+            >
+              <Logo />
+
+              <YStack gap="$2" style={{ alignItems: "center" }}>
+                <H1 color="#ffffff" style={{ textAlign: "center" }}>
+                  Verifica tu correo
+                </H1>
+                <Paragraph
+                  color="rgba(255,255,255,0.7)"
+                  style={{ textAlign: "center" }}
+                >
+                  Hemos enviado un código de verificación a {emailAddress}
+                </Paragraph>
+              </YStack>
+
+              <Card padding="$4" gap="$2" backgroundColor="rgba(255,255,255,0.05)" borderWidth={0}>
+                <YStack gap="$2">
+                  <YStack gap="$2">
+                    <Label color="#ffffff">Código de verificación</Label>
+                    <Input
+                      value={code}
+                      placeholder="Ingresa el código"
+                      onChangeText={setCode}
+                      borderWidth={0}
+                      bg="rgba(255,255,255,0.05)"
+                      color="#ffffff"
+                      placeholderTextColor="rgba(255,255,255,0.5)"
+                      focusStyle={{
+                        borderColor: "#1FC451",
+                      }}
+                      keyboardType="numeric"
+                      autoComplete="one-time-code"
+                    />
+                  </YStack>
+
+                  <Spacer />
+
+                  <Button
+                    size="$4"
+                    bg="#1FC451"
+                    color="white"
+                    borderColor="#1FC451"
+                    onPress={onVerifyPress}
+                    disabled={!isLoaded || isLoading}
+                    opacity={!isLoaded || isLoading ? 0.5 : 1}
+                  >
+                    {isLoading ? "Verificando..." : "Verificar correo"}
+                  </Button>
+                </YStack>
+              </Card>
+
+              <XStack
+                gap="$2"
+                style={{ justifyContent: "center", alignItems: "center" }}
+              >
+                <Paragraph color="rgba(255,255,255,0.7)">
+                  ¿No recibiste el código?
+                </Paragraph>
+                <Button
+                  variant="outlined"
+                  size="$3"
+                  borderColor="#1FC451"
+                  color="#1FC451"
+                  onPress={() => setPendingVerification(false)}
+                >
+                  Reenviar
+                </Button>
+              </XStack>
+            </YStack>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    );
+  }
+
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#08130D" }}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "android" ? 30 : 0}
+      >
         <ScrollView
-          flex={1}
-          bg="$background"
-          contentContainerStyle={{ flex: 1 }}
+          style={{ flex: 1, backgroundColor: "#08130D" }}
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
         >
           <YStack
             flex={1}
@@ -137,47 +237,76 @@ export default function SignUpScreen() {
             <Logo />
 
             <YStack gap="$2" style={{ alignItems: "center" }}>
-              <H1 color="$color" style={{ textAlign: "center" }}>
-                Verifica tu correo
+              <H1 color="#ffffff" style={{ textAlign: "center" }}>
+                Crear cuenta
               </H1>
               <Paragraph
-                color="$color"
-                opacity={0.7}
+                color="rgba(255,255,255,0.7)"
                 style={{ textAlign: "center" }}
               >
-                Hemos enviado un código de verificación a {emailAddress}
+                Regístrate para comenzar
               </Paragraph>
             </YStack>
 
-            <Card elevate padding="$4" gap="$2" backgroundColor="$background">
+            <Card padding="$4" gap="$2" backgroundColor="rgba(255,255,255,0.05)" borderWidth={0}>
               <YStack gap="$2">
                 <YStack gap="$2">
-                  <Label color="$color">Código de verificación</Label>
+                  <Label color="#ffffff">Correo electrónico</Label>
                   <Input
-                    value={code}
-                    placeholder="Ingresa el código"
-                    onChangeText={setCode}
-                    borderColor="$borderColor"
+                    autoCapitalize="none"
+                    keyboardType="email-address"
+                    value={emailAddress}
+                    placeholder="Ingresa tu correo"
+                    onChangeText={setEmailAddress}
+                    borderWidth={0}
+                    bg="rgba(255,255,255,0.05)"
+                    color="#ffffff"
+                    placeholderTextColor="rgba(255,255,255,0.5)"
                     focusStyle={{
-                      borderColor: "$purple10",
+                      borderColor: "#1FC451",
                     }}
-                    keyboardType="numeric"
-                    autoComplete="one-time-code"
                   />
+                </YStack>
+
+                <YStack gap="$2">
+                  <Label color="#ffffff">Contraseña</Label>
+                  <YStack style={{ position: "relative", width: "100%", justifyContent: "center" }}>
+                    <Input
+                      secureTextEntry={!showPassword}
+                      value={password}
+                      placeholder="Crea una contraseña"
+                      onChangeText={setPassword}
+                      borderWidth={0}
+                      bg="rgba(255,255,255,0.05)"
+                      color="#ffffff"
+                      placeholderTextColor="rgba(255,255,255,0.5)"
+                      focusStyle={{
+                        borderColor: "#1FC451",
+                      }}
+                      style={{ paddingRight: 45 }}
+                    />
+                    <Button
+                      style={{ position: "absolute", right: 4 }}
+                      size="$3"
+                      chromeless
+                      onPress={() => setShowPassword(!showPassword)}
+                      icon={<Feather name={showPassword ? "eye" : "eye-off"} size={20} color="rgba(255,255,255,0.5)" />}
+                    />
+                  </YStack>
                 </YStack>
 
                 <Spacer />
 
                 <Button
                   size="$4"
-                  bg="#904BFF"
+                  bg="#1FC451"
                   color="white"
-                  borderColor="#904BFF"
-                  onPress={onVerifyPress}
+                  borderColor="#1FC451"
+                  onPress={onSignUpPress}
                   disabled={!isLoaded || isLoading}
                   opacity={!isLoaded || isLoading ? 0.5 : 1}
                 >
-                  {isLoading ? "Verificando..." : "Verificar correo"}
+                  {isLoading ? "Creando cuenta..." : "Crear cuenta"}
                 </Button>
               </YStack>
             </Card>
@@ -186,116 +315,29 @@ export default function SignUpScreen() {
               gap="$2"
               style={{ justifyContent: "center", alignItems: "center" }}
             >
-              <Paragraph color="$color" opacity={0.7}>
-                ¿No recibiste el código?
+              <Paragraph color="rgba(255,255,255,0.7)">
+                ¿Ya tienes una cuenta?
               </Paragraph>
+
               <Button
                 variant="outlined"
                 size="$3"
-                borderColor="#904BFF"
-                color="#904BFF"
-                onPress={() => setPendingVerification(false)}
+                borderColor="#1FC451"
+                color="#1FC451"
+                onPress={() => {
+                  if (router.canGoBack()) {
+                    router.back();
+                  } else {
+                    router.replace("/sign-in");
+                  }
+                }}
               >
-                Reenviar
+                Iniciar sesión
               </Button>
             </XStack>
           </YStack>
         </ScrollView>
-      </SafeAreaView>
-    );
-  }
-
-  return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
-      <ScrollView flex={1} bg="$background" contentContainerStyle={{ flex: 1 }}>
-        <YStack
-          flex={1}
-          p="$4"
-          gap="$4"
-          style={{ justifyContent: "center", minHeight: "100%" }}
-        >
-          <Logo />
-
-          <YStack gap="$2" style={{ alignItems: "center" }}>
-            <H1 color="$color" style={{ textAlign: "center" }}>
-              Crear cuenta
-            </H1>
-            <Paragraph
-              color="$color"
-              opacity={0.7}
-              style={{ textAlign: "center" }}
-            >
-              Regístrate para comenzar
-            </Paragraph>
-          </YStack>
-
-          <Card elevate padding="$4" gap="$2" backgroundColor="$background">
-            <YStack gap="$2">
-              <YStack gap="$2">
-                <Label color="$color">Correo electrónico</Label>
-                <Input
-                  autoCapitalize="none"
-                  keyboardType="email-address"
-                  value={emailAddress}
-                  placeholder="Ingresa tu correo"
-                  onChangeText={setEmailAddress}
-                  borderColor="$borderColor"
-                  focusStyle={{
-                    borderColor: "$purple10",
-                  }}
-                />
-              </YStack>
-
-              <YStack gap="$2">
-                <Label color="$color">Contraseña</Label>
-                <Input
-                  secureTextEntry
-                  value={password}
-                  placeholder="Crea una contraseña"
-                  onChangeText={setPassword}
-                  borderColor="$borderColor"
-                  focusStyle={{
-                    borderColor: "$purple10",
-                  }}
-                />
-              </YStack>
-
-              <Spacer />
-
-              <Button
-                size="$4"
-                bg="#904BFF"
-                color="white"
-                borderColor="#904BFF"
-                onPress={onSignUpPress}
-                disabled={!isLoaded || isLoading}
-                opacity={!isLoaded || isLoading ? 0.5 : 1}
-              >
-                {isLoading ? "Creando cuenta..." : "Crear cuenta"}
-              </Button>
-            </YStack>
-          </Card>
-
-          <XStack
-            gap="$2"
-            style={{ justifyContent: "center", alignItems: "center" }}
-          >
-            <Paragraph color="$color" opacity={0.7}>
-              ¿Ya tienes una cuenta?
-            </Paragraph>
-
-            <Button
-              variant="outlined"
-              size="$3"
-              borderColor="#904BFF"
-              color="#904BFF"
-              onPress={() => router.canGoBack() && router.back()}
-            >
-              Iniciar sesión
-            </Button>
-          </XStack>
-        </YStack>
-      </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

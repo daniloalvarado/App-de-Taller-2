@@ -12,6 +12,7 @@ import {
 import { Slot } from "expo-router";
 import "react-native-reanimated";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { View } from "react-native";
 import { PortalProvider, TamaguiProvider } from "tamagui";
 
 // 1. LEER LA LLAVE (Agregamos esto)
@@ -22,6 +23,14 @@ if (!publishableKey) {
     'Falta la Publishable Key. Asegúrate de tener EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY en tu .env'
   );
 }
+
+const CustomDarkTheme = {
+  ...DarkTheme,
+  colors: {
+    ...DarkTheme.colors,
+    background: '#08130D',
+  },
+};
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -34,9 +43,11 @@ export default function RootLayout() {
           <PortalProvider shouldAddRootHost>
             <ModalProvider>
               <ThemeProvider
-                value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+                value={colorScheme === "dark" ? CustomDarkTheme : CustomDarkTheme}
               >
-                <Slot />
+                <View style={{ flex: 1, backgroundColor: '#08130D' }}>
+                  <Slot />
+                </View>
               </ThemeProvider>
             </ModalProvider>
           </PortalProvider>

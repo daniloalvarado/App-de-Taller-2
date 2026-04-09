@@ -1,43 +1,72 @@
 import { useAuth } from "@clerk/clerk-expo";
-import { Stack } from "expo-router";
+import { CardStyleInterpolators, createStackNavigator } from "@react-navigation/stack";
+import { useRouter, useSegments, withLayoutContext } from "expo-router";
 import React from "react";
-import { Spinner } from "tamagui"; // Agregué View por si acaso
+import { Spinner, View } from "tamagui";
+
+// Create a JS-based Stack (not Native Stack) for full animation control
+const { Navigator } = createStackNavigator();
+const JsStack = withLayoutContext(Navigator);
 
 export default function Layout() {
   const { isLoaded, isSignedIn } = useAuth();
+  const router = useRouter();
+  const segments = useSegments();
+
+  React.useEffect(() => {
+    if (!isLoaded) return;
+
+    // Check if the user is in an auth screen (login/register)
+    const inAuthGroup = segments[1] === "sign-in" || segments[1] === "sign-up";
+
+    // If logged out and not in auth screens, FORCE redirect to sign-in lock
+    if (!isSignedIn && !inAuthGroup) {
+      router.replace("/sign-in");
+    }
+    // If logged in and in auth screens, FORCE redirect to app (prevent seeing login page)
+    else if (isSignedIn && inAuthGroup) {
+      router.replace("/");
+    }
+  }, [isSignedIn, isLoaded, segments]);
 
   if (!isLoaded) {
-    return <Spinner size="large" color="$purple9" />;
+    return (
+      <View flex={1} bg="#08130D" style={{ justifyContent: "center", alignItems: "center" }}>
+        <Spinner size="large" color="#1FC451" />
+      </View>
+    );
   }
 
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Protected guard={isSignedIn}>
-        {/* Navegación de tabs */}
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+    <JsStack
+      screenOptions={{
+        headerShown: false,
+        cardStyle: { backgroundColor: "#08130D" },
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        transitionSpec: {
+          open: { animation: "timing", config: { duration: 350 } },
+          close: { animation: "timing", config: { duration: 350 } },
+        },
+        gestureEnabled: true,
+        gestureDirection: "horizontal",
+      }}
+    >
+      {/* Navegación de tabs (App principal) */}
+      <JsStack.Screen name="(tabs)" options={{ headerShown: false, animationEnabled: false }} />
+      <JsStack.Screen name="plant/[id]" options={{ headerShown: false }} />
 
-        <Stack.Screen name="new-entry" options={{ headerShown: false }} />
-        <Stack.Screen name="edit-entry/[id]" options={{ headerShown: false }} />
-        <Stack.Screen name="entry/[id]" options={{ headerShown: false }} />
-      </Stack.Protected>
-
-      <Stack.Protected guard={!isSignedIn}>
-        <Stack.Screen
-          name="sign-in"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="sign-up"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="alert-modal"
-          options={{
-            headerShown: false,
-            presentation: "modal"
-          }}
-        />
-      </Stack.Protected>
-    </Stack>
+      {/* Vistas de Autenticación */}
+      <JsStack.Screen name="sign-in" options={{ headerShown: false, animationEnabled: false }} />
+      <JsStack.Screen name="sign-up" options={{ headerShown: false }} />
+      <JsStack.Screen name="about" options={{ headerShown: false }} />
+      <JsStack.Screen
+        name="alert-modal"
+        options={{
+          headerShown: false,
+          presentation: "modal",
+          cardStyleInterpolator: CardStyleInterpolators.forModalPresentationIOS,
+        }}
+      />
+    </JsStack>
   );
 }

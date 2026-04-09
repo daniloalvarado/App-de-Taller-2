@@ -7,7 +7,7 @@ export default function Logo({ hasText = false }: { hasText?: boolean }) {
   return (
     <YStack gap="$3" style={{ alignItems: "center" }} mb="$4">
       <XStack
-        bg="$purple10"
+        bg="#1FC451"
         p="$3"
         style={{
           alignItems: "center",
@@ -15,11 +15,11 @@ export default function Logo({ hasText = false }: { hasText?: boolean }) {
           borderRadius: 16,
         }}
       >
-        <Feather size={32} color="white" />
+        <Feather size={32} color="#08130D" />
       </XStack>
       {hasText && (
-        <Text fontSize="$7" fontWeight="700" color="$color">
-          Journal.ai
+        <Text fontSize="$7" fontWeight="700" color="#ffffff">
+          Flora Iquitos
         </Text>
       )}
     </YStack>
