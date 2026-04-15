@@ -33,8 +33,10 @@ export default function HomeScreen() {
       nombre_cientifico,
       nombres_comunes,
       habito,
+      tipo_flor,
       color_flor,
       tipo_fruto,
+      tipo_infrutescencia,
       tipo_semilla,
       tipo_inflorescencia,
       exudado,
@@ -162,13 +164,12 @@ export default function HomeScreen() {
               );
             })
           ) : (
-            <>
-              {/* Fallback Estático si Sanity está vacío */}
-              <PlantCard id="mock-1" title="Heliconia psittacorum" habito="Hierba" familia="Heliconiaceae" />
-              <PlantCard id="mock-2" title="Victoria amazonica" habito="Acuática" familia="Nymphaeaceae" />
-              <PlantCard id="mock-3" title="Calathea lutea" habito="Hierba" familia="Marantaceae" />
-              <PlantCard id="mock-4" title="Costus speciosus" habito="Arbusto" familia="Costaceae" />
-            </>
+            <View style={{ width: '100%', padding: 40, alignItems: 'center', justifyContent: 'center' }}>
+              <MaterialCommunityIcons name="leaf-off" size={48} color={theme.icon} style={{ opacity: 0.5, marginBottom: 16 }} />
+              <Text style={{ color: theme.text, opacity: 0.7, textAlign: 'center', fontSize: 16 }}>
+                No se encontraron especies con esa combinación de caracteres morfológicos.
+              </Text>
+            </View>
           )}
         </View>
       </ScrollView>

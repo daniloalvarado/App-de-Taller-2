@@ -181,11 +181,12 @@ export default function PlantDetailScreen() {
             <MorphInfo icon="map-marker-outline" label="Origen" value={planta?.origen} />
             <MorphInfo icon="sprout" label="Hábito de Crecimiento" value={habito} />
             <MorphInfo icon="clipboard-text-outline" label="Caracteres Diagnósticos" value={planta?.caracteres_diagnosticos} />
-            <MorphInfo icon="flower-outline" label="Color de Flor principal" value={planta?.color_flor} />
-            <MorphInfo icon="flower-tulip-outline" label="Tipo de Inflorescencia" value={planta?.tipo_inflorescencia} />
+            <MorphInfo icon="flower" label="Tipo de Flor" value={planta?.tipo_flor} />
+            <MorphInfo icon="palette-outline" label="Color de Flor principal" value={planta?.color_flor} />
             <MorphInfo icon="fruit-cherries" label="Tipo de Fruto" value={planta?.tipo_fruto} />
-            <MorphInfo icon="fruit-grapes-outline" label="Tipo de Infrutescencia" value={planta?.tipo_infrutescencia} />
+            <MorphInfo icon="flower-tulip-outline" label="Tipo de Inflorescencia" value={planta?.tipo_inflorescencia} />
             <MorphInfo icon="seed-outline" label="Tipo de Semilla" value={planta?.tipo_semilla} />
+            <MorphInfo icon="fruit-grapes-outline" label="Tipo de Infrutescencia" value={planta?.tipo_infrutescencia} />
             <MorphInfo icon="water-outline" label="Tipo y Color de Exudado" value={planta?.exudado} />
             <MorphInfo icon="star-outline" label="Valor Ornamental" value={planta?.valor_ornamental} />
           </View>
