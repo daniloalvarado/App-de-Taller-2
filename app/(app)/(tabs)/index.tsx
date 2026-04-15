@@ -191,7 +191,7 @@ export default function HomeScreen() {
             </View>
 
             <ScrollView showsVerticalScrollIndicator={false} style={{ maxHeight: 400 }}>
-              <Text style={[styles.filterLabel, { color: theme.icon }]}>Color de Flor / Inflorescencia</Text>
+              <Text style={[styles.filterLabel, { color: theme.icon }]}>Color de Flor</Text>
               <View style={styles.filterChipContainer}>
                 {flowerList.length > 0 ? flowerList.map(color => (
                   <Pressable
@@ -255,7 +255,7 @@ export default function HomeScreen() {
                 )) : <Text style={{ color: theme.icon, fontSize: 13 }}>Sin registros en BD</Text>}
               </View>
 
-              <Text style={[styles.filterLabel, { color: theme.icon }]}>Exudado / Látex</Text>
+              <Text style={[styles.filterLabel, { color: theme.icon }]}>Exudado</Text>
               <View style={styles.filterChipContainer}>
                 {exudadoList.length > 0 ? exudadoList.map(tipo => (
                   <Pressable

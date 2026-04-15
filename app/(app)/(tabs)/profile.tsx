@@ -103,7 +103,7 @@ export default function Profile() {
               {/* Plan Badge */}
               <View style={styles.proPlanBadge}>
                 <Text fontSize={13} fontWeight="700" color="#1FC451">
-                  🌱 Botánico Observador
+                  🌱 Usuario Explorador
                 </Text>
               </View>
             </YStack>

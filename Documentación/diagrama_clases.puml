@@ -1,0 +1,38 @@
+@startuml
+
+skinparam backgroundColor #FEFEFE
+skinparam classAttributeIconSize 0
+skinparam classFontSize 13
+skinparam classHeaderBackgroundColor #1FC451
+skinparam classHeaderFontColor white
+skinparam classBorderColor #139B3A
+skinparam shadowing false
+
+title Diagrama de Clases\nCatálogo Virtual de Flora Ornamental de Iquitos
+
+class Planta {
+  - _id : string
+  - _type : string
+  - _createdAt : DateTime
+  - _updatedAt : DateTime
+  - _rev : string
+  + galeria : Image[]
+  + nombres_comunes : string
+  + nombre_cientifico : string
+  + familia : string
+  + origen : string
+  + habito : string
+  + caracteres_diagnosticos : text
+  + tipo_flor : string
+  + color_flor : string
+  + tipo_fruto : string
+  + tipo_inflorescencia : string
+  + tipo_semilla : string
+  + tipo_infrutescencia : string
+  + exudado : string
+  + valor_ornamental : text
+  + descripcion : text
+  + usos_urbanos : text
+}
+
+@enduml
