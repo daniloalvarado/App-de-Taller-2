@@ -5,9 +5,11 @@ import { client, urlFor } from "@/lib/sanity";
 import { useUser } from "@clerk/clerk-expo";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useEffect, useState } from "react";
-import { Modal, Pressable, ScrollView, StyleSheet, TextInput } from "react-native";
+import { Modal, Pressable, RefreshControl, ScrollView, StyleSheet, TextInput } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { Avatar, Text, View } from "tamagui";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRouter } from "expo-router";
 
 export default function HomeScreen() {
   const { user } = useUser();
@@ -16,36 +18,65 @@ export default function HomeScreen() {
   const theme = Colors[colorScheme];
 
   const [plantas, setPlantas] = useState<any[]>([]);
+  const [misPlantas, setMisPlantas] = useState<any[]>([]);
+  const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeHabit, setActiveHabit] = useState("Todo");
+  const router = useRouter();
 
   // Filter States
   const [modalVisible, setModalVisible] = useState(false);
+  const [notifVisible, setNotifVisible] = useState(false);
+  const [hasUnread, setHasUnread] = useState(false);
   const [filterFlower, setFilterFlower] = useState("");
   const [filterFruit, setFilterFruit] = useState("");
   const [filterSemilla, setFilterSemilla] = useState("");
   const [filterInflorescencia, setFilterInflorescencia] = useState("");
-  const [filterExudado, setFilterExudado] = useState("");
+
+  const fetchData = async () => {
+    try {
+      const data = await client.fetch(`*[_type == "planta" && !(_id in path("drafts.**")) && estado_revision == "Validado"]{
+        _id,
+        nombre_cientifico,
+        nombres_comunes,
+        habito,
+        reproductivo,
+        familia,
+        galeria
+      }`);
+      setPlantas(data);
+    } catch (e) { console.error(e); }
+
+    if (user?.id) {
+      try {
+        const misAportes = await client.fetch(`*[_type == "planta" && autor == $userId] | order(_createdAt desc) {
+          _id,
+          nombre_cientifico,
+          estado_revision
+        }`, { userId: user.id });
+        setMisPlantas(misAportes);
+
+        // Check if there are new updates
+        const storedSignature = await AsyncStorage.getItem(`notifs_sig_${user.id}`);
+        // Create a signature representing the current state of all records
+        const currentSignature = JSON.stringify(misAportes.map((p: any) => p._id + p.estado_revision));
+        
+        if (storedSignature !== currentSignature && misAportes.length > 0) {
+          setHasUnread(true);
+        }
+      } catch (e) { console.error(e); }
+    }
+  };
 
   useEffect(() => {
-    client.fetch(`*[_type == "planta"]{
-      _id,
-      nombre_cientifico,
-      nombres_comunes,
-      habito,
-      tipo_flor,
-      color_flor,
-      tipo_fruto,
-      tipo_infrutescencia,
-      tipo_semilla,
-      tipo_inflorescencia,
-      exudado,
-      familia,
-      galeria
-    }`).then((data) => {
-      setPlantas(data);
-    }).catch(console.error);
-  }, []);
+    fetchData();
+  }, [user?.id]);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchData();
+    setRefreshing(false);
+  };
 
   const userName = user?.firstName || "Explorador";
   const isAdmin = user?.publicMetadata?.role === "admin";
@@ -58,23 +89,21 @@ export default function HomeScreen() {
 
     const matchesHabit = activeHabit === "Todo" || p.habito === activeHabit;
 
-    // Modal Advanced Filters
-    const matchesFlower = !filterFlower || (p.color_flor && p.color_flor.toLowerCase().includes(filterFlower.toLowerCase()));
-    const matchesFruit = !filterFruit || (p.tipo_fruto && p.tipo_fruto.toLowerCase().includes(filterFruit.toLowerCase()));
-    const matchesSemilla = !filterSemilla || (p.tipo_semilla && p.tipo_semilla.toLowerCase().includes(filterSemilla.toLowerCase()));
-    const matchesInflorescencia = !filterInflorescencia || (p.tipo_inflorescencia && p.tipo_inflorescencia.toLowerCase().includes(filterInflorescencia.toLowerCase()));
-    const matchesExudado = !filterExudado || (p.exudado && p.exudado.toLowerCase().includes(filterExudado.toLowerCase()));
+    // Modal Advanced Filters (Using new reproductivo schema)
+    const matchesFlower = !filterFlower || (p.reproductivo?.flor_color && p.reproductivo.flor_color === filterFlower);
+    const matchesFruit = !filterFruit || (p.reproductivo?.fruto_textura && p.reproductivo.fruto_textura === filterFruit);
+    const matchesSemilla = !filterSemilla || (p.reproductivo?.semilla_presencia && p.reproductivo.semilla_presencia === filterSemilla);
+    const matchesInflorescencia = !filterInflorescencia || (p.reproductivo?.flor_agrupacion && p.reproductivo.flor_agrupacion === filterInflorescencia);
 
-    return matchesSearch && matchesHabit && matchesFlower && matchesFruit && matchesSemilla && matchesInflorescencia && matchesExudado;
+    return matchesSearch && matchesHabit && matchesFlower && matchesFruit && matchesSemilla && matchesInflorescencia;
   });
 
   // Dynamic Options (Extraídas en vivo de la base de datos)
   const habitsList = ["Todo", ...Array.from(new Set(plantas.map(p => p.habito).filter(Boolean)))];
-  const flowerList = Array.from(new Set(plantas.map(p => p.color_flor).filter(Boolean)));
-  const inflorescenciaList = Array.from(new Set(plantas.map(p => p.tipo_inflorescencia).filter(Boolean)));
-  const fruitList = Array.from(new Set(plantas.map(p => p.tipo_fruto).filter(Boolean)));
-  const semillaList = Array.from(new Set(plantas.map(p => p.tipo_semilla).filter(Boolean)));
-  const exudadoList = Array.from(new Set(plantas.map(p => p.exudado).filter(Boolean)));
+  const flowerList = Array.from(new Set(plantas.map(p => p.reproductivo?.flor_color).filter(Boolean)));
+  const inflorescenciaList = Array.from(new Set(plantas.map(p => p.reproductivo?.flor_agrupacion).filter(Boolean)));
+  const fruitList = Array.from(new Set(plantas.map(p => p.reproductivo?.fruto_textura).filter(Boolean)));
+  const semillaList = Array.from(new Set(plantas.map(p => p.reproductivo?.semilla_presencia).filter(Boolean)));
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background, paddingTop: insets.top }]}>
@@ -82,6 +111,9 @@ export default function HomeScreen() {
         style={[styles.content, { paddingTop: 20 }]}
         contentContainerStyle={{ paddingBottom: insets.bottom + 100 }}
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#1FC451" colors={['#1FC451']} />
+        }
       >
         {/* Header */}
         <View style={styles.header}>
@@ -102,9 +134,22 @@ export default function HomeScreen() {
               <Text style={[styles.subtitle, { color: theme.icon }]}>¡Descubre la flora amazónica hoy!</Text>
             </View>
           </View>
-          <View style={[styles.bellContainer, { backgroundColor: "rgba(255,255,255,0.05)" }]}>
+          <Pressable 
+            onPress={async () => {
+              setNotifVisible(true);
+              setHasUnread(false);
+              if (user?.id) {
+                const currentSignature = JSON.stringify(misPlantas.map((p: any) => p._id + p.estado_revision));
+                await AsyncStorage.setItem(`notifs_sig_${user.id}`, currentSignature);
+              }
+            }} 
+            style={[styles.bellContainer, { backgroundColor: "rgba(255,255,255,0.05)" }]}
+          >
             <MaterialCommunityIcons name="bell" size={20} color={theme.text} />
-          </View>
+            {hasUnread && (
+              <View style={{ position: 'absolute', top: 5, right: 5, backgroundColor: '#ff4444', width: 10, height: 10, borderRadius: 5 }} />
+            )}
+          </Pressable>
         </View>
 
         {/* Search Bar */}
@@ -255,21 +300,6 @@ export default function HomeScreen() {
                 )) : <Text style={{ color: theme.icon, fontSize: 13 }}>Sin registros en BD</Text>}
               </View>
 
-              <Text style={[styles.filterLabel, { color: theme.icon }]}>Exudado</Text>
-              <View style={styles.filterChipContainer}>
-                {exudadoList.length > 0 ? exudadoList.map(tipo => (
-                  <Pressable
-                    key={tipo}
-                    onPress={() => setFilterExudado(filterExudado === tipo ? "" : tipo)}
-                    style={[
-                      styles.filterChip,
-                      filterExudado === tipo ? { backgroundColor: "#1FC451" } : { backgroundColor: "rgba(255,255,255,0.05)" }
-                    ]}
-                  >
-                    <Text style={{ color: filterExudado === tipo ? "#08130D" : theme.text, fontWeight: filterExudado === tipo ? "bold" : "normal" }}>{tipo}</Text>
-                  </Pressable>
-                )) : <Text style={{ color: theme.icon, fontSize: 13 }}>Sin registros en BD</Text>}
-              </View>
             </ScrollView>
 
             <View style={{ flexDirection: 'row', gap: 12, marginTop: 24 }}>
@@ -279,7 +309,6 @@ export default function HomeScreen() {
                   setFilterFlower("");
                   setFilterSemilla("");
                   setFilterInflorescencia("");
-                  setFilterExudado("");
                   setActiveHabit("Todo");
                   setModalVisible(false);
                 }}
@@ -294,6 +323,84 @@ export default function HomeScreen() {
                 <Text style={{ color: "#08130D", textAlign: 'center', fontWeight: 'bold' }}>Aplicar Filtros</Text>
               </Pressable>
             </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Notifications Modal (Mis Aportes) */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={notifVisible}
+        onRequestClose={() => setNotifVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.modalContent, { backgroundColor: colorScheme === 'dark' ? '#12221A' : '#fff' }]}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 24 }}>
+              <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.text }}>Mis Aportes</Text>
+              <Pressable onPress={() => setNotifVisible(false)} style={styles.closeModalButton}>
+                <MaterialCommunityIcons name="close" size={20} color={theme.text} />
+              </Pressable>
+            </View>
+
+            <ScrollView showsVerticalScrollIndicator={false} style={{ maxHeight: 400 }}>
+              {misPlantas.length > 0 ? misPlantas.map(planta => (
+                <Pressable 
+                  key={planta._id} 
+                  onPress={() => {
+                    if (planta.estado_revision === 'Observado') {
+                      setNotifVisible(false);
+                      router.push({ pathname: '/registro', params: { editId: planta._id } } as any);
+                    }
+                  }}
+                  style={({ pressed }) => [
+                    { 
+                      flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', 
+                      backgroundColor: 'rgba(255,255,255,0.05)', padding: 16, borderRadius: 12, marginBottom: 12 
+                    },
+                    pressed && planta.estado_revision === 'Observado' ? { opacity: 0.7 } : {}
+                  ]}
+                >
+                  <View style={{ flex: 1 }}>
+                    <Text style={{ color: theme.text, fontWeight: 'bold' }}>{planta.nombre_cientifico || 'Planta sin nombre'}</Text>
+                    {planta.estado_revision === 'Observado' ? (
+                       <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4, gap: 4 }}>
+                         <Text style={{ color: "#FFA500", fontSize: 12, fontWeight: 'bold' }}>
+                           ¡Toca para corregir!
+                         </Text>
+                         <MaterialCommunityIcons name="pencil" size={14} color="#FFA500" />
+                       </View>
+                    ) : (
+                       <Text style={{ color: theme.icon, fontSize: 12, marginTop: 4 }}>
+                         Estado actual
+                       </Text>
+                    )}
+                  </View>
+                  <View style={{ 
+                    backgroundColor: planta.estado_revision === 'Validado' ? 'rgba(31,196,81,0.2)' : 
+                                    planta.estado_revision === 'Observado' ? 'rgba(255,165,0,0.2)' : 
+                                    planta.estado_revision === 'Rechazado' ? 'rgba(255,68,68,0.2)' : 
+                                    'rgba(255,255,255,0.1)', 
+                    paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20 
+                  }}>
+                    <Text style={{ 
+                      color: planta.estado_revision === 'Validado' ? '#1FC451' : 
+                             planta.estado_revision === 'Observado' ? '#FFA500' : 
+                             planta.estado_revision === 'Rechazado' ? '#FF4444' : 
+                             '#ffffff', 
+                      fontSize: 12, fontWeight: 'bold' 
+                    }}>
+                      {planta.estado_revision === 'en_revision' ? 'En revisión' : planta.estado_revision || 'En revisión'}
+                    </Text>
+                  </View>
+                </Pressable>
+              )) : (
+                <View style={{ padding: 40, alignItems: 'center' }}>
+                  <MaterialCommunityIcons name="leaf" size={48} color={theme.icon} style={{ opacity: 0.5, marginBottom: 16 }} />
+                  <Text style={{ color: theme.text, opacity: 0.7, textAlign: 'center' }}>Aún no has registrado ninguna planta.</Text>
+                </View>
+              )}
+            </ScrollView>
           </View>
         </View>
       </Modal>

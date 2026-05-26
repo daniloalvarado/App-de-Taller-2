@@ -4,5 +4,9 @@ export default defineCliConfig({
   api: {
     projectId: '9m09a5ng', 
     dataset: 'production'
-  }
+  },
+  studioHost: 'catalogo-flora-iquitos',
+  deployment: {
+    appId: 'elnc8cv8gt9cdcxwmxwkib5j',
+  },
 })

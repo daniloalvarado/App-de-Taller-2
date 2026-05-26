@@ -1,24 +1,358 @@
 export const planta = {
   name: 'planta',
-  title: 'Planta Ornamental',
+  title: 'Registro de Planta (PLANT-OR)',
   type: 'document',
+  fieldsets: [
+    { name: 'estado', title: 'Estado y Control', options: { collapsible: true, collapsed: false } },
+    { name: 'datosPersonales', title: '1. Datos Personales', options: { collapsible: true, collapsed: true } },
+    { name: 'ubicacion', title: '2. Ubicación y Georreferenciación', options: { collapsible: true, collapsed: true } },
+    { name: 'identificacion', title: '3. Identificación', options: { collapsible: true, collapsed: true } },
+    { name: 'habito', title: '4. Hábito y Tipo de Vida', options: { collapsible: true, collapsed: false } },
+    { name: 'fotografias', title: '7. Fotografías', options: { collapsible: true, collapsed: false } },
+    { name: 'impacto', title: 'Valor Ornamental e Impacto Urbano', options: { collapsible: true, collapsed: false } },
+  ],
   fields: [
-    { name: 'galeria', title: 'Galería Fotográfica', type: 'array', of: [{ type: 'image' }] },
-    { name: 'nombres_comunes', title: 'Nombres Comunes', type: 'string' },
-    { name: 'nombre_cientifico', title: 'Nombre Científico', type: 'string' },
-    { name: 'familia', title: 'Familia Botánica', type: 'string' },
-    { name: 'origen', title: 'Origen', type: 'string' },
-    { name: 'habito', title: 'Hábito de Crecimiento', type: 'string', description: 'Ej: Árbol, Arbusto, Caña, Hierba...' },
-    { name: 'caracteres_diagnosticos', title: 'Caracteres Diagnósticos', type: 'text', description: 'Rasgos clave que permiten identificar la especie (ej: hojas alternas, espinas en el tallo, etc.)' },
-    { name: 'tipo_flor', title: 'Tipo de Flor', type: 'string', description: 'Morfología de la flor (ej: tubular, acampanada, labiada, etc.)' },
-    { name: 'color_flor', title: 'Color de Flor principal', type: 'string' },
-    { name: 'tipo_fruto', title: 'Tipo de Fruto', type: 'string' },
-    { name: 'tipo_inflorescencia', title: 'Tipo de Inflorescencia', type: 'string', description: 'Ej: Racimo, Panícula, Umbela, etc.' },
-    { name: 'tipo_semilla', title: 'Tipo de Semilla', type: 'string' },
-    { name: 'tipo_infrutescencia', title: 'Tipo de Infrutescencia', type: 'string', description: 'Ej: Sicono, Sorosis (piña), racimo de bayas (uva), etc.' },
-    { name: 'exudado', title: 'Tipo y Color de Exudado', type: 'string' },
-    { name: 'valor_ornamental', title: 'Valor Ornamental', type: 'text' },
-    { name: 'descripcion', title: 'Descripción Morfológica Básica', type: 'text' },
-    { name: 'usos_urbanos', title: 'Usos Urbanos', type: 'text' },
+    // ESTADO Y CONTROL
+    {
+      name: 'estado_revision',
+      title: 'Estado del Registro',
+      type: 'string',
+      fieldset: 'estado',
+      options: {
+        list: ['En revisión', 'Validado', 'Observado', 'Rechazado']
+      },
+      initialValue: 'En revisión'
+    },
+    {
+      name: 'motivo_observacion',
+      title: 'Motivo de Observación / Rechazo',
+      type: 'text',
+      fieldset: 'estado',
+      hidden: ({ document }: any) => !['Observado', 'Rechazado'].includes(document?.estado_revision),
+      description: 'Escribe aquí qué debe corregir el estudiante, o por qué fue rechazado.'
+    },
+    {
+      name: 'autor',
+      title: 'ID del Autor (Clerk)',
+      type: 'string',
+      fieldset: 'estado',
+      readOnly: true
+    },
+    { name: 'validador', title: 'Docente Validador', type: 'string', fieldset: 'estado' },
+    { name: 'fecha_registro', title: 'Fecha de Registro', type: 'datetime', fieldset: 'estado' },
+
+    // 1. DATOS PERSONALES
+    { name: 'registrador_nombre', title: 'Nombre completo', type: 'string', fieldset: 'datosPersonales' },
+    { name: 'registrador_dni', title: 'DNI', type: 'string', fieldset: 'datosPersonales' },
+    { name: 'registrador_email', title: 'Email', type: 'string', fieldset: 'datosPersonales' },
+    { name: 'registrador_curso', title: 'Curso', type: 'string', fieldset: 'datosPersonales' },
+    { name: 'registrador_facultad', title: 'Facultad', type: 'string', fieldset: 'datosPersonales' },
+    { name: 'registrador_escuela', title: 'Escuela', type: 'string', fieldset: 'datosPersonales' },
+    { name: 'registrador_dia_clase', title: 'Día de clase', type: 'string', fieldset: 'datosPersonales' },
+
+    // 2. UBICACIÓN
+    { name: 'latitud', title: 'Latitud', type: 'number', fieldset: 'ubicacion' },
+    { name: 'longitud', title: 'Longitud', type: 'number', fieldset: 'ubicacion' },
+    { name: 'direccion', title: 'Dirección referencial', type: 'string', fieldset: 'ubicacion' },
+    { name: 'tipo_ubicacion_1', title: 'Tipo de ubicación 1', type: 'string', fieldset: 'ubicacion', options: { list: ['Jirón', 'Avenida', 'Calle', 'Pasaje', 'Parque'] } },
+    { name: 'tipo_ubicacion_2', title: 'Tipo de ubicación 2', type: 'string', fieldset: 'ubicacion', options: { list: ['Vereda', 'Berma central'] } },
+    { name: 'numero_casa', title: 'N° de casa', type: 'string', fieldset: 'ubicacion' },
+    { name: 'ubicacion_planta', title: 'Ubicación de la planta', type: 'string', fieldset: 'ubicacion', options: { list: ['Tierra', 'Macetero'] } },
+
+    // 3. IDENTIFICACIÓN
+    { name: 'nombre_cientifico', title: 'Nombre Científico', type: 'string', fieldset: 'identificacion' },
+    { name: 'nombres_comunes', title: 'Nombre Local / Común', type: 'string', fieldset: 'identificacion' },
+    { name: 'familia', title: 'Familia', type: 'string', fieldset: 'identificacion' },
+    { name: 'numero_planta', title: 'Número de planta', type: 'string', fieldset: 'identificacion' },
+
+    // 4. HÁBITO Y TIPO DE VIDA
+    {
+      name: 'habito',
+      title: 'Hábito de la Planta',
+      type: 'string',
+      fieldset: 'habito',
+      options: { list: ['Árbol', 'Palmera', 'Arbusto', 'Liana', 'Hierba'] }
+    },
+    {
+      name: 'tipo_vida',
+      title: 'Tipo de Vida',
+      type: 'string',
+      fieldset: 'habito',
+      options: { list: ['Terrestre', 'Epífita', 'Parásita'] }
+    },
+
+    // -------------------------------------------------------------
+    // BLOQUE: ÁRBOL (Mostrado solo si habito === 'Árbol')
+    // -------------------------------------------------------------
+    {
+      name: 'arbol_datos',
+      title: '6.1 Datos de Árbol',
+      type: 'object',
+      hidden: ({ document }: any) => document?.habito !== 'Árbol',
+      fields: [
+        { name: 'altura_total', title: 'Altura total aproximada (m)', type: 'number' },
+        { name: 'cap', title: 'CAP (cm)', type: 'number' },
+        { name: 'diametro_copa_paralelo', title: 'Diámetro de copa paralelo (m)', type: 'number' },
+        { name: 'diametro_copa_perpendicular', title: 'Diámetro de copa perpendicular (m)', type: 'number' },
+        { name: 'altura_inicio_copa', title: 'Altura inicio copa (m)', type: 'number' },
+        { name: 'raices_visibles', title: 'Raíces visibles', type: 'string', options: { list: ['Sin raíces visibles', 'Raíces tablares', 'Raíces zancudas', 'Raíces superficiales', 'Raíces adventicias', 'Otro'] } },
+        { name: 'numero_troncos', title: 'Número de troncos desde la base', type: 'number' },
+        { name: 'forma_tronco', title: 'Forma del tronco', type: 'string', options: { list: ['Recto', 'Inclinado (izq/der/calle/casa)', 'Torcido', 'Otro'] } },
+        { name: 'corteza_externa', title: 'Corteza externa', type: 'string', options: { list: ['Lisa', 'Rugosa', 'Áspera', 'Agrietada', 'Estriada', 'Escamosa', 'Con placas', 'Laminar', 'Otro'] } },
+        { name: 'lenticelas', title: 'Lenticelas', type: 'string', options: { list: ['Con lenticelas', 'Sin lenticelas'] } },
+        { name: 'color_corteza', title: 'Color de corteza', type: 'array', of: [{type: 'string'}], options: { list: ['Gris', 'Marrón', 'Verde', 'Rojiza', 'Negruzca', 'Otro'] } },
+        { name: 'olor_corteza', title: 'Olor de corteza', type: 'string', options: { list: ['Sin olor', 'Aromático', 'Cítrico', 'Resinoso', 'Desagradable', 'Otro'] } },
+        { name: 'espinas_tronco', title: 'Espinas en tronco', type: 'string', options: { list: ['Con espinas', 'Sin espinas'] } },
+        { name: 'exudado_presencia', title: 'Exudado Presencia', type: 'string', options: { list: ['Sí', 'No'] } },
+        { name: 'exudado_tipo', title: 'Tipo Exudado', type: 'string', options: { list: ['Savia', 'Látex', 'Resina', 'Goma'] } },
+        { name: 'exudado_color', title: 'Color Exudado', type: 'string', options: { list: ['Incoloro', 'Blanco', 'Amarillo', 'Rojizo', 'Marrón', 'Otro'] } },
+        { name: 'tipo_ramificacion', title: 'Tipo ramificación', type: 'string', options: { list: ['Hacia arriba', 'Hélice', 'Colgantes', 'Irregulares', 'Otro'] } },
+        { name: 'forma_copa', title: 'Forma copa', type: 'string', options: { list: ['Redondeada', 'Alargada', 'Extendida', 'Tipo paraguas', 'Irregular', 'Otro'] } },
+        { name: 'densidad_copa', title: 'Densidad copa', type: 'string', options: { list: ['Densa', 'Media', 'Rala'] } },
+        { name: 'tipo_hoja', title: 'Tipo hoja', type: 'string', options: { list: ['Simple', 'Compuesta'] } },
+        { name: 'disposicion_hoja', title: 'Disposición', type: 'array', of: [{type: 'string'}], options: { list: ['Alternas-dísticas', 'Alternas-espiraladas', 'Opuestas-dísticas', 'Opuestas-decusadas', 'Agrupadas al final', 'No agrupadas'] } },
+        { name: 'forma_hoja', title: 'Forma hoja', type: 'string', options: { list: ['Ovalada', 'Alargada', 'Redonda', 'Acorazonada', 'Palmada', 'Otro'] } },
+        { name: 'borde_hoja', title: 'Borde hoja', type: 'string', options: { list: ['Entero', 'Dentado', 'Ondulado', 'Otro'] } },
+        { name: 'textura_hoja', title: 'Textura hoja', type: 'string', options: { list: ['Papirácea', 'Cartácea', 'Coriácea'] } },
+        { name: 'color_enves', title: 'Color envés', type: 'string', options: { list: ['Verde claro', 'Verde oscuro', 'Grisáceo', 'Marrón', 'Blanquecino', 'Otro'] } },
+        { name: 'pelos_hoja', title: 'Presencia pelos', type: 'array', of: [{type: 'string'}], options: { list: ['Sin pelos (haz)', 'Con pelos (haz)', 'Sin pelos (envés)', 'Con pelos (envés)'] } },
+        { name: 'tipo_peciolo', title: 'Tipo peciolo', type: 'string', options: { list: ['Circular', 'Plano', 'Sésil'] } },
+        { name: 'longitud_peciolo', title: 'Longitud peciolo (cm)', type: 'number' },
+        { name: 'diametro_peciolo', title: 'Diámetro peciolo (mm)', type: 'number' },
+        { name: 'peciolo_pulvino', title: 'Peciolo con pulvino', type: 'string', options: { list: ['Sí', 'No'] } },
+      ]
+    },
+
+    // -------------------------------------------------------------
+    // BLOQUE: PALMERA (Mostrado solo si habito === 'Palmera')
+    // -------------------------------------------------------------
+    {
+      name: 'palmera_datos',
+      title: '6.2 Datos de Palmera',
+      type: 'object',
+      hidden: ({ document }: any) => document?.habito !== 'Palmera',
+      fields: [
+        { name: 'altura_total', title: 'Altura total (m)', type: 'number' },
+        { name: 'cap', title: 'CAP a 1.30m (cm)', type: 'number' },
+        { name: 'diametro_copa_paralelo', title: 'Diámetro de copa paralelo (m)', type: 'number' },
+        { name: 'diametro_copa_perpendicular', title: 'Diámetro de copa perpendicular (m)', type: 'number' },
+        { name: 'altura_inicio_copa', title: 'Altura de inicio de copa (m)', type: 'number' },
+        { name: 'numero_tallos', title: 'Número de tallos', type: 'string', options: { list: ['Un solo tallo', 'Varios tallos', 'Otro'] } },
+        { name: 'raices_visibles', title: 'Raíces visibles', type: 'string', options: { list: ['Sin raíces', 'Superficiales', 'Zancudas', 'Soporte', 'Adventicias', 'Otro'] } },
+        { name: 'tipo_palmera', title: 'Tipo de palmera', type: 'string', options: { list: ['Arborescente', 'Arbustiva', 'Lianescente', 'Sin tallo visible', 'Otro'] } },
+        { name: 'tallo', title: 'Tallo (estípite)', type: 'array', of: [{type:'string'}], options: { list: ['Liso', 'Anillos visibles', 'Con fibras', 'Restos de hojas', 'Con espinas', 'Sin espinas', 'Otro'] } },
+        { name: 'tipo_hoja', title: 'Tipo hoja', type: 'string', options: { list: ['Pluma (pinnada)', 'Abanico (palmada)', 'Simple entera', 'Simple bífida', 'Otro'] } },
+        { name: 'segmentos', title: 'Segmentos', type: 'array', of: [{type:'string'}], options: { list: ['Un plano', 'Varios planos', 'Rígidos', 'Colgantes', 'Otro'] } },
+        { name: 'hoja_largo', title: 'Largo hoja (m)', type: 'number' },
+        { name: 'hoja_ancho', title: 'Ancho hoja (m)', type: 'number' },
+        { name: 'peciolo_largo', title: 'Largo peciolo (m)', type: 'number' },
+        { name: 'peciolo_diametro', title: 'Diámetro peciolo (cm)', type: 'number' },
+        { name: 'color_hoja', title: 'Color de hoja', type: 'string', options: { list: ['Verde claro', 'Verde oscuro', 'Verde azulado', 'Amarillento', 'Otro'] } },
+        { name: 'espinas_palmera', title: 'Espinas', type: 'array', of: [{type:'string'}], options: { list: ['Ausentes', 'En tallo', 'En pecíolo', 'En vaina', 'Otro'] } },
+        { name: 'inflorescencia_presencia', title: 'Presencia Inflorescencia', type: 'string', options: { list: ['Con inflorescencia', 'Sin inflorescencia visible'] } },
+        { name: 'inflorescencia_posicion', title: 'Posición Inflorescencia', type: 'array', of: [{type:'string'}], options: { list: ['Interfoliar (entre hojas)', 'Infrafoliar (debajo de hojas)', 'Axilar', 'Apical', 'Otro'] } },
+        { name: 'inflorescencia_forma', title: 'Forma Inflorescencia', type: 'string', options: { list: ['Erecta', 'Colgante', 'Otro'] } },
+        { name: 'inflorescencia_espata', title: 'Presencia de espata', type: 'string', options: { list: ['Sí', 'No'] } },
+      ]
+    },
+
+    // -------------------------------------------------------------
+    // BLOQUE: ARBUSTO (Mostrado solo si habito === 'Arbusto')
+    // -------------------------------------------------------------
+    {
+      name: 'arbusto_datos',
+      title: '6.3 Datos de Arbusto',
+      type: 'object',
+      hidden: ({ document }: any) => document?.habito !== 'Arbusto',
+      fields: [
+        { name: 'altura_total', title: 'Altura total (m)', type: 'number' },
+        { name: 'diametro_copa_paralelo', title: 'Diámetro de copa paralelo (m)', type: 'number' },
+        { name: 'diametro_copa_perpendicular', title: 'Diámetro de copa perpendicular (m)', type: 'number' },
+        { name: 'altura_inicio_ramificacion', title: 'Altura de inicio de ramificación (m)', type: 'number' },
+        { name: 'numero_tallos', title: 'Número de tallos', type: 'string', options: { list: ['Un tallo principal', 'Varios tallos desde la base', 'Otro'] } },
+        { name: 'forma_general', title: 'Forma general', type: 'string', options: { list: ['Redondeado', 'Compacto', 'Extendido', 'Irregular', 'Colgante', 'Otro'] } },
+        { name: 'densidad_follaje', title: 'Densidad follaje', type: 'string', options: { list: ['Denso', 'Medio', 'Ralo'] } },
+        { name: 'tipo_ramificacion', title: 'Tipo ramificación', type: 'string', options: { list: ['Erecta', 'Abierta', 'Colgante', 'Irregular', 'Otro'] } },
+        { name: 'tipo_tallo', title: 'Tipo tallo', type: 'string', options: { list: ['Leñoso', 'Semileñoso', 'Flexible', 'Otro'] } },
+        { name: 'presencia_espinas', title: 'Presencia de espinas', type: 'string', options: { list: ['Con espinas', 'Sin espinas'] } },
+        { name: 'tipo_hoja', title: 'Tipo hoja', type: 'string', options: { list: ['Simple', 'Compuesta', 'Otro'] } },
+        { name: 'hoja_compuesta_tipo', title: 'Si es compuesta', type: 'string', options: { list: ['Bifoliada', 'Trifoliada', 'Palmada', 'Pinnada', 'Bipinnada'] } },
+        { name: 'forma_hoja', title: 'Forma de la hoja', type: 'string', options: { list: ['Ovalada', 'Alargada', 'Redonda', 'Lanceolada', 'Acorazonada', 'Otro'] } },
+        { name: 'disposicion_hoja', title: 'Disposición', type: 'string', options: { list: ['Alternas', 'Opuestas', 'Otro'] } },
+        { name: 'borde_hoja', title: 'Borde', type: 'string', options: { list: ['Entero', 'Dentado', 'Ondulado', 'Otro'] } },
+        { name: 'color_hoja', title: 'Color', type: 'string', options: { list: ['Verde claro', 'Verde oscuro', 'Variegado', 'Rojizo', 'Otro'] } },
+      ]
+    },
+
+    // -------------------------------------------------------------
+    // BLOQUE: LIANA (Mostrado solo si habito === 'Liana')
+    // -------------------------------------------------------------
+    {
+      name: 'liana_datos',
+      title: '6.4 Datos de Liana',
+      type: 'object',
+      hidden: ({ document }: any) => document?.habito !== 'Liana',
+      fields: [
+        { name: 'longitud_visible', title: 'Longitud visible (m)', type: 'number' },
+        { name: 'altura_maxima', title: 'Altura máxima alcanzada (m)', type: 'number' },
+        { name: 'diametro_tallo', title: 'Diámetro del tallo principal (cm)', type: 'number' },
+        { name: 'numero_tallos', title: 'Número de tallos', type: 'string', options: { list: ['Un tallo principal', 'Varios tallos', 'Otro'] } },
+        { name: 'tipo_soporte', title: 'Tipo soporte', type: 'string', options: { list: ['Árbol', 'Arbusto', 'Cerca', 'Suelo', 'Múltiples', 'Otro'] } },
+        { name: 'forma_crecimiento', title: 'Forma crecimiento', type: 'string', options: { list: ['Trepadora', 'Enredadera', 'Colgante', 'Rastrera', 'Escandente', 'Otro'] } },
+        { name: 'mecanismo_fijacion', title: 'Mecanismo fijación', type: 'array', of: [{type:'string'}], options: { list: ['Zarcillos', 'Raíces adherentes', 'Espinas/ganchos', 'Enrollamiento', 'No visible', 'Otro'] } },
+        { name: 'tipo_hoja', title: 'Tipo hoja', type: 'string', options: { list: ['Simple', 'Compuesta', 'Otro'] } },
+        { name: 'hoja_compuesta_tipo', title: 'Si es compuesta', type: 'string', options: { list: ['Bifoliada', 'Trifoliada', 'Palmada', 'Pinnada', 'Bipinnada'] } },
+        { name: 'forma_hoja', title: 'Forma de la hoja', type: 'string', options: { list: ['Ovalada', 'Alargada', 'Redonda', 'Lanceolada', 'Acorazonada', 'Otro'] } },
+        { name: 'disposicion_hoja', title: 'Disposición', type: 'string', options: { list: ['Alternas', 'Opuestas', 'Otro'] } },
+        { name: 'borde_hoja', title: 'Borde', type: 'string', options: { list: ['Entero', 'Dentado', 'Ondulado', 'Otro'] } },
+        { name: 'color_hoja', title: 'Color', type: 'string', options: { list: ['Verde claro', 'Verde oscuro', 'Variegado', 'Rojizo', 'Otro'] } },
+        { name: 'presencia_espinas', title: 'Presencia de espinas', type: 'string', options: { list: ['Con espinas', 'Sin espinas'] } },
+      ]
+    },
+
+    // -------------------------------------------------------------
+    // BLOQUE: HIERBA (Mostrado solo si habito === 'Hierba')
+    // -------------------------------------------------------------
+    {
+      name: 'hierba_datos',
+      title: '6.5 Datos de Hierba',
+      type: 'object',
+      hidden: ({ document }: any) => document?.habito !== 'Hierba',
+      fields: [
+        { name: 'altura_total', title: 'Altura total (cm)', type: 'number' },
+        { name: 'cobertura', title: 'Cobertura (diámetro cm)', type: 'number' },
+        { name: 'numero_tallos', title: 'Número de tallos', type: 'string', options: { list: ['Uno', 'Varios', 'Muchos', 'Sin tallo visible', 'Otro'] } },
+        { name: 'tipo_crecimiento', title: 'Tipo crecimiento', type: 'string', options: { list: ['Erecta', 'Rastrera', 'Colgante', 'En roseta', 'Formando mata', 'Otro'] } },
+        { name: 'tipo_tallo', title: 'Tipo tallo', type: 'string', options: { list: ['Herbáceo', 'Carnoso', 'Hueco', 'Rastrero', 'Trepador', 'Sin tallo', 'Otro'] } },
+        { name: 'tipo_hoja', title: 'Tipo hoja', type: 'string', options: { list: ['Simple', 'Compuesta', 'Otro'] } },
+        { name: 'hoja_compuesta_tipo', title: 'Si es compuesta', type: 'string', options: { list: ['Bifoliada', 'Trifoliada', 'Palmada', 'Pinnada', 'Bipinnada'] } },
+        { name: 'forma_hoja', title: 'Forma de la hoja', type: 'string', options: { list: ['Ovalada', 'Alargada', 'Redonda', 'Lanceolada', 'Acorazonada', 'Otro'] } },
+        { name: 'disposicion_hoja', title: 'Disposición', type: 'string', options: { list: ['Alternas', 'Opuestas', 'En roseta', 'Otro'] } },
+        { name: 'borde_hoja', title: 'Borde', type: 'string', options: { list: ['Entero', 'Dentado', 'Ondulado', 'Otro'] } },
+        { name: 'color_hoja', title: 'Color', type: 'string', options: { list: ['Verde claro', 'Verde oscuro', 'Variegado', 'Rojizo', 'Otro'] } },
+        { name: 'olor_hoja', title: 'Olor al estrujar', type: 'string', options: { list: ['Sin olor', 'Aromático', 'Cítrico', 'Desagradable', 'Otro'] } },
+        { name: 'exudado_corte', title: 'Exudado al corte', type: 'string', options: { list: ['Sí', 'No'] } },
+      ]
+    },
+
+    // -------------------------------------------------------------
+    // BLOQUE COMÚN REPRODUCTIVO (Flores, Frutos, Semillas compartidos)
+    // -------------------------------------------------------------
+    {
+      name: 'reproductivo',
+      title: 'Datos Reproductivos (Flores, Frutos, Semillas)',
+      type: 'object',
+      fields: [
+        { name: 'flor_presencia', title: 'Presencia Flores', type: 'string', options: { list: ['Con flores', 'Sin flores visibles'] } },
+        { name: 'flor_color', title: 'Color pétalos', type: 'string', options: { list: ['Blanco', 'Amarillo', 'Rojo', 'Rosado', 'Morado', 'Anaranjado', 'Verde', 'Crema', 'Otro'] } },
+        { name: 'flor_tamano_largo', title: 'Largo flor (cm)', type: 'number' },
+        { name: 'flor_tamano_ancho', title: 'Ancho flor (cm)', type: 'number' },
+        { name: 'flor_agrupacion', title: 'Agrupación flores', type: 'string', options: { list: ['Solitaria', 'En racimo', 'En manojo', 'En espiga', 'En cabezuela', 'Otro'] } },
+        { name: 'flor_olor', title: 'Olor de la flor', type: 'string', options: { list: ['Sin olor', 'Aromático', 'Dulce', 'Desagradable', 'Otro'] } },
+        { name: 'fruto_presencia', title: 'Presencia Frutos', type: 'string', options: { list: ['Con frutos', 'Sin frutos visibles'] } },
+        { name: 'fruto_textura', title: 'Textura fruto', type: 'string', options: { list: ['Carnoso', 'Seco'] } },
+        { name: 'fruto_estado_madurar', title: 'Estado al madurar', type: 'string', options: { list: ['Entero', 'Se abre (partido)'] } },
+        { name: 'fruto_forma', title: 'Forma fruto', type: 'string', options: { list: ['Redondo', 'Ovalado', 'Alargado', 'Aplanado', 'Curvo', 'Irregular', 'Otro'] } },
+        { name: 'fruto_tamano_largo', title: 'Largo fruto (cm)', type: 'number' },
+        { name: 'fruto_tamano_ancho', title: 'Ancho fruto (cm)', type: 'number' },
+        { name: 'fruto_color', title: 'Color fruto maduro', type: 'string', options: { list: ['Verde', 'Amarillo', 'Rojo', 'Anaranjado', 'Morado', 'Negro', 'Marrón', 'Crema', 'Otro'] } },
+        { name: 'fruto_superficie', title: 'Superficie del fruto', type: 'string', options: { list: ['Lisa', 'Brillante', 'Opaca', 'Rugosa', 'Con estrías', 'Con surcos', 'Escamosa', 'Fibrosa', 'Espinosa', 'Aguijonosa', 'Verrugosa', 'Con costillas', 'Otro'] } },
+        { name: 'semilla_presencia', title: 'Presencia semillas visible', type: 'string', options: { list: ['Sí', 'No'] } },
+        { name: 'semilla_numero', title: 'Número de semillas', type: 'number' },
+        { name: 'semilla_tamano_largo', title: 'Largo semilla (cm)', type: 'number' },
+        { name: 'semilla_tamano_ancho', title: 'Ancho semilla (cm)', type: 'number' },
+        { name: 'semilla_color', title: 'Color cáscara semilla', type: 'string', options: { list: ['Blanco', 'Crema', 'Marrón', 'Negro', 'Rojizo', 'Otro'] } },
+      ]
+    },
+
+    // ESTADO DEL INDIVIDUO Y FENOLÓGICO
+    {
+      name: 'estado_fenologico',
+      title: 'Estado fenológico',
+      type: 'array',
+      fieldset: 'impacto',
+      of: [{ type: 'string' }],
+      options: {
+        list: [
+          { title: 'Vegetativo (solo hojas)', value: 'Vegetativo (solo hojas)' },
+          { title: 'Con flores', value: 'Con flores' },
+          { title: 'Con frutos', value: 'Con frutos' },
+          { title: 'Sin hojas', value: 'Sin hojas' },
+          { title: 'Secándose', value: 'Secándose' },
+        ]
+      }
+    },
+    {
+      name: 'estado_individuo',
+      title: 'Estado del individuo',
+      type: 'array',
+      fieldset: 'impacto',
+      of: [{ type: 'string' }],
+      options: {
+        list: [
+          { title: 'Bueno', value: 'Bueno' },
+          { title: 'Regular', value: 'Regular' },
+          { title: 'Malo', value: 'Malo' },
+          { title: 'Podado', value: 'Podado' },
+          { title: 'Enfermo', value: 'Enfermo' },
+          { title: 'Con plagas', value: 'Con plagas' },
+          { title: 'Daño mecánico', value: 'Daño mecánico' },
+        ]
+      }
+    },
+
+    // VALOR E IMPACTO (Bloque final obligatorio)
+    {
+      name: 'valor_ornamental',
+      title: 'Valor ornamental',
+      type: 'array',
+      fieldset: 'impacto',
+      of: [{ type: 'string' }],
+      options: {
+        list: [
+          { title: 'Da sombra', value: 'Da sombra' },
+          { title: 'Flores vistosas', value: 'Flores vistosas' },
+          { title: 'Frutos vistosos', value: 'Frutos vistosos' },
+          { title: 'Hojas vistosas', value: 'Hojas vistosas' },
+          { title: 'Copa atractiva', value: 'Copa atractiva' },
+          { title: 'Atrae fauna', value: 'Atrae fauna' },
+          { title: 'Valor cultural', value: 'Valor cultural' },
+          { title: 'Valor alimenticio', value: 'Valor alimenticio' },
+          { title: 'Valor medicinal', value: 'Valor medicinal' },
+          { title: 'Mejora microclima', value: 'Mejora microclima' },
+          { title: 'Otro', value: 'Otro' },
+        ]
+      }
+    },
+    {
+      name: 'impacto_urbano',
+      title: 'Impacto urbano',
+      type: 'array',
+      fieldset: 'impacto',
+      of: [{ type: 'string' }],
+      options: {
+        list: [
+          { title: 'No genera daño', value: 'No genera daño' },
+          { title: 'Frutos ensucian', value: 'Frutos ensucian' },
+          { title: 'Obstruye desagüe', value: 'Obstruye desagüe' },
+          { title: 'Raíces rompen piso', value: 'Raíces rompen piso' },
+          { title: 'Levanta pavimento', value: 'Levanta pavimento' },
+          { title: 'Interfiere cableado', value: 'Interfiere cableado' },
+          { title: 'Riesgo caída', value: 'Riesgo caída' },
+          { title: 'Tronco inclinado', value: 'Tronco inclinado' },
+          { title: 'Otro', value: 'Otro' },
+        ]
+      }
+    },
+
+    // 7. FOTOGRAFÍAS
+    {
+      name: 'galeria',
+      title: 'Galería Fotográfica (Mínimo 5)',
+      type: 'array',
+      fieldset: 'fotografias',
+      of: [{ type: 'image' }],
+      description: 'Planta completa, Hoja, Flor, Fruto, Semilla'
+    },
   ]
 }

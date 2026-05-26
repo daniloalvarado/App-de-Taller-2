@@ -1,6 +1,6 @@
-import {visionTool} from '@sanity/vision'
 import {defineConfig} from 'sanity'
 import {structureTool} from 'sanity/structure'
+import {esESLocale} from '@sanity/locale-es-es'
 import {schemaTypes} from './schemaTypes'
 
 export default defineConfig({
@@ -10,7 +10,7 @@ export default defineConfig({
   projectId: '9m09a5ng',
   dataset: 'production',
 
-  plugins: [structureTool(), visionTool()],
+  plugins: [structureTool(), esESLocale()],
 
   schema: {
     types: schemaTypes,

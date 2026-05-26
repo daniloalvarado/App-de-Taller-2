@@ -79,7 +79,7 @@ export default function PlantDetailScreen() {
   }
 
   const title = planta?.nombres_comunes || planta?.nombre_cientifico || id || "Planta Desconocida";
-  const descripcion = planta?.descripcion || "Esta planta se encuentra en evaluación. No se ha ingresado una descripción morfológica detallada en la base de datos administrada por Sanity.";
+  const nombreCientifico = planta?.nombre_cientifico === "Planta no identificada" ? "" : planta?.nombre_cientifico;
   const imageUrl = planta?.galeria?.[0] ? urlFor(planta.galeria[0]).width(800).url() : null;
   const habito = planta?.habito || "Plantas Múltiples";
   const familia = planta?.familia || "Flora Amazónica";
@@ -175,37 +175,66 @@ export default function PlantDetailScreen() {
           </View>
 
           {/* Ficha Morfológica */}
-          <Text style={[styles.sectionTitle, { color: theme.text, marginTop: 24 }]}>Ficha Técnica</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text, marginTop: 24 }]}>Ficha Técnica General</Text>
           <View style={{ gap: 16, marginTop: 12, marginBottom: 24 }}>
             <MorphInfo icon="file-tree" label="Familia Botánica" value={familia} />
-            <MorphInfo icon="map-marker-outline" label="Origen" value={planta?.origen} />
+            <MorphInfo icon="map-marker-outline" label="Dirección/Referencia" value={planta?.direccion} />
             <MorphInfo icon="sprout" label="Hábito de Crecimiento" value={habito} />
-            <MorphInfo icon="clipboard-text-outline" label="Caracteres Diagnósticos" value={planta?.caracteres_diagnosticos} />
-            <MorphInfo icon="flower" label="Tipo de Flor" value={planta?.tipo_flor} />
-            <MorphInfo icon="palette-outline" label="Color de Flor principal" value={planta?.color_flor} />
-            <MorphInfo icon="fruit-cherries" label="Tipo de Fruto" value={planta?.tipo_fruto} />
-            <MorphInfo icon="flower-tulip-outline" label="Tipo de Inflorescencia" value={planta?.tipo_inflorescencia} />
-            <MorphInfo icon="seed-outline" label="Tipo de Semilla" value={planta?.tipo_semilla} />
-            <MorphInfo icon="fruit-grapes-outline" label="Tipo de Infrutescencia" value={planta?.tipo_infrutescencia} />
-            <MorphInfo icon="water-outline" label="Tipo y Color de Exudado" value={planta?.exudado} />
-            <MorphInfo icon="star-outline" label="Valor Ornamental" value={planta?.valor_ornamental} />
+            <MorphInfo icon="flower" label="Presencia de Flores" value={planta?.reproductivo?.flor_presencia} />
+            <MorphInfo icon="palette-outline" label="Color de Flor" value={planta?.reproductivo?.flor_color} />
+            <MorphInfo icon="flower-tulip-outline" label="Agrupación Floral" value={planta?.reproductivo?.flor_agrupacion} />
+            <MorphInfo icon="fruit-cherries" label="Presencia de Frutos" value={planta?.reproductivo?.fruto_presencia} />
+            <MorphInfo icon="fruit-grapes-outline" label="Textura del Fruto" value={planta?.reproductivo?.fruto_textura} />
+            <MorphInfo icon="shape-outline" label="Forma del Fruto" value={planta?.reproductivo?.fruto_forma} />
+            <MorphInfo icon="seed-outline" label="Semillas" value={planta?.reproductivo?.semilla_presencia} />
           </View>
 
-          {/* Description */}
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>Descripción Morfológica Básica</Text>
-          <Text style={[styles.description, { color: theme.icon, textAlign: "justify" }]}>
-            {descripcion}
-          </Text>
-
-          {/* Usos Urbanos */}
-          {planta?.usos_urbanos && (
+          {/* Bloques Específicos */}
+          {planta?.arbol_datos && (
             <>
-              <Text style={[styles.sectionTitle, { color: theme.text, marginTop: 24 }]}>Usos Urbanos</Text>
-              <Text style={[styles.description, { color: theme.icon }]}>
-                {planta.usos_urbanos}
-              </Text>
+              <Text style={[styles.sectionTitle, { color: theme.text }]}>Datos del Árbol</Text>
+              <View style={{ gap: 16, marginTop: 12, marginBottom: 24 }}>
+                <MorphInfo icon="ruler" label="Altura Total (m)" value={planta.arbol_datos.altura_total?.toString()} />
+                <MorphInfo icon="diameter-outline" label="CAP (cm)" value={planta.arbol_datos.cap?.toString()} />
+                <MorphInfo icon="tree-outline" label="Forma de Copa" value={planta.arbol_datos.forma_copa} />
+                <MorphInfo icon="texture" label="Corteza Externa" value={planta.arbol_datos.corteza_externa} />
+                <MorphInfo icon="water-outline" label="Exudado (Tipo)" value={planta.arbol_datos.exudado_tipo} />
+                <MorphInfo icon="leaf" label="Tipo de Hoja" value={planta.arbol_datos.tipo_hoja} />
+              </View>
             </>
           )}
+
+          {planta?.palmera_datos && (
+            <>
+              <Text style={[styles.sectionTitle, { color: theme.text }]}>Datos de la Palmera</Text>
+              <View style={{ gap: 16, marginTop: 12, marginBottom: 24 }}>
+                <MorphInfo icon="ruler" label="Altura Total (m)" value={planta.palmera_datos.altura_total?.toString()} />
+                <MorphInfo icon="texture" label="Estípite (Tallo)" value={planta.palmera_datos.tallo?.join(", ")} />
+                <MorphInfo icon="leaf" label="Tipo de Hoja" value={planta.palmera_datos.tipo_hoja} />
+                <MorphInfo icon="pine-tree" label="Tipo de Palmera" value={planta.palmera_datos.tipo_palmera} />
+              </View>
+            </>
+          )}
+
+          {planta?.arbusto_datos && (
+            <>
+              <Text style={[styles.sectionTitle, { color: theme.text }]}>Datos del Arbusto</Text>
+              <View style={{ gap: 16, marginTop: 12, marginBottom: 24 }}>
+                <MorphInfo icon="ruler" label="Altura Total (m)" value={planta.arbusto_datos.altura_total?.toString()} />
+                <MorphInfo icon="shape-outline" label="Forma General" value={planta.arbusto_datos.forma_general} />
+                <MorphInfo icon="leaf" label="Tipo de Hoja" value={planta.arbusto_datos.tipo_hoja} />
+              </View>
+            </>
+          )}
+
+          {/* Valor e Impacto */}
+          <Text style={[styles.sectionTitle, { color: theme.text, marginTop: 24 }]}>Impacto Urbano y Valor</Text>
+          <Text style={[styles.description, { color: theme.icon, lineHeight: 26 }]}>
+            <Text style={{ fontWeight: "bold", color: theme.text }}>Valor Ornamental:</Text> {planta?.valor_ornamental?.join(", ") || "No registrado"}{"\n"}
+            <Text style={{ fontWeight: "bold", color: theme.text }}>Impacto Urbano:</Text> {planta?.impacto_urbano?.join(", ") || "No genera daño o no registrado"}{"\n"}
+            <Text style={{ fontWeight: "bold", color: theme.text }}>Estado del individuo:</Text> {planta?.estado_individuo?.join(", ") || "No registrado"}{"\n"}
+            <Text style={{ fontWeight: "bold", color: theme.text }}>Estado Fenológico:</Text> {planta?.estado_fenologico?.join(", ") || "No registrado"}
+          </Text>
 
         </View>
       </ScrollView>

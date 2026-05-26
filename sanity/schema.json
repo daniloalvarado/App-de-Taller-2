@@ -1,0 +1,2596 @@
+[
+  {
+    "name": "filtro",
+    "type": "document",
+    "attributes": {
+      "_id": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_type": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string",
+          "value": "filtro"
+        }
+      },
+      "_createdAt": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_updatedAt": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_rev": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "nombre_filtro": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "categoria": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "Hábito"
+            },
+            {
+              "type": "string",
+              "value": "Tipo de vida"
+            },
+            {
+              "type": "string",
+              "value": "Forma"
+            },
+            {
+              "type": "string",
+              "value": "Color"
+            },
+            {
+              "type": "string",
+              "value": "Tamaño"
+            },
+            {
+              "type": "string",
+              "value": "Textura"
+            },
+            {
+              "type": "string",
+              "value": "Estructura"
+            }
+          ]
+        },
+        "optional": true
+      },
+      "dato_tecnico": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "icono": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "activo": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      }
+    }
+  },
+  {
+    "name": "planta",
+    "type": "document",
+    "attributes": {
+      "_id": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_type": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string",
+          "value": "planta"
+        }
+      },
+      "_createdAt": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_updatedAt": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_rev": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "estado_revision": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "En revisión"
+            },
+            {
+              "type": "string",
+              "value": "Validado"
+            },
+            {
+              "type": "string",
+              "value": "Observado"
+            },
+            {
+              "type": "string",
+              "value": "Rechazado"
+            }
+          ]
+        },
+        "optional": true
+      },
+      "autor": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "validador": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "fecha_registro": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "registrador_nombre": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "registrador_dni": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "registrador_email": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "registrador_curso": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "registrador_facultad": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "registrador_escuela": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "registrador_dia_clase": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "latitud": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "number"
+        },
+        "optional": true
+      },
+      "longitud": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "number"
+        },
+        "optional": true
+      },
+      "direccion": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "tipo_ubicacion_1": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "Jirón"
+            },
+            {
+              "type": "string",
+              "value": "Avenida"
+            },
+            {
+              "type": "string",
+              "value": "Calle"
+            },
+            {
+              "type": "string",
+              "value": "Pasaje"
+            },
+            {
+              "type": "string",
+              "value": "Parque"
+            }
+          ]
+        },
+        "optional": true
+      },
+      "tipo_ubicacion_2": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "Vereda"
+            },
+            {
+              "type": "string",
+              "value": "Berma central"
+            }
+          ]
+        },
+        "optional": true
+      },
+      "numero_casa": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ubicacion_planta": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "Tierra"
+            },
+            {
+              "type": "string",
+              "value": "Macetero"
+            }
+          ]
+        },
+        "optional": true
+      },
+      "nombre_cientifico": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "nombres_comunes": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "familia": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "numero_planta": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "habito": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "Árbol"
+            },
+            {
+              "type": "string",
+              "value": "Palmera"
+            },
+            {
+              "type": "string",
+              "value": "Arbusto"
+            },
+            {
+              "type": "string",
+              "value": "Liana"
+            },
+            {
+              "type": "string",
+              "value": "Hierba"
+            }
+          ]
+        },
+        "optional": true
+      },
+      "tipo_vida": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "Terrestre"
+            },
+            {
+              "type": "string",
+              "value": "Epífita"
+            },
+            {
+              "type": "string",
+              "value": "Parásita"
+            }
+          ]
+        },
+        "optional": true
+      },
+      "arbol_datos": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "object",
+          "attributes": {
+            "altura_total": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "number"
+              },
+              "optional": true
+            },
+            "cap": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "number"
+              },
+              "optional": true
+            },
+            "diametro_copa_paralelo": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "number"
+              },
+              "optional": true
+            },
+            "diametro_copa_perpendicular": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "number"
+              },
+              "optional": true
+            },
+            "altura_inicio_copa": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "number"
+              },
+              "optional": true
+            },
+            "raices_visibles": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Sin raíces visibles"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Raíces tablares"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Raíces zancudas"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Raíces superficiales"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Raíces adventicias"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Otro"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "numero_troncos": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "number"
+              },
+              "optional": true
+            },
+            "forma_tronco": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Recto"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Inclinado (izq/der/calle/casa)"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Torcido"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Otro"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "corteza_externa": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Lisa"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Rugosa"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Áspera"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Agrietada"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Estriada"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Escamosa"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Con placas"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Laminar"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Otro"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "lenticelas": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Con lenticelas"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Sin lenticelas"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "color_corteza": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "array",
+                "of": {
+                  "type": "string"
+                }
+              },
+              "optional": true
+            },
+            "olor_corteza": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Sin olor"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Aromático"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Cítrico"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Resinoso"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Desagradable"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Otro"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "espinas_tronco": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Con espinas"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Sin espinas"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "exudado_presencia": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Sí"
+                  },
+                  {
+                    "type": "string",
+                    "value": "No"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "exudado_tipo": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Savia"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Látex"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Resina"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Goma"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "exudado_color": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Incoloro"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Blanco"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Amarillo"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Rojizo"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Marrón"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Otro"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "tipo_ramificacion": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Hacia arriba"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Hélice"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Colgantes"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Irregulares"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Otro"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "forma_copa": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Redondeada"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Alargada"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Extendida"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Tipo paraguas"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Irregular"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Otro"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "densidad_copa": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Densa"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Media"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Rala"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "tipo_hoja": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Simple"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Compuesta"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "disposicion_hoja": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "array",
+                "of": {
+                  "type": "string"
+                }
+              },
+              "optional": true
+            },
+            "forma_hoja": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Ovalada"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Alargada"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Redonda"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Acorazonada"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Palmada"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Otro"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "borde_hoja": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Entero"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Dentado"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Ondulado"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Otro"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "textura_hoja": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Papirácea"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Cartácea"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Coriácea"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "color_enves": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Verde claro"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Verde oscuro"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Grisáceo"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Marrón"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Blanquecino"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Otro"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "pelos_hoja": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "array",
+                "of": {
+                  "type": "string"
+                }
+              },
+              "optional": true
+            },
+            "tipo_peciolo": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Circular"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Plano"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Sésil"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "longitud_peciolo": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "number"
+              },
+              "optional": true
+            },
+            "diametro_peciolo": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "number"
+              },
+              "optional": true
+            },
+            "peciolo_pulvino": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Sí"
+                  },
+                  {
+                    "type": "string",
+                    "value": "No"
+                  }
+                ]
+              },
+              "optional": true
+            }
+          }
+        },
+        "optional": true
+      },
+      "palmera_datos": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "object",
+          "attributes": {
+            "altura_total": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "number"
+              },
+              "optional": true
+            },
+            "cap": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "number"
+              },
+              "optional": true
+            },
+            "numero_tallos": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Un solo tallo"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Varios tallos"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Otro"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "raices_visibles": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Sin raíces"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Superficiales"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Zancudas"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Soporte"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Adventicias"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Otro"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "tipo_palmera": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Arborescente"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Arbustiva"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Lianescente"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Sin tallo visible"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Otro"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "tallo": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "array",
+                "of": {
+                  "type": "string"
+                }
+              },
+              "optional": true
+            },
+            "tipo_hoja": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Pluma (pinnada)"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Abanico (palmada)"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Simple entera"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Simple bífida"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Otro"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "segmentos": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "array",
+                "of": {
+                  "type": "string"
+                }
+              },
+              "optional": true
+            },
+            "espinas_palmera": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "array",
+                "of": {
+                  "type": "string"
+                }
+              },
+              "optional": true
+            }
+          }
+        },
+        "optional": true
+      },
+      "arbusto_datos": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "object",
+          "attributes": {
+            "altura_total": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "number"
+              },
+              "optional": true
+            },
+            "numero_tallos": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Un tallo principal"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Varios tallos"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Otro"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "forma_general": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Redondeado"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Compacto"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Extendido"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Irregular"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Colgante"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Otro"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "densidad_follaje": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Denso"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Medio"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Ralo"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "tipo_ramificacion": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Erecta"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Abierta"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Colgante"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Irregular"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Otro"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "tipo_tallo": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Leñoso"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Semileñoso"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Flexible"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Otro"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "tipo_hoja": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Simple"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Compuesta"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Otro"
+                  }
+                ]
+              },
+              "optional": true
+            }
+          }
+        },
+        "optional": true
+      },
+      "liana_datos": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "object",
+          "attributes": {
+            "longitud_visible": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "number"
+              },
+              "optional": true
+            },
+            "tipo_soporte": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Árbol"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Arbusto"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Cerca"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Suelo"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Múltiples"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Otro"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "forma_crecimiento": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Trepadora"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Enredadera"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Colgante"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Rastrera"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Escandente"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Otro"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "mecanismo_fijacion": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "array",
+                "of": {
+                  "type": "string"
+                }
+              },
+              "optional": true
+            }
+          }
+        },
+        "optional": true
+      },
+      "hierba_datos": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "object",
+          "attributes": {
+            "altura_total": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "number"
+              },
+              "optional": true
+            },
+            "cobertura": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "number"
+              },
+              "optional": true
+            },
+            "numero_tallos": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Uno"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Varios"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Muchos"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Sin tallo visible"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Otro"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "tipo_crecimiento": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Erecta"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Rastrera"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Colgante"
+                  },
+                  {
+                    "type": "string",
+                    "value": "En roseta"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Formando mata"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Otro"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "tipo_tallo": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Herbáceo"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Carnoso"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Hueco"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Rastrero"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Trepador"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Sin tallo"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Otro"
+                  }
+                ]
+              },
+              "optional": true
+            }
+          }
+        },
+        "optional": true
+      },
+      "reproductivo": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "object",
+          "attributes": {
+            "flor_presencia": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Con flores"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Sin flores visibles"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "flor_color": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Blanco"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Amarillo"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Rojo"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Rosado"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Morado"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Anaranjado"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Verde"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Crema"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Otro"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "flor_tamano": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "number"
+              },
+              "optional": true
+            },
+            "flor_agrupacion": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Solitaria"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Racimo"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Manojo"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Espiga"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Cabezuela"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Otro"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "fruto_presencia": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Con frutos"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Sin frutos visibles"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "fruto_textura": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Carnoso"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Seco"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Otro"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "fruto_forma": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Redondo"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Ovalado"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Alargado"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Aplanado"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Irregular"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Otro"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "fruto_color": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Verde"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Amarillo"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Rojo"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Morado"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Negro"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Marrón"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Crema"
+                  },
+                  {
+                    "type": "string",
+                    "value": "Otro"
+                  }
+                ]
+              },
+              "optional": true
+            },
+            "semilla_presencia": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "union",
+                "of": [
+                  {
+                    "type": "string",
+                    "value": "Sí"
+                  },
+                  {
+                    "type": "string",
+                    "value": "No"
+                  }
+                ]
+              },
+              "optional": true
+            }
+          }
+        },
+        "optional": true
+      },
+      "estado_fenologico": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "string"
+          }
+        },
+        "optional": true
+      },
+      "estado_individuo": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "string"
+          }
+        },
+        "optional": true
+      },
+      "valor_ornamental": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "string"
+          }
+        },
+        "optional": true
+      },
+      "impacto_urbano": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "string"
+          }
+        },
+        "optional": true
+      },
+      "galeria": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "object",
+            "attributes": {
+              "asset": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "object",
+                  "attributes": {
+                    "_ref": {
+                      "type": "objectAttribute",
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "_type": {
+                      "type": "objectAttribute",
+                      "value": {
+                        "type": "string",
+                        "value": "reference"
+                      }
+                    },
+                    "_weak": {
+                      "type": "objectAttribute",
+                      "value": {
+                        "type": "boolean"
+                      },
+                      "optional": true
+                    }
+                  },
+                  "dereferencesTo": "sanity.imageAsset"
+                },
+                "optional": true
+              },
+              "media": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "unknown"
+                },
+                "optional": true
+              },
+              "hotspot": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "inline",
+                  "name": "sanity.imageHotspot"
+                },
+                "optional": true
+              },
+              "crop": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "inline",
+                  "name": "sanity.imageCrop"
+                },
+                "optional": true
+              },
+              "_type": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string",
+                  "value": "image"
+                }
+              }
+            },
+            "rest": {
+              "type": "object",
+              "attributes": {
+                "_key": {
+                  "type": "objectAttribute",
+                  "value": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "optional": true
+      }
+    }
+  },
+  {
+    "name": "sanity.imageCrop",
+    "type": "type",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "sanity.imageCrop"
+          }
+        },
+        "top": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "bottom": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "left": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "right": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "name": "sanity.imageHotspot",
+    "type": "type",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "sanity.imageHotspot"
+          }
+        },
+        "x": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "y": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "height": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "width": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "name": "sanity.imagePaletteSwatch",
+    "type": "type",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "sanity.imagePaletteSwatch"
+          }
+        },
+        "background": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "foreground": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "population": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "title": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "name": "sanity.imagePalette",
+    "type": "type",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "sanity.imagePalette"
+          }
+        },
+        "darkMuted": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "sanity.imagePaletteSwatch"
+          },
+          "optional": true
+        },
+        "lightVibrant": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "sanity.imagePaletteSwatch"
+          },
+          "optional": true
+        },
+        "darkVibrant": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "sanity.imagePaletteSwatch"
+          },
+          "optional": true
+        },
+        "vibrant": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "sanity.imagePaletteSwatch"
+          },
+          "optional": true
+        },
+        "dominant": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "sanity.imagePaletteSwatch"
+          },
+          "optional": true
+        },
+        "lightMuted": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "sanity.imagePaletteSwatch"
+          },
+          "optional": true
+        },
+        "muted": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "sanity.imagePaletteSwatch"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "name": "sanity.imageDimensions",
+    "type": "type",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "sanity.imageDimensions"
+          }
+        },
+        "height": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "width": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "aspectRatio": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "name": "sanity.imageMetadata",
+    "type": "type",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "sanity.imageMetadata"
+          }
+        },
+        "location": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "geopoint"
+          },
+          "optional": true
+        },
+        "dimensions": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "sanity.imageDimensions"
+          },
+          "optional": true
+        },
+        "palette": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "sanity.imagePalette"
+          },
+          "optional": true
+        },
+        "lqip": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "blurHash": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "hasAlpha": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "boolean"
+          },
+          "optional": true
+        },
+        "isOpaque": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "boolean"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "name": "sanity.fileAsset",
+    "type": "document",
+    "attributes": {
+      "_id": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_type": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string",
+          "value": "sanity.fileAsset"
+        }
+      },
+      "_createdAt": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_updatedAt": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_rev": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "originalFilename": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "label": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "title": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "description": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "altText": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "sha1hash": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "extension": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "mimeType": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "size": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "number"
+        },
+        "optional": true
+      },
+      "assetId": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "uploadId": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "path": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "url": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "source": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "sanity.assetSourceData"
+        },
+        "optional": true
+      }
+    }
+  },
+  {
+    "name": "sanity.assetSourceData",
+    "type": "type",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "sanity.assetSourceData"
+          }
+        },
+        "name": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "id": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "url": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "name": "sanity.imageAsset",
+    "type": "document",
+    "attributes": {
+      "_id": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_type": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string",
+          "value": "sanity.imageAsset"
+        }
+      },
+      "_createdAt": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_updatedAt": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_rev": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "originalFilename": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "label": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "title": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "description": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "altText": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "sha1hash": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "extension": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "mimeType": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "size": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "number"
+        },
+        "optional": true
+      },
+      "assetId": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "uploadId": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "path": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "url": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "metadata": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "sanity.imageMetadata"
+        },
+        "optional": true
+      },
+      "source": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "sanity.assetSourceData"
+        },
+        "optional": true
+      }
+    }
+  },
+  {
+    "name": "geopoint",
+    "type": "type",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "geopoint"
+          }
+        },
+        "lat": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "lng": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "alt": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "name": "slug",
+    "type": "type",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "slug"
+          }
+        },
+        "current": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "source": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    }
+  }
+]

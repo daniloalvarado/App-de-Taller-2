@@ -39,6 +39,26 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
+        name="mapa"
+        options={{
+          title: "Mapa",
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons size={28} name="map-marker-radius" color={color} />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="registro"
+        options={{
+          title: "Registro",
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons size={28} name="plus-circle" color={color} />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
         name="profile"
         options={{
           title: "Perfil",

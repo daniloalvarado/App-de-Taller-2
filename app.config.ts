@@ -39,6 +39,19 @@ export default {
           backgroundColor: "#ffffff",
         },
       ],
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "PLANT-OR necesita acceder a tu cámara para capturar las fotos obligatorias de la planta.",
+          "photosPermission": "PLANT-OR necesita acceder a tu galería para subir fotos de plantas."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "PLANT-OR necesita tu ubicación GPS para mapear exactamente dónde está la planta."
+        }
+      ]
     ],
     experiments: {
       typedRoutes: true,
