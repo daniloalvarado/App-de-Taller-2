@@ -36,7 +36,7 @@ function App() {
           <div className="flex min-h-screen bg-background">
             <Sidebar />
             <main className="flex-1 overflow-y-auto">
-              <div className="p-6 md:p-8 max-w-7xl mx-auto">
+              <div className="p-6 pt-20 md:p-8 md:pt-8 max-w-7xl mx-auto">
                 <Routes>
                   <Route path="/" element={<DashboardPage />} />
                   <Route path="/validaciones" element={<ValidacionesPage key="pendientes" filtroEstado="En revisión" />} />
