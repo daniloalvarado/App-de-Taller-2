@@ -9,9 +9,10 @@ import { useClerk, useUser } from '@clerk/clerk-react'
 
 const navItems = [
   { href: '/', icon: LayoutDashboard, label: 'Dashboard' },
+  { href: '/catalogo', icon: Leaf, label: 'Catálogo' },
   { href: '/validaciones', icon: ClipboardList, label: 'Pendientes' },
   { href: '/aprobados', icon: CheckCircle, label: 'Aprobados' },
-  { href: '/catalogo', icon: Leaf, label: 'Catálogo' },
+  { href: '/mapa', icon: Map, label: 'Mapa' },
 ]
 
 export function Sidebar() {

@@ -5,6 +5,7 @@ import { Sidebar } from '@/components/Sidebar'
 import DashboardPage from '@/pages/DashboardPage'
 import ValidacionesPage from '@/pages/ValidacionesPage'
 import PlantaDetailPage from '@/pages/PlantaDetailPage'
+import MapaPage from '@/pages/MapaPage'
 import '@/index.css'
 
 const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
@@ -41,6 +42,7 @@ function App() {
                   <Route path="/validaciones" element={<ValidacionesPage key="pendientes" filtroEstado="En revisión" />} />
                   <Route path="/aprobados" element={<ValidacionesPage key="aprobados" filtroEstado="Validado" />} />
                   <Route path="/catalogo" element={<ValidacionesPage key="catalogo" />} />
+                  <Route path="/mapa" element={<MapaPage />} />
                   <Route path="/planta/:id" element={<PlantaDetailPage />} />
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
