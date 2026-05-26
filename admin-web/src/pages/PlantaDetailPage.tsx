@@ -276,25 +276,25 @@ export default function PlantaDetailPage() {
 
       {/* Observar Modal */}
       {observarOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#08130D]/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-          <div className="bg-[#12221A] border border-[#1FC451]/30 rounded-2xl p-6 w-full max-w-md space-y-4 shadow-2xl">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="bg-[#0A0A0A] border border-zinc-800 rounded-2xl p-6 w-full max-w-md space-y-4 shadow-2xl">
             <div>
               <h3 className="text-xl font-bold text-[#1FC451]">Observar Registro</h3>
-              <p className="text-sm text-muted-foreground mt-1">El estudiante verá este mensaje en su aplicación móvil para poder corregirlo.</p>
+              <p className="text-sm text-zinc-400 mt-1">El estudiante verá este mensaje en su aplicación móvil para poder corregirlo.</p>
             </div>
             <textarea
               value={motivoTexto}
               onChange={e => setMotivoTexto(e.target.value)}
               placeholder="Describe lo que falta o debe corregirse (ej. 'La foto de la hoja está borrosa')..."
               rows={4}
-              className="w-full px-4 py-3 bg-[#08130D] border border-orange-500/30 rounded-xl text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-orange-500 resize-none"
+              className="w-full px-4 py-3 bg-black border border-zinc-800 rounded-xl text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-[#1FC451] focus:ring-1 focus:ring-[#1FC451] resize-none transition-all"
             />
             <div className="flex gap-3 justify-end pt-2">
-              <button onClick={() => setObservarOpen(false)} className="px-4 py-2 text-sm text-muted-foreground hover:text-white transition-colors">Cancelar</button>
+              <button onClick={() => setObservarOpen(false)} className="px-4 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors">Cancelar</button>
               <button
                 onClick={() => handleAction('Observado', motivoTexto)}
                 disabled={!motivoTexto.trim() || actionLoading}
-                className="px-5 py-2 text-sm bg-orange-500/10 text-orange-400 font-medium rounded-lg hover:bg-orange-500/20 border border-orange-500/20 transition-all disabled:opacity-50"
+                className="px-5 py-2 text-sm bg-[#1FC451] text-black font-bold rounded-lg hover:bg-[#1FC451]/90 shadow-[0_0_15px_rgba(31,196,81,0.3)] transition-all disabled:opacity-50"
               >
                 {actionLoading ? 'Enviando...' : 'Enviar Observación'}
               </button>
@@ -305,23 +305,23 @@ export default function PlantaDetailPage() {
 
       {/* Rechazar Modal */}
       {rechazarOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#08130D]/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-          <div className="bg-[#12221A] border border-destructive/30 rounded-2xl p-6 w-full max-w-sm space-y-4 shadow-2xl text-center">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="bg-[#0A0A0A] border border-zinc-800 rounded-2xl p-6 w-full max-w-sm space-y-4 shadow-2xl text-center">
             <div className="mx-auto w-12 h-12 bg-destructive/10 rounded-full flex items-center justify-center mb-4">
               <XCircle className="w-6 h-6 text-destructive" />
             </div>
-            <h3 className="text-xl font-bold text-foreground">¿Rechazar Registro?</h3>
-            <p className="text-sm text-muted-foreground">
+            <h3 className="text-xl font-bold text-white">¿Rechazar Registro?</h3>
+            <p className="text-sm text-zinc-400">
               Esta acción marcará la planta como rechazada. No se borrará de la base de datos, pero el estudiante sabrá que fue invalidada.
             </p>
             <div className="flex gap-3 justify-center pt-4">
-              <button onClick={() => setRechazarOpen(false)} className="px-4 py-2 text-sm text-muted-foreground hover:text-white transition-colors">
+              <button onClick={() => setRechazarOpen(false)} className="px-4 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors">
                 Cancelar
               </button>
               <button
                 onClick={() => handleAction('Rechazado')}
                 disabled={actionLoading}
-                className="px-5 py-2 text-sm bg-destructive/10 text-destructive font-medium rounded-lg hover:bg-destructive/20 border border-destructive/20 transition-all disabled:opacity-50"
+                className="px-5 py-2 text-sm bg-destructive text-white font-bold rounded-lg hover:bg-destructive/90 transition-all disabled:opacity-50"
               >
                 {actionLoading ? 'Rechazando...' : 'Sí, Rechazar'}
               </button>
