@@ -12,7 +12,6 @@ const navItems = [
   { href: '/validaciones', icon: ClipboardList, label: 'Pendientes' },
   { href: '/aprobados', icon: CheckCircle, label: 'Aprobados' },
   { href: '/catalogo', icon: Leaf, label: 'Catálogo' },
-  { href: '/mapa', icon: Map, label: 'Mapa' },
 ]
 
 export function Sidebar() {
@@ -30,11 +29,17 @@ export function Sidebar() {
           <Leaf className="w-5 h-5 text-primary-foreground" />
         </div>
         {!collapsed && (
-          <div>
+          <div className="flex-1 min-w-0">
             <p className="text-sm font-bold text-foreground">PLANT-OR</p>
             <p className="text-xs text-muted-foreground">Panel Admin</p>
           </div>
         )}
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          className="hidden md:flex ml-auto items-center justify-center p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-sidebar-accent transition-colors"
+        >
+          {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+        </button>
       </div>
 
       {/* Navigation */}
@@ -81,12 +86,6 @@ export function Sidebar() {
         >
           <LogOut className="w-4 h-4 flex-shrink-0" />
           {!collapsed && <span>Cerrar sesión</span>}
-        </button>
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="hidden md:flex items-center justify-center w-full py-1 text-muted-foreground hover:text-foreground transition-colors"
-        >
-          {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
         </button>
       </div>
     </div>

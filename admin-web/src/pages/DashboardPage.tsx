@@ -127,15 +127,15 @@ export default function DashboardPage() {
                     {i + 1}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm text-foreground truncate">{est.nombre}</p>
-                    <div className="flex items-center gap-1 mt-0.5">
-                      <div className="h-1.5 rounded-full bg-border flex-1">
-                        <div
-                          className="h-1.5 rounded-full bg-primary transition-all"
-                          style={{ width: `${(est.aprobados / 20) * 100}%` }}
-                        />
-                      </div>
-                      <span className="text-xs text-muted-foreground">{est.aprobados}/20</span>
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm font-medium text-foreground truncate">{est.nombre}</p>
+                      <span className="text-xs font-semibold text-muted-foreground ml-2">{est.aprobados}/20</span>
+                    </div>
+                    <div className="h-1.5 rounded-full bg-border w-full mt-1.5">
+                      <div
+                        className="h-1.5 rounded-full bg-primary transition-all"
+                        style={{ width: `${(est.aprobados / 20) * 100}%` }}
+                      />
                     </div>
                   </div>
                 </div>

@@ -38,9 +38,9 @@ function App() {
               <div className="p-6 md:p-8 max-w-7xl mx-auto">
                 <Routes>
                   <Route path="/" element={<DashboardPage />} />
-                  <Route path="/validaciones" element={<ValidacionesPage />} />
-                  <Route path="/aprobados" element={<ValidacionesPage filtroEstado="Validado" />} />
-                  <Route path="/catalogo" element={<ValidacionesPage />} />
+                  <Route path="/validaciones" element={<ValidacionesPage key="pendientes" filtroEstado="En revisión" />} />
+                  <Route path="/aprobados" element={<ValidacionesPage key="aprobados" filtroEstado="Validado" />} />
+                  <Route path="/catalogo" element={<ValidacionesPage key="catalogo" />} />
                   <Route path="/planta/:id" element={<PlantaDetailPage />} />
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
