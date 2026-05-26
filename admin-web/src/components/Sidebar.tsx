@@ -54,11 +54,11 @@ export function Sidebar() {
               to={item.href}
               onClick={() => setMobileOpen(false)}
               className={cn(
-                'relative group/nav flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all',
+                'relative group/nav flex items-center rounded-lg text-sm font-medium transition-all',
                 active
                   ? 'bg-primary/10 text-primary border border-primary/20'
                   : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-accent-foreground',
-                collapsed && 'justify-center'
+                collapsed ? 'justify-center w-10 h-10 mx-auto' : 'gap-3 px-3 py-2.5'
               )}
             >
               <item.icon className="w-4.5 h-4.5 flex-shrink-0" />
@@ -90,7 +90,10 @@ export function Sidebar() {
         )}
         <button
           onClick={() => setLogoutConfirmOpen(true)}
-          className="flex items-center gap-2 px-3 py-2 w-full rounded-lg text-sm text-red-500 hover:bg-red-500/10 transition-colors"
+          className={cn(
+            "flex items-center rounded-lg text-sm text-muted-foreground hover:bg-red-500/10 hover:text-red-500 transition-colors",
+            collapsed ? "justify-center w-10 h-10 mx-auto" : "gap-2 px-3 py-2 w-full"
+          )}
         >
           <LogOut className="w-4 h-4 flex-shrink-0" />
           {!collapsed && <span>Cerrar sesión</span>}

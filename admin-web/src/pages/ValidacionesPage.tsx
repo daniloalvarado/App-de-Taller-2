@@ -5,6 +5,7 @@ import { Leaf, Search, Eye, CheckCircle, AlertCircle, XCircle, ChevronDown, Chev
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { useNavigate } from 'react-router-dom'
+import { CustomSelect } from '@/components/CustomSelect'
 import type { Planta } from '@/types/planta'
 
 interface ValidacionesPageProps {
@@ -117,28 +118,26 @@ export default function ValidacionesPage({ filtroEstado }: ValidacionesPageProps
         </div>
 
         {showFilters && (
-          <div className="flex flex-wrap gap-3 pt-2">
-            <select
+          <div className="flex flex-wrap items-center gap-3 pt-2">
+            <CustomSelect
               value={filterEstado}
-              onChange={e => setFilterEstado(e.target.value)}
-              className="px-3 py-1.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
-            >
-              <option value="">Todos los estados</option>
-              <option value="En revisión">En revisión</option>
-              <option value="Validado">Validado</option>
-              <option value="Observado">Observado</option>
-              <option value="Rechazado">Rechazado</option>
-            </select>
-            <select
+              onChange={setFilterEstado}
+              options={[
+                { value: '', label: 'Todos los estados' },
+                { value: 'En revisión', label: 'En revisión' },
+                { value: 'Validado', label: 'Validado' },
+                { value: 'Observado', label: 'Observado' },
+                { value: 'Rechazado', label: 'Rechazado' }
+              ]}
+            />
+            <CustomSelect
               value={filterHabito}
-              onChange={e => setFilterHabito(e.target.value)}
-              className="px-3 py-1.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
-            >
-              <option value="">Todos los hábitos</option>
-              {habitosUnicos.map(h => (
-                <option key={h} value={h}>{h}</option>
-              ))}
-            </select>
+              onChange={setFilterHabito}
+              options={[
+                { value: '', label: 'Todos los hábitos' },
+                ...habitosUnicos.map(h => ({ value: h, label: h }))
+              ]}
+            />
             <button
               onClick={() => { setFilterEstado(''); setFilterHabito(''); setSearch('') }}
               className="px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
