@@ -42,3 +42,9 @@ app-example
 # generated native folders
 /ios
 /android
+
+# External projects (avoid embedded repo issues)
+TeamSync/
+
+# Admin web secrets
+admin-web/.env
