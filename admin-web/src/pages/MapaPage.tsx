@@ -4,6 +4,7 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 import { usePlantas } from '@/hooks/use-plantas'
 import { useNavigate } from 'react-router-dom'
 import { Leaf, MapPin, Filter } from 'lucide-react'
+import { LoadingSpinner } from '@/components/LoadingSpinner'
 import type { Planta } from '@/types/planta'
 
 const STATUS_COLORS: Record<string, string> = {
@@ -21,9 +22,9 @@ const DARK_RASTER_STYLE: maplibregl.StyleSpecification = {
     'carto-dark': {
       type: 'raster',
       tiles: [
-        'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
-        'https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
-        'https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
+        'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
+        'https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
+        'https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
       ],
       tileSize: 256,
       attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/">CARTO</a>',
@@ -115,33 +116,7 @@ export default function MapaPage() {
   }, [mapPlantas, activeFilter])
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-[calc(100vh-120px)]">
-        <div className="flex flex-col items-center gap-6">
-          {/* Wave loader */}
-          <div className="flex items-end gap-1.5">
-            {[0, 1, 2, 3, 4].map(i => (
-              <div
-                key={i}
-                className="w-2 rounded-full bg-[#1FC451]"
-                style={{
-                  height: '32px',
-                  animation: `wave 1.2s ease-in-out infinite`,
-                  animationDelay: `${i * 0.15}s`,
-                }}
-              />
-            ))}
-          </div>
-          <p className="text-sm font-medium text-[#1FC451] tracking-wide">Cargando registros...</p>
-        </div>
-        <style>{`
-          @keyframes wave {
-            0%, 100% { transform: scaleY(0.4); opacity: 0.5; }
-            50%       { transform: scaleY(1);   opacity: 1;   }
-          }
-        `}</style>
-      </div>
-    )
+    return <LoadingSpinner text="Cargando mapa..." />
   }
 
   return (

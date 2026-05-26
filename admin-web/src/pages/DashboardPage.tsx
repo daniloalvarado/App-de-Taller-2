@@ -2,22 +2,14 @@ import React from 'react'
 import { usePlantas } from '@/hooks/use-plantas'
 import { Leaf, Clock, CheckCircle, AlertCircle, XCircle, Users, TrendingUp } from 'lucide-react'
 import { EstadoBadge } from '@/components/EstadoBadge'
+import { LoadingSpinner } from '@/components/LoadingSpinner'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 
 export default function DashboardPage() {
   const { plantas, loading } = usePlantas()
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-96">
-        <div className="flex flex-col items-center gap-3">
-          <Leaf className="w-8 h-8 text-primary animate-pulse" />
-          <p className="text-muted-foreground text-sm">Cargando registros...</p>
-        </div>
-      </div>
-    )
-  }
+  if (loading) return <LoadingSpinner />
 
   const stats = {
     total: plantas.length,

@@ -6,6 +6,7 @@ import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { useNavigate } from 'react-router-dom'
 import { CustomSelect } from '@/components/CustomSelect'
+import { LoadingSpinner } from '@/components/LoadingSpinner'
 import type { Planta } from '@/types/planta'
 
 interface ValidacionesPageProps {
@@ -151,9 +152,7 @@ export default function ValidacionesPage({ filtroEstado }: ValidacionesPageProps
       {/* Table */}
       <div className="bg-card border border-border rounded-xl overflow-hidden">
         {loading ? (
-          <div className="flex items-center justify-center h-48">
-            <Leaf className="w-6 h-6 text-primary animate-pulse" />
-          </div>
+          <LoadingSpinner />
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
