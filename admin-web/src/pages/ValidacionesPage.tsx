@@ -299,7 +299,7 @@ export default function ValidacionesPage({ filtroEstado }: ValidacionesPageProps
               <button
                 onClick={handleObservar}
                 disabled={!motivoTexto.trim() || !!loadingAction}
-                className="px-5 py-2 text-sm bg-[#1FC451]/80 hover:bg-[#1FC451]/90 text-black font-bold rounded-lg transition-all disabled:opacity-50"
+                className="px-5 py-2 text-sm bg-[#1FC451]/80 hover:bg-[#1FC451]/90 text-white font-bold rounded-lg transition-all disabled:opacity-50"
               >
                 Enviar Observación
               </button>

@@ -12,15 +12,25 @@ const STATUS_COLORS: Record<string, string> = {
   'Observado':   '#FB923C',
   'Rechazado':   '#EF4444',
 }
-
-const STATUS_LABELS: Record<string, string> = {
-  'Validado':    'Validado',
-  'En revisión': 'En revisión',
-  'Observado':   'Observado',
-  'Rechazado':   'Rechazado',
-}
-
 const ALL_STATES = Object.keys(STATUS_COLORS)
+
+// Inline raster style – no WebGL vector worker needed
+const DARK_RASTER_STYLE: maplibregl.StyleSpecification = {
+  version: 8,
+  sources: {
+    'carto-dark': {
+      type: 'raster',
+      tiles: [
+        'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
+        'https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
+        'https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
+      ],
+      tileSize: 256,
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/">CARTO</a>',
+    },
+  },
+  layers: [{ id: 'carto-dark', type: 'raster', source: 'carto-dark' }],
+}
 
 export default function MapaPage() {
   const mapRef = useRef<HTMLDivElement>(null)
@@ -28,45 +38,32 @@ export default function MapaPage() {
   const markersRef = useRef<maplibregl.Marker[]>([])
   const navigate = useNavigate()
   const { plantas, loading } = usePlantas()
-
   const [activeFilter, setActiveFilter] = useState<string>('all')
   const [selectedPlanta, setSelectedPlanta] = useState<Planta | null>(null)
   const [counts, setCounts] = useState<Record<string, number>>({})
 
   const mapPlantas = plantas.filter(p => p.latitud && p.longitud)
 
-  // Count by status
   useEffect(() => {
     const c: Record<string, number> = { all: mapPlantas.length }
-    ALL_STATES.forEach(s => {
-      c[s] = mapPlantas.filter(p => p.estado_revision === s).length
-    })
+    ALL_STATES.forEach(s => { c[s] = mapPlantas.filter(p => p.estado_revision === s).length })
     setCounts(c)
   }, [mapPlantas.length])
 
-  // Initialize map
+  // Init map
   useEffect(() => {
     if (!mapRef.current) return
-
-    const center: [number, number] = [-73.25383, -3.74912] // Iquitos [lng, lat]
-
     const map = new maplibregl.Map({
       container: mapRef.current,
-      style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
-      center,
+      style: DARK_RASTER_STYLE,
+      center: [-73.25383, -3.74912],
       zoom: 13,
       attributionControl: false,
     })
-
     map.addControl(new maplibregl.NavigationControl(), 'top-right')
     map.addControl(new maplibregl.ScaleControl({ maxWidth: 120, unit: 'metric' }), 'bottom-left')
-    map.addControl(
-      new maplibregl.AttributionControl({ compact: true }),
-      'bottom-right'
-    )
-
+    map.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-right')
     mapInstanceRef.current = map
-
     return () => {
       markersRef.current.forEach(m => m.remove())
       markersRef.current = []
@@ -75,12 +72,10 @@ export default function MapaPage() {
     }
   }, [])
 
-  // Add/update markers when data or filter changes
+  // Add markers
   useEffect(() => {
     const map = mapInstanceRef.current
     if (!map) return
-
-    // Remove old markers
     markersRef.current.forEach(m => m.remove())
     markersRef.current = []
 
@@ -90,41 +85,28 @@ export default function MapaPage() {
 
     filtered.forEach(planta => {
       const color = STATUS_COLORS[planta.estado_revision] ?? '#6B7280'
-
-      // Create custom marker element
       const el = document.createElement('div')
       el.style.cssText = `
-        width: 22px;
-        height: 22px;
-        border-radius: 50%;
-        background-color: ${color};
-        border: 3px solid rgba(255,255,255,0.9);
-        box-shadow: 0 0 12px ${color}80, 0 2px 6px rgba(0,0,0,0.5);
-        cursor: pointer;
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
+        width:22px;height:22px;border-radius:50%;
+        background-color:${color};border:3px solid rgba(255,255,255,0.9);
+        box-shadow:0 0 12px ${color}80,0 2px 6px rgba(0,0,0,.5);
+        cursor:pointer;transition:transform .15s ease,box-shadow .15s ease;
       `
       el.addEventListener('mouseenter', () => {
         el.style.transform = 'scale(1.4)'
-        el.style.boxShadow = `0 0 20px ${color}, 0 2px 10px rgba(0,0,0,0.6)`
+        el.style.boxShadow = `0 0 20px ${color},0 2px 10px rgba(0,0,0,.6)`
       })
       el.addEventListener('mouseleave', () => {
         el.style.transform = 'scale(1)'
-        el.style.boxShadow = `0 0 12px ${color}80, 0 2px 6px rgba(0,0,0,0.5)`
+        el.style.boxShadow = `0 0 12px ${color}80,0 2px 6px rgba(0,0,0,.5)`
       })
-
       const marker = new maplibregl.Marker({ element: el, anchor: 'center' })
         .setLngLat([planta.longitud!, planta.latitud!])
         .addTo(map)
-
-      el.addEventListener('click', (e) => {
-        e.stopPropagation()
-        setSelectedPlanta(planta)
-      })
-
+      el.addEventListener('click', e => { e.stopPropagation(); setSelectedPlanta(planta) })
       markersRef.current.push(marker)
     })
 
-    // Fit map to markers if any
     if (filtered.length > 0 && filtered.length <= 200) {
       const bounds = new maplibregl.LngLatBounds()
       filtered.forEach(p => bounds.extend([p.longitud!, p.latitud!]))
@@ -135,10 +117,29 @@ export default function MapaPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-[calc(100vh-120px)]">
-        <div className="flex flex-col items-center gap-3 text-muted-foreground">
-          <Leaf className="w-8 h-8 text-primary animate-pulse" />
-          <p className="text-sm">Cargando mapa...</p>
+        <div className="flex flex-col items-center gap-6">
+          {/* Wave loader */}
+          <div className="flex items-end gap-1.5">
+            {[0, 1, 2, 3, 4].map(i => (
+              <div
+                key={i}
+                className="w-2 rounded-full bg-[#1FC451]"
+                style={{
+                  height: '32px',
+                  animation: `wave 1.2s ease-in-out infinite`,
+                  animationDelay: `${i * 0.15}s`,
+                }}
+              />
+            ))}
+          </div>
+          <p className="text-sm font-medium text-[#1FC451] tracking-wide">Cargando registros...</p>
         </div>
+        <style>{`
+          @keyframes wave {
+            0%, 100% { transform: scaleY(0.4); opacity: 0.5; }
+            50%       { transform: scaleY(1);   opacity: 1;   }
+          }
+        `}</style>
       </div>
     )
   }
@@ -149,12 +150,8 @@ export default function MapaPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 flex-shrink-0">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Mapa del Catálogo</h1>
-          <p className="text-muted-foreground mt-1">
-            {counts[activeFilter] ?? 0} registro(s) geolocalizado(s)
-          </p>
+          <p className="text-muted-foreground mt-1">{counts[activeFilter] ?? 0} registro(s) geolocalizado(s)</p>
         </div>
-
-        {/* Filter pills */}
         <div className="flex items-center gap-2 flex-wrap">
           <Filter className="w-4 h-4 text-muted-foreground flex-shrink-0" />
           <button
@@ -171,23 +168,26 @@ export default function MapaPage() {
             <button
               key={state}
               onClick={() => setActiveFilter(state)}
-              style={activeFilter === state ? { borderColor: STATUS_COLORS[state] + '80', color: STATUS_COLORS[state], backgroundColor: STATUS_COLORS[state] + '15' } : {}}
+              style={activeFilter === state ? {
+                borderColor: STATUS_COLORS[state] + '80',
+                color: STATUS_COLORS[state],
+                backgroundColor: STATUS_COLORS[state] + '18',
+              } : {}}
               className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
                 activeFilter === state
                   ? ''
                   : 'border-white/10 text-muted-foreground hover:border-white/20 hover:text-white'
               }`}
             >
-              {STATUS_LABELS[state]} ({counts[state] ?? 0})
+              {state} ({counts[state] ?? 0})
             </button>
           ))}
         </div>
       </div>
 
-      {/* Map container */}
+      {/* Map */}
       <div className="flex-1 relative rounded-xl overflow-hidden border border-border">
         <div ref={mapRef} className="w-full h-full" />
-
         {/* Legend */}
         <div className="absolute bottom-8 left-4 bg-black/80 backdrop-blur-sm rounded-xl border border-white/10 p-3 space-y-1.5 z-10">
           {ALL_STATES.map(state => (
@@ -196,27 +196,29 @@ export default function MapaPage() {
                 className="w-3 h-3 rounded-full flex-shrink-0"
                 style={{ backgroundColor: STATUS_COLORS[state], boxShadow: `0 0 6px ${STATUS_COLORS[state]}80` }}
               />
-              <span className="text-xs text-zinc-300">{STATUS_LABELS[state]}</span>
+              <span className="text-xs text-zinc-300">{state}</span>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Side panel for selected plant */}
+      {/* Plant detail panel */}
       {selectedPlanta && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setSelectedPlanta(null)}>
+        <div
+          className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          onClick={() => setSelectedPlanta(null)}
+        >
           <div
             className="bg-[#0A0A0A] border border-zinc-800 rounded-2xl p-6 w-full max-w-sm shadow-2xl space-y-4"
             onClick={e => e.stopPropagation()}
           >
-            {/* Estado pill */}
             <div className="flex items-center justify-between">
               <span
                 className="px-2.5 py-1 rounded-full text-xs font-bold"
                 style={{
                   backgroundColor: (STATUS_COLORS[selectedPlanta.estado_revision] ?? '#6B7280') + '20',
                   color: STATUS_COLORS[selectedPlanta.estado_revision] ?? '#6B7280',
-                  border: `1px solid ${(STATUS_COLORS[selectedPlanta.estado_revision] ?? '#6B7280')}50`
+                  border: `1px solid ${(STATUS_COLORS[selectedPlanta.estado_revision] ?? '#6B7280')}50`,
                 }}
               >
                 {selectedPlanta.estado_revision}
@@ -224,7 +226,6 @@ export default function MapaPage() {
               <button onClick={() => setSelectedPlanta(null)} className="text-zinc-500 hover:text-white text-lg leading-none">×</button>
             </div>
 
-            {/* Name */}
             <div>
               <p className="text-white font-bold text-lg italic leading-tight">
                 {selectedPlanta.nombre_cientifico || 'Sin nombre científico'}
@@ -234,7 +235,6 @@ export default function MapaPage() {
               )}
             </div>
 
-            {/* Details */}
             <div className="space-y-2 border-t border-zinc-800 pt-3">
               {selectedPlanta.habito && (
                 <div className="flex items-center gap-2 text-sm">
@@ -257,10 +257,9 @@ export default function MapaPage() {
               )}
             </div>
 
-            {/* Action */}
             <button
               onClick={() => navigate(`/planta/${selectedPlanta._id}`)}
-              className="w-full py-2.5 rounded-xl bg-[#1FC451] text-black text-sm font-bold hover:bg-[#1FC451]/90 shadow-[0_0_15px_rgba(31,196,81,0.25)] transition-all"
+              className="w-full py-2.5 rounded-xl bg-[#1FC451]/80 hover:bg-[#1FC451]/90 text-white text-sm font-bold transition-all"
             >
               Ver Detalles Completos →
             </button>
