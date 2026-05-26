@@ -49,6 +49,11 @@ export default function RegistroScreen() {
   const [escuela, setEscuela] = useState((user?.unsafeMetadata?.escuela as string) || '');
   const [diaClase, setDiaClase] = useState((user?.unsafeMetadata?.dia_clase as string) || '');
 
+  // Form State: Bloque 3 - Identificación botánica
+  const [nombreCientifico, setNombreCientifico] = useState('');
+  const [nombresComunes, setNombresComunes] = useState('');
+  const [familia, setFamilia] = useState('');
+
   const [estadoRevision, setEstadoRevision] = useState('');
   const [motivoObservacion, setMotivoObservacion] = useState('');
 
@@ -145,6 +150,9 @@ export default function RegistroScreen() {
       if (doc) {
         setEstadoRevision(doc.estado_revision || '');
         setMotivoObservacion(doc.motivo_observacion || '');
+        setNombreCientifico(doc.nombre_cientifico && doc.nombre_cientifico !== 'Por identificar' ? doc.nombre_cientifico : '');
+        setNombresComunes(doc.nombres_comunes || '');
+        setFamilia(doc.familia || '');
         setNombre(doc.registrador_nombre || user?.fullName || '');
         setDni(doc.registrador_dni || (user?.unsafeMetadata?.dni as string) || '');
         setEmail(doc.registrador_email || user?.primaryEmailAddress?.emailAddress || '');
@@ -328,7 +336,9 @@ export default function RegistroScreen() {
       const nuevoRegistro: any = {
         _type: 'planta',
         autor: user?.id,
-        nombre_cientifico: "Planta no identificada",
+        nombre_cientifico: nombreCientifico || 'Por identificar',
+        nombres_comunes: nombresComunes || '',
+        familia: familia || '',
         estado_revision: 'En revisión',
         habito: datosBotanicos.habito,
         tipo_vida: datosBotanicos.tipoVida,
@@ -798,7 +808,49 @@ export default function RegistroScreen() {
                     <Label color="#1FC451">Número de planta del estudiante</Label>
                     <Text color="#ffffff" fontSize={16} fontWeight="bold">Planta N° {numeroPlantaAutogenerado + 1} de 20</Text>
                   </YStack>
-                  
+
+                  {/* Identificación botánica */}
+                  <YStack gap="$2">
+                    <Label color="#ffffff">Nombre científico</Label>
+                    <Input
+                      value={nombreCientifico}
+                      onChangeText={setNombreCientifico}
+                      placeholder="Ej. Heliconia rostrata"
+                      borderWidth={0}
+                      bg="rgba(255,255,255,0.05)"
+                      color="#ffffff"
+                      placeholderTextColor="rgba(255,255,255,0.3)"
+                      autoCapitalize="words"
+                    />
+                  </YStack>
+
+                  <YStack gap="$2">
+                    <Label color="#ffffff">Nombre local / común</Label>
+                    <Input
+                      value={nombresComunes}
+                      onChangeText={setNombresComunes}
+                      placeholder="Ej. Platanillo, Bijao rojo"
+                      borderWidth={0}
+                      bg="rgba(255,255,255,0.05)"
+                      color="#ffffff"
+                      placeholderTextColor="rgba(255,255,255,0.3)"
+                    />
+                  </YStack>
+
+                  <YStack gap="$2">
+                    <Label color="#ffffff">Familia botánica</Label>
+                    <Input
+                      value={familia}
+                      onChangeText={setFamilia}
+                      placeholder="Ej. Heliconiaceae"
+                      borderWidth={0}
+                      bg="rgba(255,255,255,0.05)"
+                      color="#ffffff"
+                      placeholderTextColor="rgba(255,255,255,0.3)"
+                      autoCapitalize="words"
+                    />
+                  </YStack>
+
                   <YStack gap="$2">
                     <Label color="#ffffff">1. Hábito de la planta *</Label>
                     <RadioSelect 
@@ -865,27 +917,26 @@ export default function RegistroScreen() {
 
       {/* Modal de Éxito */}
       <Modal visible={showSuccess} transparent animationType="fade">
-        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.8)', justifyContent: 'center', alignItems: 'center', padding: 20 }}>
-          <Card padding="$6" alignItems="center" gap="$4" backgroundColor="#12221A" borderWidth={1} borderColor="#1FC451" borderRadius="$6" width="100%">
-            {showSuccess ? (
-              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <MaterialCommunityIcons name="check-circle" size={100} color="#1FC451" />
-                <H2 mt="$4" color="#1FC451">¡{editId ? 'Editado' : 'Registrado'} con Éxito!</H2>
-                <Paragraph style={{ textAlign: 'center' }} mt="$2" color="$color11">
-                  Tu planta ha sido {editId ? 'editada y devuelta a revisión' : 'enviada a revisión'}. Podrás verla en el mapa una vez que los docentes la validen.
-                </Paragraph>
-                <Button
-                  mt="$6"
-                  bg="#1FC451"
-                  color="#08130D"
-                  onPress={resetFormAndGoHome}
-                  icon={<MaterialCommunityIcons name="home" size={20} color="#08130D" />}
-                >
-                  Volver al Inicio
-                </Button>
-              </View>
-            ) : null}
-          </Card>
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.85)', justifyContent: 'center', alignItems: 'center', padding: 24 }}>
+          <View style={{ backgroundColor: '#12221A', borderWidth: 1, borderColor: '#1FC451', borderRadius: 20, padding: 32, width: '100%', alignItems: 'center', gap: 16 }}>
+            <MaterialCommunityIcons name="check-circle" size={90} color="#1FC451" />
+            <H2 mt="$2" color="#1FC451" style={{ textAlign: 'center' }}>
+              ¡{editId ? 'Editado' : 'Registrado'} con Éxito!
+            </H2>
+            <Paragraph style={{ textAlign: 'center', color: 'rgba(255,255,255,0.7)', fontSize: 14, lineHeight: 22 }}>
+              Tu planta ha sido {editId ? 'editada y devuelta a revisión' : 'enviada a revisión'}. Podrás verla en el mapa una vez que los docentes la validen.
+            </Paragraph>
+            <Button
+              mt="$4"
+              bg="#1FC451"
+              color="#08130D"
+              onPress={resetFormAndGoHome}
+              icon={<MaterialCommunityIcons name="home" size={20} color="#08130D" />}
+              style={{ width: '100%' }}
+            >
+              Volver al Inicio
+            </Button>
+          </View>
         </View>
       </Modal>
 

@@ -42,9 +42,9 @@ export default function MapaScreen() {
 
   const fetchMapData = async () => {
     try {
-      // Solo plantas validadas que tengan coordenadas
+      // Todas las plantas con coordenadas (validadas Y en revisión)
       const data = await client.fetch(`
-        *[_type == "planta" && estado_revision == "Validado" && defined(latitud) && defined(longitud)] {
+        *[_type == "planta" && defined(latitud) && defined(longitud)] | order(_createdAt desc) {
           _id,
           nombre_cientifico,
           nombres_comunes,
@@ -52,7 +52,8 @@ export default function MapaScreen() {
           latitud,
           longitud,
           galeria,
-          familia
+          familia,
+          estado_revision
         }
       `);
       setPlantas(data);
@@ -63,11 +64,19 @@ export default function MapaScreen() {
     }
   };
 
+  const getMarkerColor = (estado: string) => {
+    switch (estado) {
+      case 'Validado': return '#1FC451';
+      case 'Observado': return '#f97316';
+      case 'Rechazado': return '#ef4444';
+      default: return '#facc15'; // En revisión = amarillo
+    }
+  };
+
   const handleMarkerPress = (planta: any) => {
     setSelectedPlanta(planta);
-    // Centrar suavemente el mapa en el marcador seleccionado
     mapRef.current?.animateToRegion({
-      latitude: planta.latitud - 0.005, // Offset para que no quede oculto por la tarjeta
+      latitude: planta.latitud - 0.005,
       longitude: planta.longitud,
       latitudeDelta: 0.01,
       longitudeDelta: 0.01,
@@ -75,9 +84,11 @@ export default function MapaScreen() {
   };
 
   const handleMapPress = () => {
-    // Si toca cualquier parte del mapa, ocultar la tarjeta
     setSelectedPlanta(null);
   };
+
+  const validadas = plantas.filter(p => p.estado_revision === 'Validado').length;
+  const enRevision = plantas.filter(p => p.estado_revision === 'En revisión').length;
 
   return (
     <View style={styles.container}>
@@ -97,23 +108,26 @@ export default function MapaScreen() {
         onPress={handleMapPress}
         showsUserLocation={true}
       >
-        {plantas.map((planta) => (
-          <Marker
-            key={planta._id}
-            coordinate={{ latitude: planta.latitud, longitude: planta.longitud }}
-            onPress={(e) => {
-              e.stopPropagation(); // Evitar que el mapa reciba el tap
-              handleMarkerPress(planta);
-            }}
-          >
-            <View style={styles.markerContainer}>
-              <View style={styles.markerPin}>
-                <MaterialCommunityIcons name="leaf" size={16} color="#08130D" />
+        {plantas.map((planta) => {
+          const color = getMarkerColor(planta.estado_revision);
+          return (
+            <Marker
+              key={planta._id}
+              coordinate={{ latitude: planta.latitud, longitude: planta.longitud }}
+              onPress={(e) => {
+                e.stopPropagation();
+                handleMarkerPress(planta);
+              }}
+            >
+              <View style={styles.markerContainer}>
+                <View style={[styles.markerPin, { backgroundColor: color, borderColor: '#fff' }]}>
+                  <MaterialCommunityIcons name="leaf" size={16} color="#08130D" />
+                </View>
+                <View style={[styles.markerPointer, { borderTopColor: color }]} />
               </View>
-              <View style={styles.markerPointer} />
-            </View>
-          </Marker>
-        ))}
+            </Marker>
+          );
+        })}
       </MapView>
 
       {/* Floating Card for Selected Plant */}
@@ -169,11 +183,18 @@ export default function MapaScreen() {
         </View>
       )}
 
-      {/* Top Overlay Actions (e.g. Center Map, Filters) */}
+      {/* Top Overlay: Counters + Legend */}
       <View style={[styles.topOverlay, { top: insets.top + 10 }]}>
-        <View style={[styles.badge, { backgroundColor: "rgba(0,0,0,0.6)", paddingVertical: 8, paddingHorizontal: 16, borderRadius: 20 }]}>
-          <MaterialCommunityIcons name="map-marker-multiple" size={16} color="#1FC451" />
-          <Text style={{ color: "#fff", marginLeft: 8 }} fontWeight="bold">{plantas.length} Especies mapeadas</Text>
+        <View style={[styles.badge, { backgroundColor: "rgba(0,0,0,0.7)", paddingVertical: 8, paddingHorizontal: 16, borderRadius: 20, gap: 12 }]}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+            <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: '#1FC451' }} />
+            <Text style={{ color: "#fff", fontSize: 13 }} fontWeight="bold">{validadas} validadas</Text>
+          </View>
+          <View style={{ width: 1, height: 16, backgroundColor: 'rgba(255,255,255,0.2)' }} />
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+            <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: '#facc15' }} />
+            <Text style={{ color: "#fff", fontSize: 13 }}>{enRevision} en revisión</Text>
+          </View>
         </View>
       </View>
     </View>

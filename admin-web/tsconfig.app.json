@@ -21,9 +21,7 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
 
-    /* Paths */
-    "ignoreDeprecations": "6.0",
-    "baseUrl": ".",
+    /* Paths - alias @/ -> src/ (handled by vite resolve.alias, mirrored here for IDE) */
     "paths": {
       "@/*": ["./src/*"]
     }

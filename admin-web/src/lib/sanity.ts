@@ -1,6 +1,7 @@
 import { createClient } from '@sanity/client'
+import imageUrlBuilder from '@sanity/image-url'
 
-const projectId = import.meta.env.VITE_SANITY_PROJECT_ID
+const projectId = import.meta.env.VITE_SANITY_PROJECT_ID || '9m09a5ng'
 const dataset = import.meta.env.VITE_SANITY_DATASET || 'production'
 const token = import.meta.env.VITE_SANITY_TOKEN
 
@@ -12,9 +13,19 @@ export const client = createClient({
   token,
 })
 
-export const urlFor = (source: any) => {
-  if (!source?.asset?._ref) return ''
-  const ref = source.asset._ref
-  const [, id, dimensions, format] = ref.split('-')
-  return `https://cdn.sanity.io/images/${projectId}/${dataset}/${id}-${dimensions}.${format}`
+const builder = imageUrlBuilder(client)
+
+export function urlFor(source: any): string {
+  if (!source?.asset) return ''
+  try {
+    return builder.image(source).url()
+  } catch {
+    // Fallback manual para assets con _ref
+    if (source?.asset?._ref) {
+      const ref = source.asset._ref
+      const [, id, dimensions, format] = ref.split('-')
+      return `https://cdn.sanity.io/images/${projectId}/${dataset}/${id}-${dimensions}.${format}`
+    }
+    return ''
+  }
 }

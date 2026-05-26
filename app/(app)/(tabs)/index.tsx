@@ -90,20 +90,32 @@ export default function HomeScreen() {
     const matchesHabit = activeHabit === "Todo" || p.habito === activeHabit;
 
     // Modal Advanced Filters (Using new reproductivo schema)
-    const matchesFlower = !filterFlower || (p.reproductivo?.flor_color && p.reproductivo.flor_color === filterFlower);
-    const matchesFruit = !filterFruit || (p.reproductivo?.fruto_textura && p.reproductivo.fruto_textura === filterFruit);
-    const matchesSemilla = !filterSemilla || (p.reproductivo?.semilla_presencia && p.reproductivo.semilla_presencia === filterSemilla);
-    const matchesInflorescencia = !filterInflorescencia || (p.reproductivo?.flor_agrupacion && p.reproductivo.flor_agrupacion === filterInflorescencia);
+    const matchesFlower = !filterFlower || (p.reproductivo?.flor_color === filterFlower);
+    const matchesFruit = !filterFruit || (p.reproductivo?.fruto_tipo === filterFruit || p.reproductivo?.fruto_textura === filterFruit);
+    const matchesSemilla = !filterSemilla || (p.reproductivo?.semilla_presencia === filterSemilla);
+    const matchesInflorescencia = !filterInflorescencia || (p.reproductivo?.flor_agrupacion === filterInflorescencia);
 
     return matchesSearch && matchesHabit && matchesFlower && matchesFruit && matchesSemilla && matchesInflorescencia;
   });
 
-  // Dynamic Options (Extraídas en vivo de la base de datos)
-  const habitsList = ["Todo", ...Array.from(new Set(plantas.map(p => p.habito).filter(Boolean)))];
-  const flowerList = Array.from(new Set(plantas.map(p => p.reproductivo?.flor_color).filter(Boolean)));
-  const inflorescenciaList = Array.from(new Set(plantas.map(p => p.reproductivo?.flor_agrupacion).filter(Boolean)));
-  const fruitList = Array.from(new Set(plantas.map(p => p.reproductivo?.fruto_textura).filter(Boolean)));
-  const semillaList = Array.from(new Set(plantas.map(p => p.reproductivo?.semilla_presencia).filter(Boolean)));
+  // Dynamic Options merged with static values from PLANT-OR document
+  const habitsList = ["Todo", "Árbol", "Palmera", "Arbusto", "Liana", "Hierba"];
+  
+  // Static lists from PLANT-OR document (always available, even if DB is empty)
+  const FLOWER_COLORS = ['Blanco', 'Amarillo', 'Rojo', 'Rosado', 'Morado', 'Anaranjado', 'Verde', 'Crema', 'Otro'];
+  const FLOWER_GROUPS = ['Solitaria', 'En racimo', 'En manojo', 'En espiga', 'En cabezuela', 'Otro'];
+  const FRUIT_TYPES = ['Baya', 'Drupa', 'Cápsula', 'Vaina', 'Sámara', 'Nuez', 'Aquenio', 'Otro'];
+  const SEMILLA_OPTIONS = ['Con semillas visibles', 'Sin semillas visibles'];
+
+  // Merge static + dynamic values from DB (unique)
+  const dbFlowerColors = plantas.map(p => p.reproductivo?.flor_color).filter(Boolean) as string[];
+  const dbFruitTypes = plantas.map(p => p.reproductivo?.fruto_tipo || p.reproductivo?.fruto_textura).filter(Boolean) as string[];
+  const dbGroups = plantas.map(p => p.reproductivo?.flor_agrupacion).filter(Boolean) as string[];
+  
+  const flowerList = [...new Set([...FLOWER_COLORS, ...dbFlowerColors])];
+  const inflorescenciaList = [...new Set([...FLOWER_GROUPS, ...dbGroups])];
+  const fruitList = [...new Set([...FRUIT_TYPES, ...dbFruitTypes])];
+  const semillaList = SEMILLA_OPTIONS;
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background, paddingTop: insets.top }]}>
@@ -238,7 +250,7 @@ export default function HomeScreen() {
             <ScrollView showsVerticalScrollIndicator={false} style={{ maxHeight: 400 }}>
               <Text style={[styles.filterLabel, { color: theme.icon }]}>Color de Flor</Text>
               <View style={styles.filterChipContainer}>
-                {flowerList.length > 0 ? flowerList.map(color => (
+                {flowerList.map(color => (
                   <Pressable
                     key={color}
                     onPress={() => setFilterFlower(filterFlower === color ? "" : color)}
@@ -249,12 +261,12 @@ export default function HomeScreen() {
                   >
                     <Text style={{ color: filterFlower === color ? "#08130D" : theme.text, fontWeight: filterFlower === color ? "bold" : "normal" }}>{color}</Text>
                   </Pressable>
-                )) : <Text style={{ color: theme.icon, fontSize: 13 }}>Sin registros en BD</Text>}
+                ))}
               </View>
 
               <Text style={[styles.filterLabel, { color: theme.icon }]}>Tipo de Inflorescencia</Text>
               <View style={styles.filterChipContainer}>
-                {inflorescenciaList.length > 0 ? inflorescenciaList.map(tipo => (
+                {inflorescenciaList.map(tipo => (
                   <Pressable
                     key={tipo}
                     onPress={() => setFilterInflorescencia(filterInflorescencia === tipo ? "" : tipo)}
@@ -265,12 +277,12 @@ export default function HomeScreen() {
                   >
                     <Text style={{ color: filterInflorescencia === tipo ? "#08130D" : theme.text, fontWeight: filterInflorescencia === tipo ? "bold" : "normal" }}>{tipo}</Text>
                   </Pressable>
-                )) : <Text style={{ color: theme.icon, fontSize: 13 }}>Sin registros en BD</Text>}
+                ))}
               </View>
 
               <Text style={[styles.filterLabel, { color: theme.icon }]}>Tipo de Fruto</Text>
               <View style={styles.filterChipContainer}>
-                {fruitList.length > 0 ? fruitList.map(tipo => (
+                {fruitList.map(tipo => (
                   <Pressable
                     key={tipo}
                     onPress={() => setFilterFruit(filterFruit === tipo ? "" : tipo)}
@@ -281,12 +293,12 @@ export default function HomeScreen() {
                   >
                     <Text style={{ color: filterFruit === tipo ? "#08130D" : theme.text, fontWeight: filterFruit === tipo ? "bold" : "normal" }}>{tipo}</Text>
                   </Pressable>
-                )) : <Text style={{ color: theme.icon, fontSize: 13 }}>Sin registros en BD</Text>}
+                ))}
               </View>
 
               <Text style={[styles.filterLabel, { color: theme.icon }]}>Tipo de Semilla</Text>
               <View style={styles.filterChipContainer}>
-                {semillaList.length > 0 ? semillaList.map(tipo => (
+                {semillaList.map(tipo => (
                   <Pressable
                     key={tipo}
                     onPress={() => setFilterSemilla(filterSemilla === tipo ? "" : tipo)}
@@ -297,7 +309,7 @@ export default function HomeScreen() {
                   >
                     <Text style={{ color: filterSemilla === tipo ? "#08130D" : theme.text, fontWeight: filterSemilla === tipo ? "bold" : "normal" }}>{tipo}</Text>
                   </Pressable>
-                )) : <Text style={{ color: theme.icon, fontSize: 13 }}>Sin registros en BD</Text>}
+                ))}
               </View>
 
             </ScrollView>
