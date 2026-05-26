@@ -18,6 +18,7 @@ export default function PlantaDetailPage() {
   const [loading, setLoading] = useState(true)
   const [selectedImg, setSelectedImg] = useState<string | null>(null)
   const [observarOpen, setObservarOpen] = useState(false)
+  const [rechazarOpen, setRechazarOpen] = useState(false)
   const [motivoTexto, setMotivoTexto] = useState('')
   const [actionLoading, setActionLoading] = useState(false)
 
@@ -38,6 +39,7 @@ export default function PlantaDetailPage() {
     setPlanta(updated)
     setActionLoading(false)
     setObservarOpen(false)
+    setRechazarOpen(false)
     setMotivoTexto('')
   }
 
@@ -123,9 +125,7 @@ export default function PlantaDetailPage() {
           Observar
         </button>
         <button
-          onClick={() => {
-            if (confirm('¿Rechazar este registro permanentemente?')) handleAction('Rechazado')
-          }}
+          onClick={() => setRechazarOpen(true)}
           disabled={actionLoading || planta.estado_revision === 'Rechazado'}
           className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm bg-destructive/10 text-destructive border border-destructive/20 hover:bg-destructive/20 transition-colors disabled:opacity-40"
         >
@@ -184,7 +184,7 @@ export default function PlantaDetailPage() {
             <Section title={`Datos de ${planta.habito}`}>
               <div className="grid grid-cols-2 gap-x-6">
                 {Object.entries(habitoDatos).map(([k, v]) => (
-                  <InfoRow key={k} label={k.replace(/_/g, ' ')} value={Array.isArray(v) ? v.join(', ') : String(v)} />
+                  <InfoRow key={k} label={k.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} value={Array.isArray(v) ? v.join(', ') : String(v)} />
                 ))}
               </div>
             </Section>
@@ -195,7 +195,7 @@ export default function PlantaDetailPage() {
             <Section title="Datos Reproductivos">
               <div className="grid grid-cols-2 gap-x-6">
                 {Object.entries(planta.reproductivo).map(([k, v]) => (
-                  <InfoRow key={k} label={k.replace(/_/g, ' ')} value={Array.isArray(v) ? v.join(', ') : String(v)} />
+                  <InfoRow key={k} label={k.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} value={Array.isArray(v) ? v.join(', ') : String(v)} />
                 ))}
               </div>
             </Section>
@@ -276,25 +276,54 @@ export default function PlantaDetailPage() {
 
       {/* Observar Modal */}
       {observarOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="bg-card border border-border rounded-xl p-6 w-full max-w-md space-y-4">
-            <h3 className="text-lg font-semibold text-foreground">Observar registro</h3>
-            <p className="text-sm text-muted-foreground">El estudiante recibirá este mensaje en su app móvil.</p>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#08130D]/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="bg-[#12221A] border border-[#1FC451]/30 rounded-2xl p-6 w-full max-w-md space-y-4 shadow-2xl">
+            <div>
+              <h3 className="text-xl font-bold text-[#1FC451]">Observar Registro</h3>
+              <p className="text-sm text-muted-foreground mt-1">El estudiante verá este mensaje en su aplicación móvil para poder corregirlo.</p>
+            </div>
             <textarea
               value={motivoTexto}
               onChange={e => setMotivoTexto(e.target.value)}
-              placeholder="Describe lo que debe corregirse..."
+              placeholder="Describe lo que falta o debe corregirse (ej. 'La foto de la hoja está borrosa')..."
               rows={4}
-              className="w-full px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-orange-400 resize-none"
+              className="w-full px-4 py-3 bg-[#08130D] border border-orange-500/30 rounded-xl text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-orange-500 resize-none"
             />
-            <div className="flex gap-3 justify-end">
-              <button onClick={() => setObservarOpen(false)} className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground">Cancelar</button>
+            <div className="flex gap-3 justify-end pt-2">
+              <button onClick={() => setObservarOpen(false)} className="px-4 py-2 text-sm text-muted-foreground hover:text-white transition-colors">Cancelar</button>
               <button
                 onClick={() => handleAction('Observado', motivoTexto)}
                 disabled={!motivoTexto.trim() || actionLoading}
-                className="px-4 py-2 text-sm bg-orange-500/10 text-orange-400 border border-orange-500/20 rounded-lg hover:bg-orange-500/20 disabled:opacity-50"
+                className="px-5 py-2 text-sm bg-orange-500/10 text-orange-400 font-medium rounded-lg hover:bg-orange-500/20 border border-orange-500/20 transition-all disabled:opacity-50"
               >
-                {actionLoading ? 'Enviando...' : 'Enviar observación'}
+                {actionLoading ? 'Enviando...' : 'Enviar Observación'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Rechazar Modal */}
+      {rechazarOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#08130D]/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="bg-[#12221A] border border-destructive/30 rounded-2xl p-6 w-full max-w-sm space-y-4 shadow-2xl text-center">
+            <div className="mx-auto w-12 h-12 bg-destructive/10 rounded-full flex items-center justify-center mb-4">
+              <XCircle className="w-6 h-6 text-destructive" />
+            </div>
+            <h3 className="text-xl font-bold text-foreground">¿Rechazar Registro?</h3>
+            <p className="text-sm text-muted-foreground">
+              Esta acción marcará la planta como rechazada. No se borrará de la base de datos, pero el estudiante sabrá que fue invalidada.
+            </p>
+            <div className="flex gap-3 justify-center pt-4">
+              <button onClick={() => setRechazarOpen(false)} className="px-4 py-2 text-sm text-muted-foreground hover:text-white transition-colors">
+                Cancelar
+              </button>
+              <button
+                onClick={() => handleAction('Rechazado')}
+                disabled={actionLoading}
+                className="px-5 py-2 text-sm bg-destructive/10 text-destructive font-medium rounded-lg hover:bg-destructive/20 border border-destructive/20 transition-all disabled:opacity-50"
+              >
+                {actionLoading ? 'Rechazando...' : 'Sí, Rechazar'}
               </button>
             </div>
           </div>

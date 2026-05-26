@@ -20,6 +20,7 @@ export default function ValidacionesPage({ filtroEstado }: ValidacionesPageProps
   const [sortField, setSortField] = useState<keyof Planta>('_createdAt')
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc')
   const [observarId, setObservarId] = useState<string | null>(null)
+  const [rechazarId, setRechazarId] = useState<string | null>(null)
   const [motivoTexto, setMotivoTexto] = useState('')
   const [loadingAction, setLoadingAction] = useState<string | null>(null)
   const [showFilters, setShowFilters] = useState(false)
@@ -58,11 +59,12 @@ export default function ValidacionesPage({ filtroEstado }: ValidacionesPageProps
     setLoadingAction(null)
   }
 
-  const handleRechazar = async (id: string) => {
-    if (!confirm('¿Estás seguro de rechazar este registro?')) return
-    setLoadingAction(id + '-rechazar')
-    await updatePlantaEstado(id, 'Rechazado')
+  const handleRechazar = async () => {
+    if (!rechazarId) return
+    setLoadingAction(rechazarId + '-rechazar')
+    await updatePlantaEstado(rechazarId, 'Rechazado')
     await refetch()
+    setRechazarId(null)
     setLoadingAction(null)
   }
 
@@ -201,42 +203,61 @@ export default function ValidacionesPage({ filtroEstado }: ValidacionesPageProps
                     </td>
                     <td className="px-4 py-3"><EstadoBadge estado={p.estado_revision} /></td>
                     <td className="px-4 py-3">
-                      <div className="flex items-center justify-end gap-2">
-                        <button
-                          onClick={() => navigate(`/planta/${p._id}`)}
-                          className="p-1.5 rounded-lg hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
-                          title="Ver detalle"
-                        >
-                          <Eye className="w-4 h-4" />
-                        </button>
+                      <div className="flex items-center justify-end gap-3">
+                        <div className="relative group/tooltip">
+                          <button
+                            onClick={() => navigate(`/planta/${p._id}`)}
+                            className="p-1.5 rounded-lg hover:bg-[#1FC451]/10 text-muted-foreground hover:text-[#1FC451] transition-colors"
+                          >
+                            <Eye className="w-4 h-4" />
+                          </button>
+                          <span className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-[#12221A] text-[#1FC451] text-xs rounded border border-[#1FC451]/30 opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10 shadow-lg">
+                            Ver detalle
+                          </span>
+                        </div>
+                        
                         {p.estado_revision !== 'Validado' && (
-                          <button
-                            onClick={() => handleAprobar(p._id)}
-                            disabled={loadingAction === p._id + '-aprobar'}
-                            className="p-1.5 rounded-lg hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors disabled:opacity-50"
-                            title="Aprobar"
-                          >
-                            <CheckCircle className="w-4 h-4" />
-                          </button>
+                          <div className="relative group/tooltip">
+                            <button
+                              onClick={() => handleAprobar(p._id)}
+                              disabled={loadingAction === p._id + '-aprobar'}
+                              className="p-1.5 rounded-lg hover:bg-[#1FC451]/10 text-muted-foreground hover:text-[#1FC451] transition-colors disabled:opacity-50"
+                            >
+                              <CheckCircle className="w-4 h-4" />
+                            </button>
+                            <span className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-[#12221A] text-[#1FC451] text-xs rounded border border-[#1FC451]/30 opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10 shadow-lg">
+                              Aprobar
+                            </span>
+                          </div>
                         )}
+                        
                         {p.estado_revision !== 'Observado' && p.estado_revision !== 'Rechazado' && (
-                          <button
-                            onClick={() => setObservarId(p._id)}
-                            className="p-1.5 rounded-lg hover:bg-orange-500/10 text-muted-foreground hover:text-orange-400 transition-colors"
-                            title="Observar"
-                          >
-                            <AlertCircle className="w-4 h-4" />
-                          </button>
+                          <div className="relative group/tooltip">
+                            <button
+                              onClick={() => setObservarId(p._id)}
+                              className="p-1.5 rounded-lg hover:bg-orange-500/10 text-muted-foreground hover:text-orange-400 transition-colors"
+                            >
+                              <AlertCircle className="w-4 h-4" />
+                            </button>
+                            <span className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-[#12221A] text-orange-400 text-xs rounded border border-orange-500/30 opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10 shadow-lg">
+                              Observar
+                            </span>
+                          </div>
                         )}
+                        
                         {p.estado_revision !== 'Rechazado' && (
-                          <button
-                            onClick={() => handleRechazar(p._id)}
-                            disabled={loadingAction === p._id + '-rechazar'}
-                            className="p-1.5 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors disabled:opacity-50"
-                            title="Rechazar"
-                          >
-                            <XCircle className="w-4 h-4" />
-                          </button>
+                          <div className="relative group/tooltip">
+                            <button
+                              onClick={() => setRechazarId(p._id)}
+                              disabled={loadingAction === p._id + '-rechazar'}
+                              className="p-1.5 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors disabled:opacity-50"
+                            >
+                              <XCircle className="w-4 h-4" />
+                            </button>
+                            <span className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-[#12221A] text-destructive text-xs rounded border border-destructive/30 opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10 shadow-lg">
+                              Rechazar
+                            </span>
+                          </div>
                         )}
                       </div>
                     </td>
@@ -256,32 +277,62 @@ export default function ValidacionesPage({ filtroEstado }: ValidacionesPageProps
 
       {/* Observar Modal */}
       {observarId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="bg-card border border-border rounded-xl p-6 w-full max-w-md space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#08130D]/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="bg-[#12221A] border border-[#1FC451]/30 rounded-2xl p-6 w-full max-w-md space-y-4 shadow-2xl">
             <div>
-              <h3 className="text-lg font-semibold text-foreground">Observar registro</h3>
-              <p className="text-sm text-muted-foreground mt-1">El estudiante verá este mensaje en su aplicación móvil.</p>
+              <h3 className="text-xl font-bold text-[#1FC451]">Observar Registro</h3>
+              <p className="text-sm text-muted-foreground mt-1">El estudiante verá este mensaje en su aplicación móvil para poder corregirlo.</p>
             </div>
             <textarea
               value={motivoTexto}
               onChange={e => setMotivoTexto(e.target.value)}
-              placeholder="Describe lo que falta o debe corregirse..."
+              placeholder="Describe lo que falta o debe corregirse (ej. 'La foto de la hoja está borrosa')..."
               rows={4}
-              className="w-full px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-orange-400 resize-none"
+              className="w-full px-4 py-3 bg-[#08130D] border border-orange-500/30 rounded-xl text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-orange-500 resize-none"
             />
-            <div className="flex gap-3 justify-end">
+            <div className="flex gap-3 justify-end pt-2">
               <button
                 onClick={() => { setObservarId(null); setMotivoTexto('') }}
-                className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                className="px-4 py-2 text-sm text-muted-foreground hover:text-white transition-colors"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleObservar}
                 disabled={!motivoTexto.trim() || !!loadingAction}
-                className="px-4 py-2 text-sm bg-orange-500/10 text-orange-400 border border-orange-500/20 rounded-lg hover:bg-orange-500/20 transition-colors disabled:opacity-50"
+                className="px-5 py-2 text-sm bg-orange-500/10 text-orange-400 font-medium rounded-lg hover:bg-orange-500/20 border border-orange-500/20 transition-all disabled:opacity-50"
               >
-                Enviar observación
+                Enviar Observación
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Rechazar Modal */}
+      {rechazarId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#08130D]/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="bg-[#12221A] border border-destructive/30 rounded-2xl p-6 w-full max-w-sm space-y-4 shadow-2xl text-center">
+            <div className="mx-auto w-12 h-12 bg-destructive/10 rounded-full flex items-center justify-center mb-4">
+              <XCircle className="w-6 h-6 text-destructive" />
+            </div>
+            <h3 className="text-xl font-bold text-foreground">¿Rechazar Registro?</h3>
+            <p className="text-sm text-muted-foreground">
+              Esta acción marcará la planta como rechazada. No se borrará de la base de datos, pero el estudiante sabrá que fue invalidada.
+            </p>
+            <div className="flex gap-3 justify-center pt-4">
+              <button
+                onClick={() => setRechazarId(null)}
+                className="px-4 py-2 text-sm text-muted-foreground hover:text-white transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleRechazar}
+                disabled={!!loadingAction}
+                className="px-5 py-2 text-sm bg-destructive/10 text-destructive font-medium rounded-lg hover:bg-destructive/20 border border-destructive/20 transition-all disabled:opacity-50"
+              >
+                Sí, Rechazar
               </button>
             </div>
           </div>
