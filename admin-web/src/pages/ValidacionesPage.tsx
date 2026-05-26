@@ -225,7 +225,7 @@ export default function ValidacionesPage({ filtroEstado }: ValidacionesPageProps
                             >
                               <CheckCircle className="w-4 h-4" />
                             </button>
-                            <span className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-[#12221A] text-[#1FC451] text-xs rounded border border-[#1FC451]/30 opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10 shadow-lg">
+                            <span className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-black text-[#1FC451] text-xs font-bold rounded border border-[#1FC451]/30 opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10 shadow-lg">
                               Aprobar
                             </span>
                           </div>
@@ -239,7 +239,7 @@ export default function ValidacionesPage({ filtroEstado }: ValidacionesPageProps
                             >
                               <AlertCircle className="w-4 h-4" />
                             </button>
-                            <span className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-[#12221A] text-orange-400 text-xs rounded border border-orange-500/30 opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10 shadow-lg">
+                            <span className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-black text-orange-400 text-xs font-bold rounded border border-orange-500/30 opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10 shadow-lg">
                               Observar
                             </span>
                           </div>
@@ -250,11 +250,11 @@ export default function ValidacionesPage({ filtroEstado }: ValidacionesPageProps
                             <button
                               onClick={() => setRechazarId(p._id)}
                               disabled={loadingAction === p._id + '-rechazar'}
-                              className="p-1.5 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors disabled:opacity-50"
+                              className="p-1.5 rounded-lg hover:bg-red-500/10 text-muted-foreground hover:text-red-500 transition-colors disabled:opacity-50"
                             >
                               <XCircle className="w-4 h-4" />
                             </button>
-                            <span className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-[#12221A] text-destructive text-xs rounded border border-destructive/30 opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10 shadow-lg">
+                            <span className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-black text-red-500 text-xs font-bold rounded border border-red-500/30 opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10 shadow-lg">
                               Rechazar
                             </span>
                           </div>
@@ -327,7 +327,7 @@ export default function ValidacionesPage({ filtroEstado }: ValidacionesPageProps
               <button
                 onClick={handleRechazar}
                 disabled={!!loadingAction}
-                className="px-5 py-2 text-sm bg-destructive text-white font-bold rounded-lg hover:bg-destructive/90 transition-all disabled:opacity-50"
+                className="px-5 py-2 text-sm bg-red-500 text-white font-bold rounded-lg hover:bg-red-600 shadow-[0_0_15px_rgba(239,68,68,0.3)] transition-all disabled:opacity-50"
               >
                 Sí, Rechazar
               </button>

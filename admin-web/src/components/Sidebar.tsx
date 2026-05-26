@@ -84,7 +84,7 @@ export function Sidebar() {
         )}
         <button
           onClick={() => setLogoutConfirmOpen(true)}
-          className="flex items-center gap-2 px-3 py-2 w-full rounded-lg text-sm text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
+          className="flex items-center gap-2 px-3 py-2 w-full rounded-lg text-sm text-red-500 hover:bg-red-500/10 transition-colors"
         >
           <LogOut className="w-4 h-4 flex-shrink-0" />
           {!collapsed && <span>Cerrar sesión</span>}
@@ -136,7 +136,7 @@ export function Sidebar() {
               </button>
               <button
                 onClick={() => signOut()}
-                className="px-5 py-2 text-sm bg-destructive text-white font-bold rounded-lg hover:bg-destructive/90 transition-all"
+                className="px-5 py-2 text-sm bg-red-500 text-white font-bold rounded-lg hover:bg-red-600 shadow-[0_0_15px_rgba(239,68,68,0.3)] transition-all"
               >
                 Cerrar sesión
               </button>

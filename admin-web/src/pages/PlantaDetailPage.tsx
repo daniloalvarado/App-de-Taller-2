@@ -111,7 +111,7 @@ export default function PlantaDetailPage() {
         <button
           onClick={() => handleAction('Validado')}
           disabled={actionLoading || planta.estado_revision === 'Validado'}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-colors disabled:opacity-40"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm bg-[#1FC451]/10 text-[#1FC451] border border-[#1FC451]/20 hover:bg-[#1FC451]/20 transition-colors disabled:opacity-40"
         >
           {actionLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4" />}
           Aprobar
@@ -127,7 +127,7 @@ export default function PlantaDetailPage() {
         <button
           onClick={() => setRechazarOpen(true)}
           disabled={actionLoading || planta.estado_revision === 'Rechazado'}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm bg-destructive/10 text-destructive border border-destructive/20 hover:bg-destructive/20 transition-colors disabled:opacity-40"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20 transition-colors disabled:opacity-40"
         >
           <XCircle className="w-4 h-4" />
           Rechazar
@@ -318,7 +318,7 @@ export default function PlantaDetailPage() {
               <button
                 onClick={() => handleAction('Rechazado')}
                 disabled={actionLoading}
-                className="px-5 py-2 text-sm bg-destructive text-white font-bold rounded-lg hover:bg-destructive/90 transition-all disabled:opacity-50"
+                className="px-5 py-2 text-sm bg-red-500 text-white font-bold rounded-lg hover:bg-red-600 shadow-[0_0_15px_rgba(239,68,68,0.3)] transition-all disabled:opacity-50"
               >
                 {actionLoading ? 'Rechazando...' : 'Sí, Rechazar'}
               </button>
