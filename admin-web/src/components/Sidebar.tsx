@@ -57,7 +57,7 @@ export function Sidebar() {
                 'relative group/nav flex items-center rounded-lg text-sm font-medium transition-all',
                 active
                   ? 'bg-primary/10 text-primary border border-primary/20'
-                  : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-accent-foreground',
+                  : 'text-sidebar-foreground hover:bg-white/5 hover:text-accent-foreground',
                 collapsed ? 'justify-center w-10 h-10 mx-auto' : 'gap-3 px-3 py-2.5'
               )}
             >

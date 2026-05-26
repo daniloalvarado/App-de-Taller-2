@@ -4,8 +4,8 @@ import { useColorScheme } from "@/hooks/use-color-scheme";
 import { getUserDisplayName, getUserInitials } from "@/lib/utils/user";
 import { useUser } from "@clerk/clerk-expo";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useRouter, useFocusEffect } from "expo-router";
+import { useState, useCallback } from "react";
 import { client } from "@/lib/sanity";
 import { Image, Pressable, StyleSheet, Modal } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -81,14 +81,16 @@ export default function Profile() {
     }
   };
 
-  useEffect(() => {
-    if (user?.id) {
-      // Solo contamos los registros en estado "Validado"
-      client.fetch(`count(*[_type == "planta" && autor == $userId && estado_revision == "Validado"])`, { userId: user.id })
-        .then(count => setValidatedCount(count))
-        .catch(err => console.error(err));
-    }
-  }, [user?.id]);
+  useFocusEffect(
+    useCallback(() => {
+      if (user?.id) {
+        // Solo contamos los registros en estado "Validado"
+        client.fetch(`count(*[_type == "planta" && autor == $userId && estado_revision == "Validado"])`, { userId: user.id })
+          .then(count => setValidatedCount(count))
+          .catch(err => console.error(err));
+      }
+    }, [user?.id])
+  );
 
   if (!isLoaded) {
     return (
