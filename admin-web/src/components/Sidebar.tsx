@@ -27,8 +27,8 @@ export function Sidebar() {
     <div className="flex flex-col h-full bg-sidebar-background border-r border-sidebar-border">
       {/* Logo */}
       <div className="flex items-center gap-3 px-4 py-5 border-b border-sidebar-border">
-        <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center flex-shrink-0">
-          <Leaf className="w-5 h-5 text-primary-foreground" />
+        <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0">
+          <Leaf className="w-6 h-6 text-[#1FC451]" />
         </div>
         {!collapsed && (
           <div className="flex-1 min-w-0">
@@ -38,7 +38,7 @@ export function Sidebar() {
         )}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="hidden md:flex ml-auto items-center justify-center p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-sidebar-accent transition-colors"
+          className="hidden md:flex ml-auto items-center justify-center p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-sidebar-accent transition-colors cursor-pointer"
         >
           {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
         </button>
@@ -54,14 +54,20 @@ export function Sidebar() {
               to={item.href}
               onClick={() => setMobileOpen(false)}
               className={cn(
-                'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all',
+                'relative group/nav flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all',
                 active
                   ? 'bg-primary/10 text-primary border border-primary/20'
-                  : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-accent-foreground'
+                  : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-accent-foreground',
+                collapsed && 'justify-center'
               )}
             >
               <item.icon className="w-4.5 h-4.5 flex-shrink-0" />
               {!collapsed && <span>{item.label}</span>}
+              {collapsed && (
+                <span className="absolute left-14 px-2 py-1 bg-black text-white text-xs font-bold rounded border border-zinc-800 opacity-0 group-hover/nav:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-lg">
+                  {item.label}
+                </span>
+              )}
             </Link>
           )
         })}
