@@ -123,8 +123,10 @@ export function Sidebar() {
       {/* Mobile Drawer */}
       {mobileOpen && (
         <div className="md:hidden fixed inset-0 z-40 flex">
-          <div className="w-60 h-full"><SidebarContent /></div>
-          <div className="flex-1 bg-black/50" onClick={() => setMobileOpen(false)} />
+          <div className="w-72 h-full bg-[#080808] shadow-2xl border-r border-zinc-800 flex-shrink-0">
+            <SidebarContent />
+          </div>
+          <div className="flex-1 bg-black/60 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
         </div>
       )}
 
