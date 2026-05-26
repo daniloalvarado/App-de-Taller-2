@@ -18,6 +18,7 @@ const navItems = [
 export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false)
   const location = useLocation()
   const { signOut } = useClerk()
   const { user } = useUser()
@@ -82,7 +83,7 @@ export function Sidebar() {
           </div>
         )}
         <button
-          onClick={() => signOut()}
+          onClick={() => setLogoutConfirmOpen(true)}
           className="flex items-center gap-2 px-3 py-2 w-full rounded-lg text-sm text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
         >
           <LogOut className="w-4 h-4 flex-shrink-0" />
@@ -115,6 +116,32 @@ export function Sidebar() {
         <div className="md:hidden fixed inset-0 z-40 flex">
           <div className="w-60 h-full"><SidebarContent /></div>
           <div className="flex-1 bg-black/50" onClick={() => setMobileOpen(false)} />
+        </div>
+      )}
+
+      {/* Logout Confirm Modal */}
+      {logoutConfirmOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="bg-[#0A0A0A] border border-zinc-800 rounded-2xl p-6 w-full max-w-sm space-y-4 shadow-2xl text-center">
+            <h3 className="text-xl font-bold text-white">¿Cerrar sesión?</h3>
+            <p className="text-sm text-zinc-400">
+              Saldrás del panel administrativo de PLANT-OR.
+            </p>
+            <div className="flex gap-3 justify-center pt-4">
+              <button
+                onClick={() => setLogoutConfirmOpen(false)}
+                className="px-4 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={() => signOut()}
+                className="px-5 py-2 text-sm bg-destructive text-white font-bold rounded-lg hover:bg-destructive/90 transition-all"
+              >
+                Cerrar sesión
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </>

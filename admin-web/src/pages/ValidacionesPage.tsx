@@ -95,7 +95,7 @@ export default function ValidacionesPage({ filtroEstado }: ValidacionesPageProps
       </div>
 
       {/* Search & Filters */}
-      <div className="bg-card border border-border rounded-xl p-4 space-y-4">
+      <div className="space-y-4">
         <div className="flex gap-3">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -117,7 +117,7 @@ export default function ValidacionesPage({ filtroEstado }: ValidacionesPageProps
         </div>
 
         {showFilters && (
-          <div className="flex flex-wrap gap-3 pt-2 border-t border-border">
+          <div className="flex flex-wrap gap-3 pt-2">
             <select
               value={filterEstado}
               onChange={e => setFilterEstado(e.target.value)}
@@ -313,9 +313,6 @@ export default function ValidacionesPage({ filtroEstado }: ValidacionesPageProps
       {rechazarId && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
           <div className="bg-[#0A0A0A] border border-zinc-800 rounded-2xl p-6 w-full max-w-sm space-y-4 shadow-2xl text-center">
-            <div className="mx-auto w-12 h-12 bg-destructive/10 rounded-full flex items-center justify-center mb-4">
-              <XCircle className="w-6 h-6 text-destructive" />
-            </div>
             <h3 className="text-xl font-bold text-white">¿Rechazar Registro?</h3>
             <p className="text-sm text-zinc-400">
               Esta acción marcará la planta como rechazada. No se borrará de la base de datos, pero el estudiante sabrá que fue invalidada.

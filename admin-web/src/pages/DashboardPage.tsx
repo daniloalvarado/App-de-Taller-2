@@ -122,22 +122,12 @@ export default function DashboardPage() {
             </div>
             <div className="space-y-3">
               {topEstudiantes.map((est, i) => (
-                <div key={i} className="flex items-center gap-3">
+                <div key={i} className="flex items-center gap-3 py-1">
                   <div className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold flex-shrink-0">
                     {i + 1}
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm font-medium text-foreground truncate">{est.nombre}</p>
-                      <span className="text-xs font-semibold text-muted-foreground ml-2">{est.aprobados}/20</span>
-                    </div>
-                    <div className="h-1.5 rounded-full bg-border w-full mt-1.5">
-                      <div
-                        className="h-1.5 rounded-full bg-primary transition-all"
-                        style={{ width: `${(est.aprobados / 20) * 100}%` }}
-                      />
-                    </div>
-                  </div>
+                  <p className="text-sm font-medium text-foreground flex-1 truncate">{est.nombre}</p>
+                  <span className="text-sm font-bold text-muted-foreground flex-shrink-0">{est.aprobados}/20</span>
                 </div>
               ))}
               {topEstudiantes.length === 0 && (

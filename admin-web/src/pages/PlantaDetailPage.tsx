@@ -307,9 +307,6 @@ export default function PlantaDetailPage() {
       {rechazarOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
           <div className="bg-[#0A0A0A] border border-zinc-800 rounded-2xl p-6 w-full max-w-sm space-y-4 shadow-2xl text-center">
-            <div className="mx-auto w-12 h-12 bg-destructive/10 rounded-full flex items-center justify-center mb-4">
-              <XCircle className="w-6 h-6 text-destructive" />
-            </div>
             <h3 className="text-xl font-bold text-white">¿Rechazar Registro?</h3>
             <p className="text-sm text-zinc-400">
               Esta acción marcará la planta como rechazada. No se borrará de la base de datos, pero el estudiante sabrá que fue invalidada.
