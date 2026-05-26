@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --background: 138 60% 4%;
+    --foreground: 0 0% 98%;
+    --card: 138 40% 7%;
+    --card-foreground: 0 0% 98%;
+    --popover: 138 40% 7%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 138 62% 44%;
+    --primary-foreground: 138 60% 4%;
+    --secondary: 138 20% 12%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 138 20% 12%;
+    --muted-foreground: 0 0% 55%;
+    --accent: 138 20% 14%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 138 20% 14%;
+    --input: 138 20% 12%;
+    --ring: 138 62% 44%;
+    --sidebar-background: 138 60% 3%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 138 62% 44%;
+    --sidebar-primary-foreground: 138 60% 4%;
+    --sidebar-accent: 138 20% 10%;
+    --sidebar-accent-foreground: 0 0% 90%;
+    --sidebar-border: 138 20% 12%;
+    --sidebar-ring: 138 62% 44%;
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * { border-color: hsl(var(--border)); }
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: hsl(var(--background)); }
+::-webkit-scrollbar-thumb { background: hsl(var(--border)); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: hsl(var(--primary)); }
