@@ -115,7 +115,7 @@ export function Sidebar() {
       {/* Mobile Toggle */}
       <button
         onClick={() => setMobileOpen(!mobileOpen)}
-        className="md:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-card border border-border text-foreground"
+        className="md:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-[#080808] border border-zinc-700 text-foreground shadow-lg"
       >
         <Menu className="w-5 h-5" />
       </button>
