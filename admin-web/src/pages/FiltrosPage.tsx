@@ -72,11 +72,15 @@ export default function FiltrosPage() {
   }
 
   const toggleActivo = async (filtro: Filtro) => {
+    // Optimistic update - update UI immediately
+    const newState = !filtro.activo
+    setFiltros(prev => prev.map(f => f._id === filtro._id ? { ...f, activo: newState } : f))
     try {
-      await client.patch(filtro._id).set({ activo: !filtro.activo }).commit()
-      setFiltros(prev => prev.map(f => f._id === filtro._id ? { ...f, activo: !f.activo } : f))
+      await client.patch(filtro._id).set({ activo: newState }).commit()
     } catch (e) {
+      // Revert on error
       console.error(e)
+      setFiltros(prev => prev.map(f => f._id === filtro._id ? { ...f, activo: !newState } : f))
     }
   }
 
@@ -124,7 +128,7 @@ export default function FiltrosPage() {
           </button>
           <button
             onClick={() => setShowForm(v => !v)}
-            className="flex items-center gap-2 px-4 py-2 bg-primary text-black text-sm font-bold rounded-lg hover:bg-[#1FC451] hover:scale-105 active:scale-95 transition-all shadow-[0_0_15px_rgba(31,196,81,0.3)]"
+            className="flex items-center gap-2 px-4 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:bg-primary/90 hover:scale-105 active:scale-95 transition-all shadow-[0_0_15px_rgba(31,196,81,0.3)]"
           >
             <Plus className="w-4 h-4" />
             Nuevo filtro
@@ -227,7 +231,7 @@ export default function FiltrosPage() {
             <button
               onClick={handleCreate}
               disabled={saving}
-              className="px-6 py-2 text-sm bg-primary text-black font-bold rounded-lg hover:bg-[#1FC451] transition-colors disabled:opacity-50"
+              className="px-6 py-2 text-sm bg-primary text-white font-bold rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50"
             >
               {saving ? 'Guardando...' : 'Crear filtro'}
             </button>
@@ -300,31 +304,39 @@ export default function FiltrosPage() {
                         {filtro.icono && <> · Ícono: <code className="bg-white/5 px-1 rounded">{filtro.icono}</code></>}
                       </p>
                     </div>
-                    <div className="flex items-center gap-2 flex-shrink-0">
+                    <div className="flex items-center gap-1 flex-shrink-0">
                       {/* Toggle active */}
-                      <button
-                        onClick={() => toggleActivo(filtro)}
-                        className={`p-2 rounded-lg transition-colors ${
-                          filtro.activo
-                            ? 'text-primary hover:bg-primary/10'
-                            : 'text-muted-foreground hover:bg-white/5'
-                        }`}
-                        title={filtro.activo ? 'Desactivar' : 'Activar'}
-                      >
-                        {filtro.activo
-                          ? <ToggleRight className="w-5 h-5" />
-                          : <ToggleLeft className="w-5 h-5" />
-                        }
-                      </button>
+                      <div className="relative group">
+                        <button
+                          onClick={() => toggleActivo(filtro)}
+                          className={`p-2 rounded-lg transition-colors ${
+                            filtro.activo
+                              ? 'text-green-400 hover:bg-green-500/10'
+                              : 'text-red-400 hover:bg-red-500/10'
+                          }`}
+                        >
+                          {filtro.activo
+                            ? <ToggleRight className="w-5 h-5" />
+                            : <ToggleLeft className="w-5 h-5" />
+                          }
+                        </button>
+                        <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-zinc-900 text-white text-xs rounded border border-zinc-800 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-lg">
+                          {filtro.activo ? 'Desactivar' : 'Activar'}
+                        </span>
+                      </div>
                       {/* Delete */}
-                      <button
-                        onClick={() => handleDelete(filtro._id)}
-                        disabled={deletingId === filtro._id}
-                        className="p-2 rounded-lg text-muted-foreground hover:bg-red-500/10 hover:text-red-400 transition-colors disabled:opacity-40"
-                        title="Eliminar"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                      <div className="relative group">
+                        <button
+                          onClick={() => handleDelete(filtro._id)}
+                          disabled={deletingId === filtro._id}
+                          className="p-2 rounded-lg text-zinc-500 hover:bg-red-500/10 hover:text-red-400 transition-colors disabled:opacity-40"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                        <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-zinc-900 text-white text-xs rounded border border-zinc-800 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-lg">
+                          Eliminar
+                        </span>
+                      </div>
                     </div>
                   </div>
                 ))}
