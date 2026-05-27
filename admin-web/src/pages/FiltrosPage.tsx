@@ -121,14 +121,14 @@ export default function FiltrosPage() {
         <div className="flex items-center gap-2 flex-shrink-0">
           <button
             onClick={fetchFiltros}
-            className="p-2 rounded-lg border border-zinc-800 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors"
+            className="p-2 rounded-lg border border-zinc-800 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
             title="Recargar"
           >
             <RefreshCw className="w-4 h-4" />
           </button>
           <button
             onClick={() => setShowForm(v => !v)}
-            className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white text-sm font-bold rounded-lg hover:bg-green-500 hover:scale-105 active:scale-95 transition-all shadow-[0_0_15px_rgba(31,196,81,0.3)]"
+            className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white text-sm font-bold rounded-lg hover:bg-green-500 transition-colors cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             Nuevo filtro
@@ -224,14 +224,14 @@ export default function FiltrosPage() {
           <div className="flex gap-3 justify-end mt-4">
             <button
               onClick={() => { setShowForm(false); setForm(EMPTY_FORM); setFormError('') }}
-              className="px-4 py-2 text-sm font-medium bg-red-600 text-white rounded-lg hover:bg-red-500 transition-colors"
+              className="px-4 py-2 text-sm font-medium bg-red-600 text-white rounded-lg hover:bg-red-500 transition-colors cursor-pointer"
             >
               Cancelar
             </button>
             <button
               onClick={handleCreate}
               disabled={saving}
-              className="px-6 py-2 text-sm bg-green-600 text-white font-bold rounded-lg hover:bg-green-500 transition-colors disabled:opacity-50"
+              className="px-6 py-2 text-sm bg-green-600 text-white font-bold rounded-lg hover:bg-green-500 transition-colors disabled:opacity-50 cursor-pointer"
             >
               {saving ? 'Guardando...' : 'Crear filtro'}
             </button>
@@ -245,10 +245,10 @@ export default function FiltrosPage() {
           <button
             key={cat}
             onClick={() => setCategoriaSeleccionada(cat)}
-            className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-colors ${
+            className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-colors cursor-pointer ${
               categoriaSeleccionada === cat
                 ? 'bg-primary/10 text-primary border-primary/30'
-                : 'border-border text-muted-foreground hover:text-foreground hover:bg-white/5'
+                : 'border-border text-muted-foreground hover:text-primary hover:bg-primary/10 hover:border-primary/30'
             }`}
           >
             {cat}
@@ -309,7 +309,7 @@ export default function FiltrosPage() {
                       <div className="relative group">
                         <button
                           onClick={() => toggleActivo(filtro)}
-                          className={`p-2 rounded-lg transition-colors ${
+                          className={`p-2 rounded-lg transition-colors cursor-pointer ${
                             filtro.activo
                               ? 'text-green-400 hover:bg-green-500/10'
                               : 'text-red-400 hover:bg-red-500/10'
@@ -333,7 +333,7 @@ export default function FiltrosPage() {
                         <button
                           onClick={() => handleDelete(filtro._id)}
                           disabled={deletingId === filtro._id}
-                          className="p-2 rounded-lg text-zinc-500 hover:bg-red-500/10 hover:text-red-400 transition-colors disabled:opacity-40"
+                          className="p-2 rounded-lg text-zinc-500 hover:bg-red-500/10 hover:text-red-400 transition-colors disabled:opacity-40 cursor-pointer"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
