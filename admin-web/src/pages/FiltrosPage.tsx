@@ -123,7 +123,7 @@ export default function FiltrosPage() {
           </button>
           <button
             onClick={() => setShowForm(v => !v)}
-            className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground text-sm font-semibold rounded-lg hover:bg-primary/90 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-primary text-black text-sm font-bold rounded-lg hover:bg-[#1FC451] hover:scale-105 active:scale-95 transition-all shadow-[0_0_15px_rgba(31,196,81,0.3)]"
           >
             <Plus className="w-4 h-4" />
             Nuevo filtro
@@ -137,7 +137,7 @@ export default function FiltrosPage() {
           { label: 'Total filtros', value: filtros.length, color: 'text-foreground' },
           { label: 'Activos', value: activosCount, color: 'text-primary' },
           { label: 'Inactivos', value: filtros.length - activosCount, color: 'text-muted-foreground' },
-          { label: 'Categorías', value: new Set(filtros.map(f => f.categoria)).size, color: 'text-blue-400' },
+          { label: 'Categorías', value: new Set(filtros.map(f => f.categoria)).size, color: 'text-foreground' },
         ].map(s => (
           <div key={s.label} className="bg-card border border-border rounded-xl p-4">
             <p className="text-xs text-muted-foreground">{s.label}</p>
@@ -186,17 +186,26 @@ export default function FiltrosPage() {
                 onChange={e => setForm(f => ({ ...f, dato_tecnico: e.target.value }))}
               />
             </div>
-            <div className="space-y-1">
+            <div className="space-y-2 md:col-span-2">
               <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
                 Categoría *
               </label>
-              <select
-                className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
-                value={form.categoria}
-                onChange={e => setForm(f => ({ ...f, categoria: e.target.value }))}
-              >
-                {CATEGORIAS.map(c => <option key={c} value={c}>{c}</option>)}
-              </select>
+              <div className="flex flex-wrap gap-2">
+                {CATEGORIAS.map(c => (
+                  <button
+                    key={c}
+                    type="button"
+                    onClick={() => setForm(f => ({ ...f, categoria: c }))}
+                    className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-all ${
+                      form.categoria === c
+                        ? 'bg-primary/20 text-primary border-primary shadow-[0_0_10px_rgba(31,196,81,0.2)]'
+                        : 'border-border text-muted-foreground hover:text-foreground hover:bg-white/5'
+                    }`}
+                  >
+                    {c}
+                  </button>
+                ))}
+              </div>
             </div>
             <div className="space-y-1">
               <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
@@ -217,17 +226,17 @@ export default function FiltrosPage() {
             </p>
           )}
 
-          <div className="flex gap-3 justify-end">
+          <div className="flex gap-3 justify-end mt-4">
             <button
               onClick={() => { setShowForm(false); setForm(EMPTY_FORM); setFormError('') }}
-              className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="px-4 py-2 text-sm font-medium bg-red-500/10 text-red-500 border border-red-500/20 rounded-lg hover:bg-red-500/20 hover:text-red-400 transition-colors"
             >
               Cancelar
             </button>
             <button
               onClick={handleCreate}
               disabled={saving}
-              className="px-5 py-2 text-sm bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50"
+              className="px-6 py-2 text-sm bg-primary text-black font-bold rounded-lg hover:bg-[#1FC451] hover:scale-105 active:scale-95 transition-all shadow-[0_0_15px_rgba(31,196,81,0.3)] disabled:opacity-50 disabled:scale-100"
             >
               {saving ? 'Guardando...' : 'Crear filtro'}
             </button>

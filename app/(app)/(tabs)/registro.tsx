@@ -1000,9 +1000,9 @@ export default function RegistroScreen() {
             <Button
               mt="$4"
               bg="#1FC451"
-              color="#08130D"
+              color="white"
               onPress={resetFormAndGoHome}
-              icon={<MaterialCommunityIcons name="home" size={20} color="#08130D" />}
+              icon={<MaterialCommunityIcons name="home" size={20} color="white" />}
               style={{ width: '100%' }}
             >
               Volver al Inicio

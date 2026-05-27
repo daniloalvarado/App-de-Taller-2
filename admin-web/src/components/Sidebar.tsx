@@ -65,7 +65,7 @@ export function Sidebar() {
               <item.icon className="w-4.5 h-4.5 flex-shrink-0" />
               {!collapsed && <span>{item.label}</span>}
               {collapsed && (
-                <span className="absolute left-14 px-2 py-1 bg-black text-white text-xs font-bold rounded border border-zinc-800 opacity-0 group-hover/nav:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-lg">
+                <span className="absolute left-14 px-2 py-1 bg-black text-white text-xs font-bold rounded border border-zinc-800 opacity-0 group-hover/nav:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-[9999] shadow-lg">
                   {item.label}
                 </span>
               )}
