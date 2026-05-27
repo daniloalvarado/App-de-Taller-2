@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { StyleSheet, ScrollView, Pressable, ActivityIndicator, Image, FlatList } from "react-native";
+import MapView, { Marker } from "react-native-maps";
 import { View, Text } from "tamagui";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -223,6 +224,36 @@ export default function PlantDetailScreen() {
                 <MorphInfo icon="ruler" label="Altura Total (m)" value={planta.arbusto_datos.altura_total?.toString()} />
                 <MorphInfo icon="shape-outline" label="Forma General" value={planta.arbusto_datos.forma_general} />
                 <MorphInfo icon="leaf" label="Tipo de Hoja" value={planta.arbusto_datos.tipo_hoja} />
+              </View>
+            </>
+          )}
+
+          {/* Ubicación en Mapa */}
+          {planta?.latitud && planta?.longitud && (
+            <>
+              <Text style={[styles.sectionTitle, { color: theme.text, marginTop: 24 }]}>Ubicación</Text>
+              {planta?.direccion ? (
+                <Text style={{ color: '#a0a0a0', fontSize: 13, marginBottom: 8 }}>
+                  📍 {planta.direccion}
+                </Text>
+              ) : null}
+              <View style={{ height: 200, borderRadius: 12, overflow: 'hidden', marginBottom: 24, borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)' }}>
+                <MapView
+                  style={{ flex: 1 }}
+                  scrollEnabled={false}
+                  zoomEnabled={false}
+                  initialRegion={{
+                    latitude: planta.latitud,
+                    longitude: planta.longitud,
+                    latitudeDelta: 0.004,
+                    longitudeDelta: 0.004,
+                  }}
+                >
+                  <Marker
+                    coordinate={{ latitude: planta.latitud, longitude: planta.longitud }}
+                    pinColor="#1FC451"
+                  />
+                </MapView>
               </View>
             </>
           )}

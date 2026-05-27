@@ -220,12 +220,26 @@ export default function RegistroScreen() {
       setErrorMsg("Permiso de cámara denegado.");
       return;
     }
-
     const result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
       quality: 0.6,
     });
+    if (!result.canceled) {
+      setFotos((prev) => ({ ...prev, [tipo]: result.assets[0].uri }));
+    }
+  };
 
+  const pickFromGallery = async (tipo: keyof typeof fotos) => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (permissionResult.granted === false) {
+      setErrorMsg("Permiso de galería denegado.");
+      return;
+    }
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 0.6,
+    });
     if (!result.canceled) {
       setFotos((prev) => ({ ...prev, [tipo]: result.assets[0].uri }));
     }
@@ -484,6 +498,30 @@ export default function RegistroScreen() {
               </Card>
             ) : null}
 
+            {/* Block when student reaches 20 plants */}
+            {step === 1 && rolRegistro === 'estudiante' && !editId && numeroPlantaAutogenerado >= 20 && (
+              <Card padding="$5" backgroundColor="rgba(255, 165, 0, 0.1)" borderWidth={1} borderColor="#FFA500" borderRadius={12}>
+                <YStack gap="$3" style={{ alignItems: 'center' }}>
+                  <MaterialCommunityIcons name="check-decagram" size={56} color="#1FC451" />
+                  <H4 color="#1FC451" style={{ textAlign: 'center' }}>¡Meta alcanzada!</H4>
+                  <Paragraph color="rgba(255,255,255,0.8)" style={{ textAlign: 'center' }}>
+                    Ya registraste tus 20 plantas requeridas para el curso. No puedes agregar más registros como estudiante.
+                  </Paragraph>
+                  <Paragraph color="rgba(255,255,255,0.5)" size="$2" style={{ textAlign: 'center' }}>
+                    Si quieres seguir contribuyendo, puedes cambiar a modo Ciudadano.
+                  </Paragraph>
+                  <Button
+                    bg="#1FC451"
+                    color="#08130D"
+                    onPress={() => setRolRegistro('ciudadano')}
+                    pressStyle={{ bg: '#15963c' }}
+                  >
+                    Continuar como Ciudadano
+                  </Button>
+                </YStack>
+              </Card>
+            )}
+
             {step === 1 && (
               <Card padding="$4" gap="$2" backgroundColor="rgba(255,255,255,0.05)" borderWidth={0}>
                 <H4 color="#1FC451" mb="$2">Bloque 1: Datos Personales</H4>
@@ -519,6 +557,7 @@ export default function RegistroScreen() {
 
                   <YStack gap="$2">
                     <Label color="#ffffff">Nombre completo *</Label>
+                    {/* Email is always required */}
                     <Input
                       value={nombre}
                       onChangeText={setNombre}
@@ -530,10 +569,25 @@ export default function RegistroScreen() {
                     />
                   </YStack>
 
+                  <YStack gap="$2">
+                    <Label color="#ffffff">Email *</Label>
+                    <Input
+                      value={email}
+                      onChangeText={setEmail}
+                      placeholder="Ej. juan@gmail.com"
+                      keyboardType="email-address"
+                      autoCapitalize="none"
+                      borderWidth={0}
+                      bg="rgba(255,255,255,0.05)"
+                      color="#ffffff"
+                      placeholderTextColor="rgba(255,255,255,0.3)"
+                    />
+                  </YStack>
+
                   {rolRegistro === 'estudiante' && (
                     <>
                       <YStack gap="$2">
-                        <Label color="#ffffff">DNI</Label>
+                        <Label color="#ffffff">DNI *</Label>
                         <Input
                           value={dni}
                           onChangeText={(text) => setDni(text.replace(/[^0-9]/g, ''))} // Solo permite números
@@ -548,7 +602,7 @@ export default function RegistroScreen() {
                       </YStack>
 
                       <YStack gap="$2">
-                        <Label color="#ffffff">Facultad</Label>
+                        <Label color="#ffffff">Facultad *</Label>
                         <Input
                           value={facultad}
                           onChangeText={setFacultad}
@@ -561,7 +615,7 @@ export default function RegistroScreen() {
                       </YStack>
 
                       <YStack gap="$2">
-                        <Label color="#ffffff">Escuela</Label>
+                        <Label color="#ffffff">Escuela *</Label>
                         <Input
                           value={escuela}
                           onChangeText={setEscuela}
@@ -735,26 +789,46 @@ export default function RegistroScreen() {
                   ].map((item) => {
                     const uri = fotos[item.id as keyof typeof fotos];
                     return (
-                      <XStack key={item.id} style={{ alignItems: "center", justifyContent: "space-between", backgroundColor: "rgba(255,255,255,0.02)", padding: 12, borderRadius: 8 }}>
-                        <YStack flex={1}>
-                          <Label color="#ffffff">{item.label}</Label>
-                          {uri && <Paragraph color="#1FC451" size="$1">Capturada ✓</Paragraph>}
-                        </YStack>
-                        
-                        {uri ? (
-                          <Image source={{ uri }} style={{ width: 50, height: 50, borderRadius: 8, marginRight: 10 }} />
-                        ) : null}
-
-                        <Button 
-                          size="$3" 
-                          bg={uri ? "rgba(255,255,255,0.1)" : "#1FC451"}
-                          color="white"
-                          icon={<MaterialCommunityIcons name="camera" size={18} color="white" />}
-                          onPress={() => takePhoto(item.id as keyof typeof fotos)}
-                        >
-                          {uri ? 'Retomar' : 'Tomar'}
-                        </Button>
-                      </XStack>
+                      <YStack key={item.id} style={{ backgroundColor: "rgba(255,255,255,0.02)", padding: 12, borderRadius: 8 }} gap="$2">
+                        <XStack style={{ alignItems: "center" }} gap="$3">
+                          {uri ? (
+                            <Image source={{ uri }} style={{ width: 56, height: 56, borderRadius: 8 }} />
+                          ) : (
+                            <View style={{ width: 56, height: 56, borderRadius: 8, backgroundColor: 'rgba(255,255,255,0.05)', alignItems: 'center', justifyContent: 'center' }}>
+                              <MaterialCommunityIcons name="image-outline" size={28} color="rgba(255,255,255,0.3)" />
+                            </View>
+                          )}
+                          <YStack flex={1}>
+                            <Label color="#ffffff">{item.label}</Label>
+                            {uri
+                              ? <Paragraph color="#1FC451" size="$1">✓ Capturada</Paragraph>
+                              : <Paragraph color="rgba(255,255,255,0.4)" size="$1">Sin foto</Paragraph>
+                            }
+                          </YStack>
+                        </XStack>
+                        <XStack gap="$2">
+                          <Button
+                            flex={1}
+                            size="$3"
+                            bg="rgba(255,255,255,0.08)"
+                            color="white"
+                            icon={<MaterialCommunityIcons name="camera" size={16} color="white" />}
+                            onPress={() => takePhoto(item.id as keyof typeof fotos)}
+                          >
+                            Cámara
+                          </Button>
+                          <Button
+                            flex={1}
+                            size="$3"
+                            bg="rgba(255,255,255,0.08)"
+                            color="white"
+                            icon={<MaterialCommunityIcons name="image-multiple" size={16} color="white" />}
+                            onPress={() => pickFromGallery(item.id as keyof typeof fotos)}
+                          >
+                            Galería
+                          </Button>
+                        </XStack>
+                      </YStack>
                     );
                   })}
 

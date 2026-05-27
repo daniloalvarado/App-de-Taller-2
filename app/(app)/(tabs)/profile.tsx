@@ -173,7 +173,8 @@ export default function Profile() {
             </YStack>
           </Card>
 
-          {/* Progreso del Curso Card */}
+          {/* Progreso del Curso Card - Solo visible para estudiantes */}
+          {(user?.unsafeMetadata?.dni || user?.unsafeMetadata?.facultad) && (
           <Card
             size="$4"
             bordered
@@ -207,6 +208,7 @@ export default function Profile() {
               </XStack>
             </YStack>
           </Card>
+          )}
 
           {/* Certificación Progress Card */}
           <Card
