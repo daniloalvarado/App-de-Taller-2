@@ -128,7 +128,7 @@ export default function FiltrosPage() {
           </button>
           <button
             onClick={() => setShowForm(v => !v)}
-            className="flex items-center gap-2 px-4 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:bg-primary/90 hover:scale-105 active:scale-95 transition-all shadow-[0_0_15px_rgba(31,196,81,0.3)]"
+            className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white text-sm font-bold rounded-lg hover:bg-green-500 hover:scale-105 active:scale-95 transition-all shadow-[0_0_15px_rgba(31,196,81,0.3)]"
           >
             <Plus className="w-4 h-4" />
             Nuevo filtro
@@ -224,14 +224,14 @@ export default function FiltrosPage() {
           <div className="flex gap-3 justify-end mt-4">
             <button
               onClick={() => { setShowForm(false); setForm(EMPTY_FORM); setFormError('') }}
-              className="px-4 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors"
+              className="px-4 py-2 text-sm font-medium bg-red-600 text-white rounded-lg hover:bg-red-500 transition-colors"
             >
               Cancelar
             </button>
             <button
               onClick={handleCreate}
               disabled={saving}
-              className="px-6 py-2 text-sm bg-primary text-white font-bold rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50"
+              className="px-6 py-2 text-sm bg-green-600 text-white font-bold rounded-lg hover:bg-green-500 transition-colors disabled:opacity-50"
             >
               {saving ? 'Guardando...' : 'Crear filtro'}
             </button>
@@ -320,7 +320,11 @@ export default function FiltrosPage() {
                             : <ToggleLeft className="w-5 h-5" />
                           }
                         </button>
-                        <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-zinc-900 text-white text-xs rounded border border-zinc-800 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-lg">
+                        <span className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs rounded border opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-lg ${
+                          filtro.activo
+                            ? 'bg-green-950 text-green-400 border-green-800'
+                            : 'bg-red-950 text-red-400 border-red-800'
+                        }`}>
                           {filtro.activo ? 'Desactivar' : 'Activar'}
                         </span>
                       </div>
@@ -333,7 +337,7 @@ export default function FiltrosPage() {
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
-                        <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-zinc-900 text-white text-xs rounded border border-zinc-800 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-lg">
+                        <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-red-950 text-red-400 text-xs rounded border border-red-800 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-lg">
                           Eliminar
                         </span>
                       </div>
