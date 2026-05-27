@@ -18,9 +18,13 @@ function App() {
       localization={{
         ...esES,
         signIn: {
+          ...esES.signIn,
           start: {
+            ...esES.signIn?.start,
             title: 'Bienvenido',
             subtitle: 'Inicia sesión con tu Email o cuenta de Google',
+            actionText: '¿No tienes una cuenta?',
+            actionLink: 'Registrarse'
           }
         }
       }}
