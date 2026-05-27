@@ -293,37 +293,43 @@ export default function RegistroScreen() {
         const projectId = process.env.EXPO_PUBLIC_SANITY_PROJECT_ID || '9m09a5ng';
         const dataset = process.env.EXPO_PUBLIC_SANITY_DATASET || 'production';
 
-        return new Promise((resolve, reject) => {
-          const xhr = new XMLHttpRequest();
-          xhr.open(
-            'POST',
-            `https://${projectId}.api.sanity.io/v2024-03-28/assets/images/${dataset}`,
-            true
-          );
-          xhr.setRequestHeader('Authorization', `Bearer ${token}`);
-          xhr.setRequestHeader('Content-Type', 'image/jpeg');
-          xhr.responseType = 'json';
+        return new Promise(async (resolve, reject) => {
+          try {
+            // Convertir URI a Blob
+            const fetchResponse = await fetch(uri);
+            const blob = await fetchResponse.blob();
 
-          xhr.onload = () => {
-            if (xhr.status >= 200 && xhr.status < 300) {
-              const assetId = xhr.response?.document?._id;
-              if (!assetId) {
-                reject(new Error('No asset ID in response'));
-                return;
-              }
-              resolve({
-                _key: Math.random().toString(36).substring(7),
-                _type: 'image',
-                asset: { _type: 'reference', _ref: assetId }
-              });
-            } else {
-              reject(new Error(`Upload failed (${xhr.status}): ${JSON.stringify(xhr.response)}`));
+            // Subir blob a Sanity
+            const uploadResponse = await fetch(`https://${projectId}.api.sanity.io/v2024-03-28/assets/images/${dataset}`, {
+              method: 'POST',
+              headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'image/jpeg',
+              },
+              body: blob,
+            });
+
+            if (!uploadResponse.ok) {
+              const text = await uploadResponse.text();
+              throw new Error(`Upload failed (${uploadResponse.status}): ${text}`);
             }
-          };
 
-          xhr.onerror = () => reject(new Error('XHR network error during upload'));
+            const data = await uploadResponse.json();
+            const assetId = data.document?._id;
+            
+            if (!assetId) {
+              throw new Error('No asset ID in response');
+            }
 
-          xhr.send({ uri } as any);
+            resolve({
+              _key: Math.random().toString(36).substring(7),
+              _type: 'image',
+              asset: { _type: 'reference', _ref: assetId }
+            });
+
+          } catch (err: any) {
+            reject(new Error(`Fetch error during upload: ${err.message}`));
+          }
         });
       };
 

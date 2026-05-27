@@ -9,7 +9,7 @@ interface RadioSelectProps {
   horizontal?: boolean;
 }
 
-export function RadioSelect({ options, value, onChange, horizontal = false }: RadioSelectProps) {
+export const RadioSelect = React.memo(function RadioSelect({ options, value, onChange, horizontal = false }: RadioSelectProps) {
   const renderButtons = () =>
     options.map((opt) => {
       const isSelected = value === opt;
@@ -48,7 +48,7 @@ export function RadioSelect({ options, value, onChange, horizontal = false }: Ra
       {renderButtons()}
     </XStack>
   );
-}
+});
 
 interface MultiSelectProps {
   options: string[];
@@ -56,7 +56,7 @@ interface MultiSelectProps {
   onChange: (val: string[]) => void;
 }
 
-export function MultiSelect({ options, value, onChange }: MultiSelectProps) {
+export const MultiSelect = React.memo(function MultiSelect({ options, value, onChange }: MultiSelectProps) {
   const toggleOption = (opt: string) => {
     if (value.includes(opt)) {
       onChange(value.filter((item) => item !== opt));
@@ -90,4 +90,4 @@ export function MultiSelect({ options, value, onChange }: MultiSelectProps) {
       })}
     </XStack>
   );
-}
+});
