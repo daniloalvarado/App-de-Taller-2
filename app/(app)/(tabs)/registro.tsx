@@ -221,8 +221,8 @@ export default function RegistroScreen() {
       return;
     }
     const result = await ImagePicker.launchCameraAsync({
-      allowsEditing: true,
-      quality: 0.6,
+      allowsEditing: false,
+      quality: 0.7,
     });
     if (!result.canceled) {
       setFotos((prev) => ({ ...prev, [tipo]: result.assets[0].uri }));
@@ -237,8 +237,8 @@ export default function RegistroScreen() {
     }
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 0.6,
+      allowsEditing: false,
+      quality: 0.7,
     });
     if (!result.canceled) {
       setFotos((prev) => ({ ...prev, [tipo]: result.assets[0].uri }));
@@ -497,30 +497,6 @@ export default function RegistroScreen() {
                 <Paragraph color="white">{motivoObservacion}</Paragraph>
               </Card>
             ) : null}
-
-            {/* Block when student reaches 20 plants */}
-            {step === 1 && rolRegistro === 'estudiante' && !editId && numeroPlantaAutogenerado >= 20 && (
-              <Card padding="$5" backgroundColor="rgba(255, 165, 0, 0.1)" borderWidth={1} borderColor="#FFA500" borderRadius={12}>
-                <YStack gap="$3" style={{ alignItems: 'center' }}>
-                  <MaterialCommunityIcons name="check-decagram" size={56} color="#1FC451" />
-                  <H4 color="#1FC451" style={{ textAlign: 'center' }}>¡Meta alcanzada!</H4>
-                  <Paragraph color="rgba(255,255,255,0.8)" style={{ textAlign: 'center' }}>
-                    Ya registraste tus 20 plantas requeridas para el curso. No puedes agregar más registros como estudiante.
-                  </Paragraph>
-                  <Paragraph color="rgba(255,255,255,0.5)" size="$2" style={{ textAlign: 'center' }}>
-                    Si quieres seguir contribuyendo, puedes cambiar a modo Ciudadano.
-                  </Paragraph>
-                  <Button
-                    bg="#1FC451"
-                    color="#08130D"
-                    onPress={() => setRolRegistro('ciudadano')}
-                    pressStyle={{ bg: '#15963c' }}
-                  >
-                    Continuar como Ciudadano
-                  </Button>
-                </YStack>
-              </Card>
-            )}
 
             {step === 1 && (
               <Card padding="$4" gap="$2" backgroundColor="rgba(255,255,255,0.05)" borderWidth={0}>
