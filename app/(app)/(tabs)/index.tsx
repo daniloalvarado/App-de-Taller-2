@@ -32,19 +32,18 @@ export default function HomeScreen() {
   const [filterFruit, setFilterFruit] = useState("");
   const [filterSemilla, setFilterSemilla] = useState("");
   const [filterInflorescencia, setFilterInflorescencia] = useState("");
+  
+  // Dynamic Filters
+  const [filtrosDinamicos, setFiltrosDinamicos] = useState<any[]>([]);
+  const [selectedFiltros, setSelectedFiltros] = useState<string[]>([]);
 
   const fetchData = async () => {
     try {
-      const data = await client.fetch(`*[_type == "planta" && !(_id in path("drafts.**")) && estado_revision == "Validado"]{
-        _id,
-        nombre_cientifico,
-        nombres_comunes,
-        habito,
-        reproductivo,
-        familia,
-        galeria
-      }`);
+      const data = await client.fetch(`*[_type == "planta" && !(_id in path("drafts.**")) && estado_revision == "Validado"]`);
       setPlantas(data);
+
+      const filtrosData = await client.fetch(`*[_type == "filtro" && activo == true] | order(categoria asc, nombre_filtro asc)`);
+      setFiltrosDinamicos(filtrosData);
     } catch (e) { console.error(e); }
 
     if (user?.id) {
@@ -81,7 +80,14 @@ export default function HomeScreen() {
   const userName = user?.firstName || "Explorador";
   const isAdmin = user?.publicMetadata?.role === "admin";
 
-  // Filter Logic
+  const hasValue = (obj: any, targetValue: string): boolean => {
+    if (!obj) return false;
+    if (typeof obj === 'string') return obj === targetValue;
+    if (Array.isArray(obj)) return obj.some(item => hasValue(item, targetValue));
+    if (typeof obj === 'object') return Object.values(obj).some(val => hasValue(val, targetValue));
+    return false;
+  };
+
   const filteredPlantas = plantas.filter((p) => {
     const matchesSearch =
       ((p.nombre_cientifico || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -89,33 +95,20 @@ export default function HomeScreen() {
 
     const matchesHabit = activeHabit === "Todo" || p.habito === activeHabit;
 
-    // Modal Advanced Filters (Using new reproductivo schema)
-    const matchesFlower = !filterFlower || (p.reproductivo?.flor_color === filterFlower);
-    const matchesFruit = !filterFruit || (p.reproductivo?.fruto_tipo === filterFruit || p.reproductivo?.fruto_textura === filterFruit);
-    const matchesSemilla = !filterSemilla || (p.reproductivo?.semilla_presencia === filterSemilla);
-    const matchesInflorescencia = !filterInflorescencia || (p.reproductivo?.flor_agrupacion === filterInflorescencia);
+    const matchesDynamic = selectedFiltros.length === 0 || selectedFiltros.every(dato_tecnico => hasValue(p, dato_tecnico));
 
-    return matchesSearch && matchesHabit && matchesFlower && matchesFruit && matchesSemilla && matchesInflorescencia;
+    return matchesSearch && matchesHabit && matchesDynamic;
   });
 
   // Dynamic Options merged with static values from PLANT-OR document
   const habitsList = ["Todo", "Árbol", "Palmera", "Arbusto", "Liana", "Hierba"];
-  
-  // Static lists from PLANT-OR document (always available, even if DB is empty)
-  const FLOWER_COLORS = ['Blanco', 'Amarillo', 'Rojo', 'Rosado', 'Morado', 'Anaranjado', 'Verde', 'Crema', 'Otro'];
-  const FLOWER_GROUPS = ['Solitaria', 'En racimo', 'En manojo', 'En espiga', 'En cabezuela', 'Otro'];
-  const FRUIT_TYPES = ['Baya', 'Drupa', 'Cápsula', 'Vaina', 'Sámara', 'Nuez', 'Aquenio', 'Otro'];
-  const SEMILLA_OPTIONS = ['Con semillas visibles', 'Sin semillas visibles'];
 
-  // Merge static + dynamic values from DB (unique)
-  const dbFlowerColors = plantas.map(p => p.reproductivo?.flor_color).filter(Boolean) as string[];
-  const dbFruitTypes = plantas.map(p => p.reproductivo?.fruto_tipo || p.reproductivo?.fruto_textura).filter(Boolean) as string[];
-  const dbGroups = plantas.map(p => p.reproductivo?.flor_agrupacion).filter(Boolean) as string[];
-  
-  const flowerList = [...new Set([...FLOWER_COLORS, ...dbFlowerColors])];
-  const inflorescenciaList = [...new Set([...FLOWER_GROUPS, ...dbGroups])];
-  const fruitList = [...new Set([...FRUIT_TYPES, ...dbFruitTypes])];
-  const semillaList = SEMILLA_OPTIONS;
+  // Group dynamic filters by category
+  const groupedFiltros = filtrosDinamicos.reduce((acc, filtro) => {
+    if (!acc[filtro.categoria]) acc[filtro.categoria] = [];
+    acc[filtro.categoria].push(filtro);
+    return acc;
+  }, {} as Record<string, any[]>);
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background, paddingTop: insets.top }]}>
@@ -176,9 +169,10 @@ export default function HomeScreen() {
           />
           <Pressable
             onPress={() => setModalVisible(true)}
-            style={[styles.filterButton, { backgroundColor: "rgba(255,255,255,0.1)" }]}
+            style={[styles.filterButton, { backgroundColor: selectedFiltros.length > 0 ? "#1FC451" : "rgba(255,255,255,0.1)", flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12 }]}
           >
-            <MaterialCommunityIcons name="filter-variant" size={20} color={theme.text} />
+            <MaterialCommunityIcons name="filter-variant" size={20} color={selectedFiltros.length > 0 ? "#08130D" : theme.text} />
+            <Text style={{ color: selectedFiltros.length > 0 ? "#08130D" : theme.text, fontSize: 13, fontWeight: "bold" }}>Filtros</Text>
           </Pressable>
         </View>
 
@@ -248,79 +242,50 @@ export default function HomeScreen() {
             </View>
 
             <ScrollView showsVerticalScrollIndicator={false} style={{ maxHeight: 400 }}>
-              <Text style={[styles.filterLabel, { color: theme.icon }]}>Color de Flor</Text>
-              <View style={styles.filterChipContainer}>
-                {flowerList.map(color => (
-                  <Pressable
-                    key={color}
-                    onPress={() => setFilterFlower(filterFlower === color ? "" : color)}
-                    style={[
-                      styles.filterChip,
-                      filterFlower === color ? { backgroundColor: "#1FC451" } : { backgroundColor: "rgba(255,255,255,0.05)" }
-                    ]}
-                  >
-                    <Text style={{ color: filterFlower === color ? "#08130D" : theme.text, fontWeight: filterFlower === color ? "bold" : "normal" }}>{color}</Text>
-                  </Pressable>
-                ))}
-              </View>
-
-              <Text style={[styles.filterLabel, { color: theme.icon }]}>Tipo de Inflorescencia</Text>
-              <View style={styles.filterChipContainer}>
-                {inflorescenciaList.map(tipo => (
-                  <Pressable
-                    key={tipo}
-                    onPress={() => setFilterInflorescencia(filterInflorescencia === tipo ? "" : tipo)}
-                    style={[
-                      styles.filterChip,
-                      filterInflorescencia === tipo ? { backgroundColor: "#1FC451" } : { backgroundColor: "rgba(255,255,255,0.05)" }
-                    ]}
-                  >
-                    <Text style={{ color: filterInflorescencia === tipo ? "#08130D" : theme.text, fontWeight: filterInflorescencia === tipo ? "bold" : "normal" }}>{tipo}</Text>
-                  </Pressable>
-                ))}
-              </View>
-
-              <Text style={[styles.filterLabel, { color: theme.icon }]}>Tipo de Fruto</Text>
-              <View style={styles.filterChipContainer}>
-                {fruitList.map(tipo => (
-                  <Pressable
-                    key={tipo}
-                    onPress={() => setFilterFruit(filterFruit === tipo ? "" : tipo)}
-                    style={[
-                      styles.filterChip,
-                      filterFruit === tipo ? { backgroundColor: "#1FC451" } : { backgroundColor: "rgba(255,255,255,0.05)" }
-                    ]}
-                  >
-                    <Text style={{ color: filterFruit === tipo ? "#08130D" : theme.text, fontWeight: filterFruit === tipo ? "bold" : "normal" }}>{tipo}</Text>
-                  </Pressable>
-                ))}
-              </View>
-
-              <Text style={[styles.filterLabel, { color: theme.icon }]}>Tipo de Semilla</Text>
-              <View style={styles.filterChipContainer}>
-                {semillaList.map(tipo => (
-                  <Pressable
-                    key={tipo}
-                    onPress={() => setFilterSemilla(filterSemilla === tipo ? "" : tipo)}
-                    style={[
-                      styles.filterChip,
-                      filterSemilla === tipo ? { backgroundColor: "#1FC451" } : { backgroundColor: "rgba(255,255,255,0.05)" }
-                    ]}
-                  >
-                    <Text style={{ color: filterSemilla === tipo ? "#08130D" : theme.text, fontWeight: filterSemilla === tipo ? "bold" : "normal" }}>{tipo}</Text>
-                  </Pressable>
-                ))}
-              </View>
+              {Object.keys(groupedFiltros).length > 0 ? (
+                Object.keys(groupedFiltros).map(categoria => (
+                  <View key={categoria}>
+                    <Text style={[styles.filterLabel, { color: theme.icon }]}>{categoria}</Text>
+                    <View style={styles.filterChipContainer}>
+                      {groupedFiltros[categoria].map(filtro => {
+                        const isActive = selectedFiltros.includes(filtro.dato_tecnico);
+                        return (
+                          <Pressable
+                            key={filtro._id}
+                            onPress={() => {
+                              setSelectedFiltros(prev => 
+                                isActive 
+                                  ? prev.filter(f => f !== filtro.dato_tecnico)
+                                  : [...prev, filtro.dato_tecnico]
+                              );
+                            }}
+                            style={[
+                              styles.filterChip,
+                              isActive ? { backgroundColor: "#1FC451", borderColor: "#1FC451" } : { backgroundColor: "rgba(255,255,255,0.05)" }
+                            ]}
+                          >
+                            <Text style={{ color: isActive ? "#08130D" : theme.text, fontWeight: isActive ? "bold" : "normal" }}>
+                              {filtro.nombre_filtro}
+                            </Text>
+                          </Pressable>
+                        );
+                      })}
+                    </View>
+                  </View>
+                ))
+              ) : (
+                <View style={{ padding: 20, alignItems: 'center' }}>
+                  <MaterialCommunityIcons name="filter-off-outline" size={40} color={theme.icon} style={{ opacity: 0.5, marginBottom: 12 }} />
+                  <Text style={{ color: theme.text, opacity: 0.7, textAlign: 'center' }}>No hay filtros dinámicos disponibles.</Text>
+                </View>
+              )}
 
             </ScrollView>
 
             <View style={{ flexDirection: 'row', gap: 12, marginTop: 24 }}>
               <Pressable
                 onPress={() => {
-                  setFilterFruit("");
-                  setFilterFlower("");
-                  setFilterSemilla("");
-                  setFilterInflorescencia("");
+                  setSelectedFiltros([]);
                   setActiveHabit("Todo");
                   setModalVisible(false);
                 }}
