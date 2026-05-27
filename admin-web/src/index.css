@@ -47,3 +47,24 @@
 ::-webkit-scrollbar-track { background: hsl(var(--background)); }
 ::-webkit-scrollbar-thumb { background: hsl(var(--border)); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: hsl(var(--muted-foreground)); }
+
+/* Hack: Ocultar cartel de Development Mode y Secured by Clerk */
+.cl-internal-b3al4t,
+div[class*="cl-internal-"][style*="position: fixed"][style*="bottom: "],
+div[class*="cl-internal-"][style*="z-index: 99999"],
+aside[class*="cl-internal-"] {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Ocultar "Secured by Clerk" */
+.cl-footerAction__signIn,
+.cl-footerAction__signUp {
+  display: flex !important; /* Keep the 'No tienes cuenta?' text visible */
+}
+
+div[class*="cl-internal-"][style*="display: flex"][style*="align-items: center"][style*="justify-content: center"]:has(svg) {
+  display: none !important;
+}
