@@ -116,7 +116,7 @@ export default function FiltrosPage() {
         <div className="flex items-center gap-2 flex-shrink-0">
           <button
             onClick={fetchFiltros}
-            className="p-2 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:bg-white/5 transition-colors"
+            className="p-2 rounded-lg border border-zinc-800 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors"
             title="Recargar"
           >
             <RefreshCw className="w-4 h-4" />
@@ -186,26 +186,17 @@ export default function FiltrosPage() {
                 onChange={e => setForm(f => ({ ...f, dato_tecnico: e.target.value }))}
               />
             </div>
-            <div className="space-y-2 md:col-span-2">
+            <div className="space-y-1">
               <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
                 Categoría *
               </label>
-              <div className="flex flex-wrap gap-2">
-                {CATEGORIAS.map(c => (
-                  <button
-                    key={c}
-                    type="button"
-                    onClick={() => setForm(f => ({ ...f, categoria: c }))}
-                    className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-all ${
-                      form.categoria === c
-                        ? 'bg-primary/20 text-primary border-primary shadow-[0_0_10px_rgba(31,196,81,0.2)]'
-                        : 'border-border text-muted-foreground hover:text-foreground hover:bg-white/5'
-                    }`}
-                  >
-                    {c}
-                  </button>
-                ))}
-              </div>
+              <select
+                className="w-full bg-[#0A0A0A] border border-zinc-800 rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary appearance-none cursor-pointer"
+                value={form.categoria}
+                onChange={e => setForm(f => ({ ...f, categoria: e.target.value }))}
+              >
+                {CATEGORIAS.map(c => <option key={c} value={c} className="bg-[#0A0A0A]">{c}</option>)}
+              </select>
             </div>
             <div className="space-y-1">
               <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
@@ -229,14 +220,14 @@ export default function FiltrosPage() {
           <div className="flex gap-3 justify-end mt-4">
             <button
               onClick={() => { setShowForm(false); setForm(EMPTY_FORM); setFormError('') }}
-              className="px-4 py-2 text-sm font-medium bg-red-500/10 text-red-500 border border-red-500/20 rounded-lg hover:bg-red-500/20 hover:text-red-400 transition-colors"
+              className="px-4 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors"
             >
               Cancelar
             </button>
             <button
               onClick={handleCreate}
               disabled={saving}
-              className="px-6 py-2 text-sm bg-primary text-black font-bold rounded-lg hover:bg-[#1FC451] hover:scale-105 active:scale-95 transition-all shadow-[0_0_15px_rgba(31,196,81,0.3)] disabled:opacity-50 disabled:scale-100"
+              className="px-6 py-2 text-sm bg-primary text-black font-bold rounded-lg hover:bg-[#1FC451] transition-colors disabled:opacity-50"
             >
               {saving ? 'Guardando...' : 'Crear filtro'}
             </button>
@@ -268,7 +259,7 @@ export default function FiltrosPage() {
 
       {/* Filters list */}
       {loading ? (
-        <LoadingSpinner message="Cargando filtros..." />
+        <LoadingSpinner text="Cargando filtros..." />
       ) : filtrosFiltrados.length === 0 ? (
         <div className="text-center py-16 text-muted-foreground">
           <Filter className="w-12 h-12 mx-auto mb-3 opacity-20" />
