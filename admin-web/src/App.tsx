@@ -15,20 +15,42 @@ function App() {
     <ClerkProvider publishableKey={clerkPubKey}>
       <BrowserRouter>
         <SignedOut>
-          <div className="min-h-screen flex items-center justify-center bg-background p-4">
-            <div className="w-full max-w-md space-y-6">
-              {/* Header */}
-              <div className="text-center space-y-2">
-                <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto">
-                  <span className="text-2xl">🌿</span>
-                </div>
-                <h1 className="text-2xl font-bold text-foreground">PLANT-OR</h1>
-                <p className="text-muted-foreground text-sm">Panel Administrativo para Profesores</p>
+          <div className="min-h-screen flex flex-col items-center justify-center bg-[#f4f4f5] p-4">
+            {/* Custom Header matching the screenshot style */}
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
+                <span className="text-white text-lg leading-none">🌿</span>
               </div>
-              <div className="bg-card border border-border rounded-xl p-6">
-                <SignIn routing="hash" />
-              </div>
+              <span className="text-xl font-medium text-black">PLANT-OR</span>
             </div>
+            
+            <SignIn 
+              routing="hash" 
+              appearance={{
+                variables: {
+                  colorPrimary: '#0a0a0a',
+                  colorBackground: '#ffffff',
+                  colorText: '#000000',
+                  colorInputBackground: '#ffffff',
+                  colorInputText: '#000000',
+                  borderRadius: '0.5rem',
+                },
+                elements: {
+                  card: "shadow-sm border border-gray-200 w-full max-w-[400px] p-8",
+                  header: "hidden",
+                  headerTitle: "text-2xl font-bold text-center text-black",
+                  headerSubtitle: "text-center text-gray-500",
+                  socialButtonsBlockButton: "border border-gray-200 text-black font-medium py-2.5",
+                  formButtonPrimary: "bg-[#0a0a0a] hover:bg-black text-white shadow-none py-2.5",
+                  formFieldLabel: "text-black font-medium",
+                  formFieldInput: "bg-white border-gray-200 text-black py-2.5",
+                  footerActionText: "text-gray-600",
+                  footerActionLink: "text-black hover:underline font-medium",
+                  dividerLine: "bg-gray-200",
+                  dividerText: "text-gray-500"
+                }
+              }}
+            />
           </div>
         </SignedOut>
 

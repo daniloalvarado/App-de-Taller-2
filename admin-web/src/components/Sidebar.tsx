@@ -132,7 +132,7 @@ export function Sidebar() {
 
       {/* Logout Confirm Modal */}
       {logoutConfirmOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
           <div className="bg-[#0A0A0A] border border-zinc-800 rounded-2xl p-6 w-full max-w-sm space-y-4 shadow-2xl text-center">
             <h3 className="text-xl font-bold text-white">¿Cerrar sesión?</h3>
             <p className="text-sm text-zinc-400">
