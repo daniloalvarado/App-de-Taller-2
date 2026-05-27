@@ -90,8 +90,21 @@ export default function RegistroScreen() {
     tipoVida: '',
   });
 
-  const updateBotanic = (key: string, value: any) => {
-    setDatosBotanicos((prev: any) => ({ ...prev, [key]: value }));
+  const updateBotanic = (sectionOrKey: string, fieldOrValue: any, nestedValue?: any) => {
+    setDatosBotanicos((prev: any) => {
+      if (nestedValue !== undefined) {
+        // Es una actualización anidada: section, field, value
+        return {
+          ...prev,
+          [sectionOrKey]: {
+            ...(prev[sectionOrKey] || {}),
+            [fieldOrValue]: nestedValue
+          }
+        };
+      }
+      // Actualización directa: key, value
+      return { ...prev, [sectionOrKey]: fieldOrValue };
+    });
   };
 
   // Sync profile data on tab focus (for new records)
@@ -687,6 +700,7 @@ export default function RegistroScreen() {
                   <YStack gap="$2">
                     <Label color="#ffffff">Dirección / Referencia</Label>
                     <Input
+                      size="$3"
                       value={direccion}
                       onChangeText={setDireccion}
                       placeholder="Ej. Malecón Tarapacá, Calle Próspero..."
@@ -720,6 +734,7 @@ export default function RegistroScreen() {
                     <YStack flex={1} gap="$2">
                       <Label color="#ffffff">N° de Casa</Label>
                       <Input
+                        size="$3"
                         value={numeroCasa}
                         onChangeText={setNumeroCasa}
                         placeholder="Ej. 123 o S/N"

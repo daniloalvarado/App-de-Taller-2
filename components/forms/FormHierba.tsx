@@ -9,8 +9,7 @@ interface FormHierbaProps {
 
 export function FormHierba({ data, updateData }: FormHierbaProps) {
   const setField = (section: string, field: string, value: any) => {
-    const currentSection = data[section] || {};
-    updateData(section, { ...currentSection, [field]: value });
+    updateData(section, field, value);
   };
 
   const getField = (section: string, field: string) => {
