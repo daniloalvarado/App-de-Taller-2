@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { client } from '@/lib/sanity'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
 import { SlidersHorizontal, Plus, Trash2, ToggleLeft, ToggleRight, RefreshCw, Filter } from 'lucide-react'
+import { CustomSelect } from '@/components/CustomSelect'
 
 const CATEGORIAS = ['Hábito', 'Tipo de vida', 'Forma', 'Color', 'Tamaño', 'Textura', 'Estructura']
 
@@ -190,13 +191,12 @@ export default function FiltrosPage() {
               <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
                 Categoría *
               </label>
-              <select
-                className="w-full bg-[#0A0A0A] border border-zinc-800 rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary appearance-none cursor-pointer"
+              <CustomSelect
                 value={form.categoria}
-                onChange={e => setForm(f => ({ ...f, categoria: e.target.value }))}
-              >
-                {CATEGORIAS.map(c => <option key={c} value={c} className="bg-[#0A0A0A]">{c}</option>)}
-              </select>
+                onChange={(val) => setForm(f => ({ ...f, categoria: val }))}
+                options={CATEGORIAS.map(c => ({ value: c, label: c }))}
+                placeholder="Seleccionar categoría..."
+              />
             </div>
             <div className="space-y-1">
               <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
@@ -290,9 +290,9 @@ export default function FiltrosPage() {
                           {filtro.nombre_filtro}
                         </p>
                         {filtro.activo ? (
-                          <span className="text-xs px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 flex-shrink-0">Activo</span>
+                          <span className="text-xs px-2 py-0.5 rounded-full bg-green-500/15 text-green-400 border border-green-500/30 flex-shrink-0">Activo</span>
                         ) : (
-                          <span className="text-xs px-2 py-0.5 rounded-full bg-white/5 text-muted-foreground border border-border flex-shrink-0">Inactivo</span>
+                          <span className="text-xs px-2 py-0.5 rounded-full bg-red-500/15 text-red-400 border border-red-500/30 flex-shrink-0">Inactivo</span>
                         )}
                       </div>
                       <p className="text-xs text-muted-foreground mt-0.5">
