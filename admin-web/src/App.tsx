@@ -1,5 +1,6 @@
 import React from 'react'
 import { ClerkProvider, SignedIn, SignedOut, SignIn } from '@clerk/clerk-react'
+import { esES } from '@clerk/localizations'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Sidebar } from '@/components/Sidebar'
 import DashboardPage from '@/pages/DashboardPage'
@@ -12,7 +13,18 @@ const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
 function App() {
   return (
-    <ClerkProvider publishableKey={clerkPubKey}>
+    <ClerkProvider 
+      publishableKey={clerkPubKey}
+      localization={{
+        ...esES,
+        signIn: {
+          start: {
+            title: 'Bienvenido',
+            subtitle: 'Inicia sesión con tu Email o cuenta de Google',
+          }
+        }
+      }}
+    >
       <BrowserRouter>
         <SignedOut>
           <div className="min-h-screen flex flex-col items-center justify-center bg-[#f4f4f5] p-4">
