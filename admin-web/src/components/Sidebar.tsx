@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import {
   LayoutDashboard, ClipboardList, CheckCircle, Leaf,
-  Map, ChevronLeft, ChevronRight, LogOut, Menu
+  Map, ChevronLeft, ChevronRight, LogOut, Menu, SlidersHorizontal
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useClerk, useUser } from '@clerk/clerk-react'
@@ -13,6 +13,7 @@ const navItems = [
   { href: '/validaciones', icon: ClipboardList, label: 'Pendientes' },
   { href: '/aprobados', icon: CheckCircle, label: 'Aprobados' },
   { href: '/mapa', icon: Map, label: 'Mapa' },
+  { href: '/filtros', icon: SlidersHorizontal, label: 'Filtros' },
 ]
 
 export function Sidebar() {
