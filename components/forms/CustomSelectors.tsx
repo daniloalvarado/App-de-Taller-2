@@ -1,6 +1,6 @@
 import React from 'react';
-import { ScrollView } from 'react-native';
-import { Button, XStack, YStack, Paragraph } from 'tamagui';
+import { ScrollView, Pressable, Text } from 'react-native';
+import { XStack, YStack } from 'tamagui';
 
 interface RadioSelectProps {
   options: string[];
@@ -14,24 +14,33 @@ export const RadioSelect = React.memo(function RadioSelect({ options, value, onC
     options.map((opt) => {
       const isSelected = value === opt;
       return (
-        <Button
+        <Pressable
           key={opt}
-          size="$3"
-          bg={isSelected ? '#1FC451' : 'rgba(255,255,255,0.05)'}
-          color={isSelected ? '#08130D' : 'rgba(255,255,255,0.7)'}
-          borderColor={isSelected ? '#1FC451' : 'transparent'}
-          borderWidth={1}
           onPress={() => onChange(opt)}
-          mr={horizontal ? '$2' : 0}
-          mb={horizontal ? 0 : '$2'}
-          height="auto"
-          py="$2"
-          pressStyle={{ bg: isSelected ? '#15963c' : 'rgba(255,255,255,0.1)' }}
+          style={({ pressed }) => ({
+            backgroundColor: pressed 
+              ? (isSelected ? '#15963c' : 'rgba(255,255,255,0.1)') 
+              : (isSelected ? '#1FC451' : 'rgba(255,255,255,0.05)'),
+            borderColor: isSelected ? '#1FC451' : 'transparent',
+            borderWidth: 1,
+            borderRadius: 8,
+            paddingVertical: 8,
+            paddingHorizontal: 12,
+            marginRight: horizontal ? 8 : 0,
+            marginBottom: horizontal ? 0 : 8,
+            justifyContent: 'center',
+            alignItems: 'center',
+          })}
         >
-          <Paragraph color={isSelected ? '#08130D' : 'rgba(255,255,255,0.7)'} size="$2" style={{ flexShrink: 1, flexWrap: 'wrap', textAlign: 'center' }}>
+          <Text style={{ 
+            color: isSelected ? '#08130D' : 'rgba(255,255,255,0.7)',
+            fontSize: 13,
+            textAlign: 'center',
+            flexShrink: 1,
+          }}>
             {opt}
-          </Paragraph>
-        </Button>
+          </Text>
+        </Pressable>
       );
     });
 
@@ -48,6 +57,10 @@ export const RadioSelect = React.memo(function RadioSelect({ options, value, onC
       {renderButtons()}
     </XStack>
   );
+}, (prev, next) => {
+  return prev.value === next.value && 
+         prev.horizontal === next.horizontal && 
+         prev.options.join(',') === next.options.join(',');
 });
 
 interface MultiSelectProps {
@@ -70,24 +83,41 @@ export const MultiSelect = React.memo(function MultiSelect({ options, value, onC
       {options.map((opt) => {
         const isSelected = value.includes(opt);
         return (
-          <Button
+          <Pressable
             key={opt}
-            size="$3"
-            bg={isSelected ? '#1FC451' : 'rgba(255,255,255,0.05)'}
-            color={isSelected ? '#08130D' : 'rgba(255,255,255,0.7)'}
-            borderColor={isSelected ? '#1FC451' : 'transparent'}
-            borderWidth={1}
             onPress={() => toggleOption(opt)}
-            height="auto"
-            py="$2"
-            pressStyle={{ bg: isSelected ? '#15963c' : 'rgba(255,255,255,0.1)' }}
+            style={({ pressed }) => ({
+              backgroundColor: pressed 
+                ? (isSelected ? '#15963c' : 'rgba(255,255,255,0.1)') 
+                : (isSelected ? '#1FC451' : 'rgba(255,255,255,0.05)'),
+              borderColor: isSelected ? '#1FC451' : 'transparent',
+              borderWidth: 1,
+              borderRadius: 8,
+              paddingVertical: 8,
+              paddingHorizontal: 12,
+              justifyContent: 'center',
+              alignItems: 'center',
+            })}
           >
-            <Paragraph color={isSelected ? '#08130D' : 'rgba(255,255,255,0.7)'} size="$2" style={{ flexShrink: 1, flexWrap: 'wrap', textAlign: 'center' }}>
+            <Text style={{ 
+              color: isSelected ? '#08130D' : 'rgba(255,255,255,0.7)',
+              fontSize: 13,
+              textAlign: 'center',
+              flexShrink: 1,
+            }}>
               {opt}
-            </Paragraph>
-          </Button>
+            </Text>
+          </Pressable>
         );
       })}
     </XStack>
   );
+}, (prev, next) => {
+  const prevValue = Array.isArray(prev.value) ? prev.value : [];
+  const nextValue = Array.isArray(next.value) ? next.value : [];
+  const prevOptions = Array.isArray(prev.options) ? prev.options : [];
+  const nextOptions = Array.isArray(next.options) ? next.options : [];
+  
+  return prevValue.join(',') === nextValue.join(',') && 
+         prevOptions.join(',') === nextOptions.join(',');
 });
