@@ -61,6 +61,33 @@ function App() {
           }
         }
       }}
+      appearance={{
+        variables: {
+          colorPrimary: '#1FC451',
+          colorBackground: '#0a0a0a',
+          colorText: '#ffffff',
+          colorInputBackground: '#121212',
+          colorInputText: '#ffffff',
+          borderRadius: '0.75rem',
+        },
+        elements: {
+          card: "shadow-2xl border border-zinc-800 w-full max-w-[400px] p-8 bg-[#0a0a0a]",
+          header: "hidden",
+          headerTitle: "text-2xl font-bold text-center text-white",
+          headerSubtitle: "text-center text-zinc-400",
+          socialButtonsBlockButton: "border border-zinc-700 bg-transparent hover:bg-white/5 transition-colors py-2.5",
+          socialButtonsBlockButtonText: "!text-white font-medium",
+          formButtonPrimary: "bg-[#1FC451] hover:bg-[#19a343] text-black font-bold shadow-none py-2.5 transition-colors",
+          formFieldLabel: "text-zinc-300 font-medium",
+          formFieldInput: "bg-black border-zinc-800 text-white focus:border-[#1FC451] py-2.5",
+          footerAction: "hidden",
+          dividerLine: "bg-zinc-800",
+          dividerText: "text-zinc-500",
+          identityPreviewText: "text-white",
+          identityPreviewEditButtonIcon: "text-[#1FC451]",
+          formFieldInputShowPasswordButton: "text-zinc-400 hover:text-white"
+        }
+      }}
     >
       <BrowserRouter>
         <SignedOut>
@@ -73,36 +100,7 @@ function App() {
               <span className="text-2xl font-bold text-white tracking-tight">PLANT-OR</span>
             </div>
             
-            <SignIn 
-              routing="hash" 
-              appearance={{
-                variables: {
-                  colorPrimary: '#1FC451',
-                  colorBackground: '#0a0a0a',
-                  colorText: '#ffffff',
-                  colorInputBackground: '#121212',
-                  colorInputText: '#ffffff',
-                  borderRadius: '0.75rem',
-                },
-                elements: {
-                  card: "shadow-2xl border border-zinc-800 w-full max-w-[400px] p-8 bg-[#0a0a0a]",
-                  header: "hidden",
-                  headerTitle: "text-2xl font-bold text-center text-white",
-                  headerSubtitle: "text-center text-zinc-400",
-                  socialButtonsBlockButton: "border border-zinc-700 bg-transparent hover:bg-white/5 transition-colors py-2.5",
-                  socialButtonsBlockButtonText: "!text-white font-medium",
-                  formButtonPrimary: "bg-[#1FC451] hover:bg-[#19a343] text-black font-bold shadow-none py-2.5 transition-colors",
-                  formFieldLabel: "text-zinc-300 font-medium",
-                  formFieldInput: "bg-black border-zinc-800 text-white focus:border-[#1FC451] py-2.5",
-                  footerAction: "hidden",
-                  dividerLine: "bg-zinc-800",
-                  dividerText: "text-zinc-500",
-                  identityPreviewText: "text-white",
-                  identityPreviewEditButtonIcon: "text-[#1FC451]",
-                  formFieldInputShowPasswordButton: "text-zinc-400 hover:text-white"
-                }
-              }}
-            />
+            <SignIn routing="hash" />
           </div>
         </SignedOut>
 
