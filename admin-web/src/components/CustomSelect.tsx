@@ -36,7 +36,7 @@ export function CustomSelect({ value, onChange, options, placeholder = 'Seleccio
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-between w-full px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground hover:bg-secondary/50 focus:outline-none focus:ring-1 focus:ring-primary transition-colors"
+        className="flex items-center justify-between w-full px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground hover:bg-secondary/50 focus:outline-none focus:ring-1 focus:ring-primary transition-colors cursor-pointer"
       >
         <span className={cn("truncate", !selectedOption && "text-muted-foreground")}>
           {selectedOption ? selectedOption.label : placeholder}

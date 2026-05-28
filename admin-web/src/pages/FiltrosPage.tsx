@@ -119,16 +119,20 @@ export default function FiltrosPage() {
           </p>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
-          <button
-            onClick={fetchFiltros}
-            className="p-2 rounded-lg border border-zinc-800 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
-            title="Recargar"
-          >
-            <RefreshCw className="w-4 h-4" />
-          </button>
+          <div className="relative group/tooltip">
+            <button
+              onClick={fetchFiltros}
+              className="p-2 rounded-lg border border-zinc-800 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+            >
+              <RefreshCw className="w-4 h-4" />
+            </button>
+            <span className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-black text-white text-xs rounded border border-white/20 opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10 shadow-lg">
+              Recargar
+            </span>
+          </div>
           <button
             onClick={() => setShowForm(v => !v)}
-            className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white text-sm font-bold rounded-lg hover:bg-green-500 transition-colors cursor-pointer"
+            className="flex items-center gap-2 px-4 py-2 bg-[#1FC451] text-[#080808] text-sm font-bold rounded-lg hover:bg-[#1FC451]/90 hover:scale-105 transition-all cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             Nuevo filtro

@@ -73,7 +73,7 @@ export default function MapaPage() {
             onClick={() => setActiveFilter('all')}
             className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all cursor-pointer ${
               activeFilter === 'all'
-                ? 'bg-white text-black border-white'
+                ? 'bg-white/10 border-white/30 text-white'
                 : 'border-white/10 text-muted-foreground hover:text-white hover:bg-white/10'
             }`}
           >
@@ -84,9 +84,9 @@ export default function MapaPage() {
               key={state}
               onClick={() => setActiveFilter(state)}
               style={activeFilter === state ? {
-                borderColor: STATUS_COLORS[state],
-                color: '#080808',
-                backgroundColor: STATUS_COLORS[state],
+                borderColor: STATUS_COLORS[state] + '80',
+                color: STATUS_COLORS[state],
+                backgroundColor: STATUS_COLORS[state] + '18',
               } : {}}
               className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all cursor-pointer ${
                 activeFilter === state ? '' : 'border-white/10 text-muted-foreground hover:text-white hover:bg-white/5'

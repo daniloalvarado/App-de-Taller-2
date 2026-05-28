@@ -111,7 +111,7 @@ export default function ValidacionesPage({ filtroEstado }: ValidacionesPageProps
           </div>
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className="flex items-center gap-2 px-4 py-2 bg-secondary border border-border rounded-lg text-sm text-foreground hover:bg-accent transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-secondary border border-border rounded-lg text-sm text-foreground hover:bg-accent transition-colors cursor-pointer"
           >
             <Filter className="w-4 h-4" />
             <span className="hidden sm:inline">Filtros</span>
@@ -141,7 +141,7 @@ export default function ValidacionesPage({ filtroEstado }: ValidacionesPageProps
             />
             <button
               onClick={() => { setFilterEstado(''); setFilterHabito(''); setSearch('') }}
-              className="px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
             >
               Limpiar
             </button>
