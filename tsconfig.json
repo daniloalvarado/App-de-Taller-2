@@ -12,5 +12,11 @@
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
     "sanity/sanity.types.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "TeamSync",
+    "admin-web",
+    "sanity"
   ]
 }

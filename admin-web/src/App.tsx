@@ -1,5 +1,6 @@
 import React from 'react'
 import { ClerkProvider, SignedIn, SignedOut, SignIn, useUser, useAuth } from '@clerk/clerk-react'
+import { XCircle } from 'lucide-react'
 import { esES } from '@clerk/localizations'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Sidebar } from '@/components/Sidebar'
@@ -24,7 +25,7 @@ function RoleCheck({ children }: { children: React.ReactNode }) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-[#000000] p-4 text-center">
         <div className="w-16 h-16 bg-red-500/10 rounded-2xl flex items-center justify-center border border-red-500/20 mb-6">
-          <span className="text-3xl">⛔</span>
+          <XCircle className="w-8 h-8 text-white" />
         </div>
         <h1 className="text-2xl font-bold text-white mb-2">Acceso Denegado</h1>
         <p className="text-zinc-400 mb-8 max-w-md">
@@ -32,7 +33,7 @@ function RoleCheck({ children }: { children: React.ReactNode }) {
         </p>
         <button
           onClick={() => signOut()}
-          className="px-6 py-3 bg-[#1FC451] hover:bg-[#19a343] text-black font-bold rounded-lg transition-colors cursor-pointer"
+          className="px-6 py-3 bg-[#1FC451] hover:bg-[#19a343] text-white font-bold rounded-lg transition-colors cursor-pointer"
         >
           Cerrar sesión y volver
         </button>
@@ -54,7 +55,7 @@ function App() {
           start: {
             ...esES.signIn?.start,
             title: 'Bienvenido',
-            subtitle: 'Inicia sesión con tu Email o cuenta de Google',
+            subtitle: 'Inicia sesión con tu correo o cuenta de Google',
             actionText: '',
             actionLink: ''
           }
@@ -69,7 +70,7 @@ function App() {
               <div className="w-10 h-10 bg-[#1FC451]/10 rounded-xl flex items-center justify-center border border-[#1FC451]/20">
                 <span className="text-xl leading-none">🌿</span>
               </div>
-              <span className="text-2xl font-bold text-white tracking-tight">PLANT-OR <span className="text-[#1FC451]">Admin</span></span>
+              <span className="text-2xl font-bold text-white tracking-tight">PLANT-OR</span>
             </div>
             
             <SignIn 
@@ -88,8 +89,8 @@ function App() {
                   header: "hidden",
                   headerTitle: "text-2xl font-bold text-center text-white",
                   headerSubtitle: "text-center text-zinc-400",
-                  socialButtonsBlockButton: "border border-zinc-700 text-white hover:bg-white/5 transition-colors font-medium py-2.5",
-                  socialButtonsBlockButtonText: "text-white",
+                  socialButtonsBlockButton: "border border-zinc-700 bg-transparent text-white hover:bg-white/5 transition-colors font-medium py-2.5",
+                  socialButtonsBlockButtonText: "text-white font-medium",
                   formButtonPrimary: "bg-[#1FC451] hover:bg-[#19a343] text-black font-bold shadow-none py-2.5 transition-colors",
                   formFieldLabel: "text-zinc-300 font-medium",
                   formFieldInput: "bg-black border-zinc-800 text-white focus:border-[#1FC451] py-2.5",

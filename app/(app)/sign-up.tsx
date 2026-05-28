@@ -67,6 +67,8 @@ export default function SignUpScreen() {
         errorMessage = "La contraseña debe tener al menos 8 caracteres.";
       } else if (errorCode === "form_identifier_invalid" || originalMessage.includes("identifier is invalid")) {
         errorMessage = "El correo electrónico no es válido. Ejemplo: usuario@correo.com";
+      } else if (errorCode === "form_param_nil" || originalMessage.includes("enter email address")) {
+        errorMessage = "Por favor, ingresa tu correo electrónico.";
       } else if (clerkError?.errors[0]) {
         errorMessage = clerkError.errors[0].longMessage || clerkError.errors[0].message;
       }
