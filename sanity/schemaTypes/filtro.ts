@@ -39,6 +39,23 @@ export const filtro = {
       title: 'Filtro Activo',
       type: 'boolean',
       initialValue: true,
+    },
+    {
+      name: 'tipo_seleccion',
+      title: 'Tipo de Selección',
+      type: 'string',
+      options: {
+        list: ['Selección única', 'Selección múltiple'],
+      },
+      initialValue: 'Selección única',
+      validation: (Rule: any) => Rule.required(),
+    },
+    {
+      name: 'orden',
+      title: 'Orden de aparición',
+      type: 'number',
+      initialValue: 0,
+      description: 'Define en qué orden aparece este filtro en la app (menor número aparece primero).',
     }
   ]
 }

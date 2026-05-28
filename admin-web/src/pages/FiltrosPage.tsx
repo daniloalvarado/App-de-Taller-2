@@ -13,9 +13,11 @@ interface Filtro {
   dato_tecnico: string
   icono?: string
   activo: boolean
+  tipo_seleccion?: string
+  orden?: number
 }
 
-const EMPTY_FORM = { nombre_filtro: '', categoria: CATEGORIAS[0], dato_tecnico: '', icono: '' }
+const EMPTY_FORM = { nombre_filtro: '', categoria: CATEGORIAS[0], dato_tecnico: '', icono: '', tipo_seleccion: 'Selección única', orden: 0 }
 
 export default function FiltrosPage() {
   const [filtros, setFiltros] = useState<Filtro[]>([])
@@ -31,8 +33,8 @@ export default function FiltrosPage() {
     setLoading(true)
     try {
       const data = await client.fetch(
-        `*[_type == "filtro"] | order(categoria asc, nombre_filtro asc) {
-          _id, nombre_filtro, categoria, dato_tecnico, icono, activo
+        `*[_type == "filtro"] | order(orden asc, categoria asc, nombre_filtro asc) {
+          _id, nombre_filtro, categoria, dato_tecnico, icono, activo, tipo_seleccion, orden
         }`
       )
       setFiltros(data)
@@ -55,11 +57,8 @@ export default function FiltrosPage() {
     try {
       await client.create({
         _type: 'filtro',
-        nombre_filtro: form.nombre_filtro.trim(),
-        categoria: form.categoria,
-        dato_tecnico: form.dato_tecnico.trim(),
-        icono: form.icono.trim() || undefined,
-        activo: true,
+        ...form,
+        activo: true
       })
       setForm(EMPTY_FORM)
       setShowForm(false)
@@ -215,6 +214,31 @@ export default function FiltrosPage() {
                 placeholder="Ej. tree-outline"
                 value={form.icono}
                 onChange={e => setForm(f => ({ ...f, icono: e.target.value }))}
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                Tipo de Selección *
+              </label>
+              <CustomSelect
+                value={form.tipo_seleccion}
+                onChange={(val) => setForm(f => ({ ...f, tipo_seleccion: val }))}
+                options={[
+                  { value: 'Selección única', label: 'Selección única' },
+                  { value: 'Selección múltiple', label: 'Selección múltiple' }
+                ]}
+                placeholder="Tipo..."
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                Orden de aparición (0 primero)
+              </label>
+              <input
+                type="number"
+                className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                value={form.orden}
+                onChange={e => setForm(f => ({ ...f, orden: parseInt(e.target.value) || 0 }))}
               />
             </div>
           </div>

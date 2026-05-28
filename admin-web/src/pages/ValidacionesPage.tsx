@@ -7,6 +7,7 @@ import { es } from 'date-fns/locale'
 import { useNavigate } from 'react-router-dom'
 import { CustomSelect } from '@/components/CustomSelect'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
+import { useUser } from '@clerk/clerk-react'
 import type { Planta } from '@/types/planta'
 
 interface ValidacionesPageProps {
@@ -14,6 +15,8 @@ interface ValidacionesPageProps {
 }
 
 export default function ValidacionesPage({ filtroEstado }: ValidacionesPageProps) {
+  const { user } = useUser()
+  const docenteName = user?.fullName || user?.primaryEmailAddress?.emailAddress || 'Docente'
   const { plantas, loading, refetch } = usePlantas()
   const navigate = useNavigate()
   const [search, setSearch] = useState('')
@@ -56,7 +59,7 @@ export default function ValidacionesPage({ filtroEstado }: ValidacionesPageProps
 
   const handleAprobar = async (id: string) => {
     setLoadingAction(id + '-aprobar')
-    await updatePlantaEstado(id, 'Validado')
+    await updatePlantaEstado(id, 'Validado', '', docenteName)
     await refetch()
     setLoadingAction(null)
   }
@@ -64,7 +67,7 @@ export default function ValidacionesPage({ filtroEstado }: ValidacionesPageProps
   const handleRechazar = async () => {
     if (!rechazarId || !motivoTexto.trim()) return
     setLoadingAction(rechazarId + '-rechazar')
-    await updatePlantaEstado(rechazarId, 'Rechazado', motivoTexto.trim())
+    await updatePlantaEstado(rechazarId, 'Rechazado', motivoTexto.trim(), docenteName)
     await refetch()
     setRechazarId(null)
     setMotivoTexto('')
@@ -74,7 +77,7 @@ export default function ValidacionesPage({ filtroEstado }: ValidacionesPageProps
   const handleObservar = async () => {
     if (!observarId || !motivoTexto.trim()) return
     setLoadingAction(observarId + '-observar')
-    await updatePlantaEstado(observarId, 'Observado', motivoTexto.trim())
+    await updatePlantaEstado(observarId, 'Observado', motivoTexto.trim(), docenteName)
     await refetch()
     setObservarId(null)
     setMotivoTexto('')

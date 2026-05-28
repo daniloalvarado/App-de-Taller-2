@@ -9,7 +9,8 @@ export const sendStatusEmail = async (
   nombre_registrador: string,
   nombre_planta: string,
   estado_nuevo: string,
-  motivo_observacion?: string
+  motivo_observacion?: string,
+  docente_nombre?: string
 ) => {
   if (!SERVICE_ID || !TEMPLATE_ID || !PUBLIC_KEY) {
     console.warn("Faltan configurar las credenciales de EmailJS en .env");
@@ -19,7 +20,7 @@ export const sendStatusEmail = async (
   const templateParams = {
     email: email_destino,
     name: nombre_registrador,
-    message: `El estado de tu registro "${nombre_planta || 'la planta'}" ha cambiado a: ${estado_nuevo}.${motivo_observacion ? `\n\nMotivo:\n${motivo_observacion}` : ''}`,
+    message: `El estado de tu registro "${nombre_planta || 'la planta'}" ha sido actualizado a: ${estado_nuevo} por el docente ${docente_nombre || 'Validador'}.${motivo_observacion ? `\n\nMotivo/Comentario:\n${motivo_observacion}` : ''}`,
   };
 
   try {

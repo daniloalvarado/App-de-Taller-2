@@ -43,11 +43,18 @@ export function usePlantas() {
 export async function updatePlantaEstado(
   id: string,
   estado: string,
-  motivo?: string
+  motivo?: string,
+  docenteName?: string
 ) {
-  const patch: any = { estado_revision: estado }
+  const patch: any = { 
+    estado_revision: estado,
+    fecha_revision: new Date().toISOString()
+  }
+  
   if (motivo) patch.motivo_observacion = motivo
   else patch.motivo_observacion = ''
+  
+  if (docenteName) patch.validador = docenteName
   
   const result = await client.patch(id).set(patch).commit()
   
@@ -60,7 +67,8 @@ export async function updatePlantaEstado(
         doc.registrador_nombre || 'Registrador',
         doc.nombre_cientifico || doc.nombres_comunes || 'Tu planta',
         estado,
-        motivo
+        motivo,
+        docenteName
       )
     }
   } catch (e) {

@@ -39,6 +39,7 @@ export const planta = {
       readOnly: true
     },
     { name: 'validador', title: 'Docente Validador', type: 'string', fieldset: 'estado' },
+    { name: 'fecha_revision', title: 'Fecha de Revisión', type: 'datetime', fieldset: 'estado' },
     { name: 'fecha_registro', title: 'Fecha de Registro', type: 'datetime', fieldset: 'estado' },
 
     // 1. DATOS PERSONALES
