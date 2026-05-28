@@ -71,10 +71,10 @@ export default function MapaPage() {
           <Filter className="w-4 h-4 text-muted-foreground flex-shrink-0" />
           <button
             onClick={() => setActiveFilter('all')}
-            className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
+            className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all cursor-pointer ${
               activeFilter === 'all'
-                ? 'bg-white/10 border-white/30 text-white'
-                : 'border-white/10 text-muted-foreground hover:text-white'
+                ? 'bg-white text-black border-white'
+                : 'border-white/10 text-muted-foreground hover:text-white hover:bg-white/10'
             }`}
           >
             Todos ({counts['all'] ?? 0})
@@ -84,12 +84,12 @@ export default function MapaPage() {
               key={state}
               onClick={() => setActiveFilter(state)}
               style={activeFilter === state ? {
-                borderColor: STATUS_COLORS[state] + '80',
-                color: STATUS_COLORS[state],
-                backgroundColor: STATUS_COLORS[state] + '18',
+                borderColor: STATUS_COLORS[state],
+                color: '#080808',
+                backgroundColor: STATUS_COLORS[state],
               } : {}}
-              className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
-                activeFilter === state ? '' : 'border-white/10 text-muted-foreground hover:text-white'
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all cursor-pointer ${
+                activeFilter === state ? '' : 'border-white/10 text-muted-foreground hover:text-white hover:bg-white/5'
               }`}
             >
               {state} ({counts[state] ?? 0})

@@ -247,7 +247,7 @@ export default function FiltrosPage() {
             onClick={() => setCategoriaSeleccionada(cat)}
             className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-colors cursor-pointer ${
               categoriaSeleccionada === cat
-                ? 'bg-primary/10 text-primary border-primary/30'
+                ? 'bg-[#1FC451] text-[#080808] border-[#1FC451] font-bold'
                 : 'border-border text-muted-foreground hover:text-primary hover:bg-primary/10 hover:border-primary/30'
             }`}
           >

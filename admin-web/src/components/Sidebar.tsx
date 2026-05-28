@@ -92,7 +92,7 @@ export function Sidebar() {
         <button
           onClick={() => setLogoutConfirmOpen(true)}
           className={cn(
-            "flex items-center rounded-lg text-sm text-muted-foreground hover:bg-red-500/10 hover:text-red-500 transition-colors",
+            "flex items-center rounded-lg text-sm text-muted-foreground hover:bg-red-500/10 hover:text-red-500 transition-colors cursor-pointer",
             collapsed ? "justify-center w-10 h-10 mx-auto" : "gap-2 px-3 py-2 w-full"
           )}
         >
@@ -142,13 +142,13 @@ export function Sidebar() {
             <div className="flex gap-3 justify-center pt-4">
               <button
                 onClick={() => setLogoutConfirmOpen(false)}
-                className="px-4 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors"
+                className="px-4 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors cursor-pointer"
               >
                 Cancelar
               </button>
               <button
                 onClick={() => signOut()}
-                className="px-5 py-2 text-sm bg-red-500/80 hover:bg-red-500/90 text-white font-semibold rounded-lg transition-all"
+                className="px-5 py-2 text-sm bg-red-500/80 hover:bg-red-500/90 text-white font-semibold rounded-lg transition-all cursor-pointer"
               >
                 Cerrar sesión
               </button>

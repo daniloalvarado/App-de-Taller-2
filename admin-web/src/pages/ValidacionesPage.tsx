@@ -205,7 +205,7 @@ export default function ValidacionesPage({ filtroEstado }: ValidacionesPageProps
                         <div className="relative group/tooltip">
                           <button
                             onClick={() => navigate(`/planta/${p._id}`)}
-                            className="p-1.5 rounded-lg hover:bg-[#1FC451]/10 text-muted-foreground hover:text-[#1FC451] transition-colors"
+                            className="p-1.5 rounded-lg hover:bg-[#1FC451]/10 text-muted-foreground hover:text-[#1FC451] transition-colors cursor-pointer"
                           >
                             <Eye className="w-4 h-4" />
                           </button>
@@ -219,7 +219,7 @@ export default function ValidacionesPage({ filtroEstado }: ValidacionesPageProps
                             <button
                               onClick={() => handleAprobar(p._id)}
                               disabled={loadingAction === p._id + '-aprobar'}
-                              className="p-1.5 rounded-lg hover:bg-[#1FC451]/10 text-muted-foreground hover:text-[#1FC451] transition-colors disabled:opacity-50"
+                              className="p-1.5 rounded-lg hover:bg-[#1FC451]/10 text-muted-foreground hover:text-[#1FC451] transition-colors disabled:opacity-50 cursor-pointer"
                             >
                               <CheckCircle className="w-4 h-4" />
                             </button>
@@ -233,7 +233,7 @@ export default function ValidacionesPage({ filtroEstado }: ValidacionesPageProps
                           <div className="relative group/tooltip">
                             <button
                               onClick={() => setObservarId(p._id)}
-                              className="p-1.5 rounded-lg hover:bg-orange-500/10 text-muted-foreground hover:text-orange-400 transition-colors"
+                              className="p-1.5 rounded-lg hover:bg-orange-500/10 text-muted-foreground hover:text-orange-400 transition-colors cursor-pointer"
                             >
                               <AlertCircle className="w-4 h-4" />
                             </button>
@@ -248,7 +248,7 @@ export default function ValidacionesPage({ filtroEstado }: ValidacionesPageProps
                             <button
                               onClick={() => setRechazarId(p._id)}
                               disabled={loadingAction === p._id + '-rechazar'}
-                              className="p-1.5 rounded-lg hover:bg-red-500/10 text-muted-foreground hover:text-red-500 transition-colors disabled:opacity-50"
+                              className="p-1.5 rounded-lg hover:bg-red-500/10 text-muted-foreground hover:text-red-500 transition-colors disabled:opacity-50 cursor-pointer"
                             >
                               <XCircle className="w-4 h-4" />
                             </button>
@@ -291,14 +291,14 @@ export default function ValidacionesPage({ filtroEstado }: ValidacionesPageProps
             <div className="flex gap-3 justify-end pt-2">
               <button
                 onClick={() => { setObservarId(null); setMotivoTexto('') }}
-                className="px-4 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors"
+                className="px-4 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors cursor-pointer"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleObservar}
                 disabled={!motivoTexto.trim() || !!loadingAction}
-                className="px-5 py-2 text-sm bg-[#1FC451]/80 hover:bg-[#1FC451]/90 text-white font-bold rounded-lg transition-all disabled:opacity-50"
+                className="px-5 py-2 text-sm bg-[#1FC451]/80 hover:bg-[#1FC451]/90 text-white font-bold rounded-lg transition-all disabled:opacity-50 cursor-pointer"
               >
                 Enviar Observación
               </button>
@@ -318,14 +318,14 @@ export default function ValidacionesPage({ filtroEstado }: ValidacionesPageProps
             <div className="flex gap-3 justify-center pt-4">
               <button
                 onClick={() => setRechazarId(null)}
-                className="px-4 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors"
+                className="px-4 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors cursor-pointer"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleRechazar}
                 disabled={!!loadingAction}
-                className="px-5 py-2 text-sm bg-red-500/80 hover:bg-red-500/90 text-white font-semibold rounded-lg transition-all disabled:opacity-50"
+                className="px-5 py-2 text-sm bg-red-500/80 hover:bg-red-500/90 text-white font-semibold rounded-lg transition-all disabled:opacity-50 cursor-pointer"
               >
                 Sí, Rechazar
               </button>
