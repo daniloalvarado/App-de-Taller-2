@@ -44,7 +44,7 @@ export default function MapaScreen() {
     try {
       // Todas las plantas con coordenadas (validadas Y en revisión)
       const data = await client.fetch(`
-        *[_type == "planta" && defined(latitud) && defined(longitud)] | order(_createdAt desc) {
+        *[_type == "planta" && defined(latitud) && defined(longitud) && estado_revision == "Validado"] | order(_createdAt desc) {
           _id,
           nombre_cientifico,
           nombres_comunes,
@@ -88,7 +88,6 @@ export default function MapaScreen() {
   };
 
   const validadas = plantas.filter(p => p.estado_revision === 'Validado').length;
-  const enRevision = plantas.filter(p => p.estado_revision === 'En revisión').length;
 
   return (
     <View style={styles.container}>
@@ -189,11 +188,6 @@ export default function MapaScreen() {
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
             <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: '#1FC451' }} />
             <Text style={{ color: "#fff", fontSize: 13 }} fontWeight="bold">{validadas} validadas</Text>
-          </View>
-          <View style={{ width: 1, height: 16, backgroundColor: 'rgba(255,255,255,0.2)' }} />
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-            <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: '#facc15' }} />
-            <Text style={{ color: "#fff", fontSize: 13 }}>{enRevision} en revisión</Text>
           </View>
         </View>
       </View>

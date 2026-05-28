@@ -967,15 +967,80 @@ export default function RegistroScreen() {
                     <Button 
                       bg="#1FC451" 
                       color="white" 
-                      onPress={handleFinalSubmit}
-                      disabled={!datosBotanicos.habito || !datosBotanicos.tipoVida || isSubmitting} 
-                      opacity={(!datosBotanicos.habito || !datosBotanicos.tipoVida || isSubmitting) ? 0.5 : 1}
+                      onPress={nextStep}
+                      disabled={!datosBotanicos.habito || !datosBotanicos.tipoVida} 
+                      opacity={(!datosBotanicos.habito || !datosBotanicos.tipoVida) ? 0.5 : 1}
                       pressStyle={{ bg: '#15963c' }}
                     >
-                      {isSubmitting ? "Enviando e iterando fotos..." : (editId ? "Guardar Cambios" : "Finalizar y Enviar a Revisión")}
+                      Continuar al Resumen
                     </Button>
                     <Button variant="outlined" borderColor="rgba(255,255,255,0.2)" color="white" onPress={prevStep} pressStyle={{ bg: 'rgba(255,255,255,0.05)' }}>
                       Volver
+                    </Button>
+                  </YStack>
+                </Card>
+              </YStack>
+            )}
+
+            {/* -------------------- BLOQUE 5: RESUMEN -------------------- */}
+            {step === 5 && (
+              <YStack gap="$4" animation="fade" enterStyle={{ opacity: 0, y: 10 }}>
+                <YStack>
+                  <Text color="#1FC451" fontSize={14} fontWeight="bold" textTransform="uppercase">Paso 5 de 5</Text>
+                  <H2 color="white" mt="$1">Resumen del Registro</H2>
+                  <Paragraph color="rgba(255,255,255,0.7)" mt="$2">
+                    Verifica que todos los datos ingresados sean correctos antes de enviarlos.
+                  </Paragraph>
+                </YStack>
+
+                <Card padding="$4" backgroundColor="rgba(255,255,255,0.05)" borderWidth={0} gap="$3">
+                  <H4 color="white">1. Datos Personales</H4>
+                  <Text color="rgba(255,255,255,0.7)">Nombre: <Text color="white" fontWeight="bold">{nombre}</Text></Text>
+                  <Text color="rgba(255,255,255,0.7)">Email: <Text color="white" fontWeight="bold">{email}</Text></Text>
+                  {rolRegistro === 'estudiante' && (
+                    <Text color="rgba(255,255,255,0.7)">DNI: <Text color="white" fontWeight="bold">{dni}</Text></Text>
+                  )}
+                </Card>
+
+                <Card padding="$4" backgroundColor="rgba(255,255,255,0.05)" borderWidth={0} gap="$3">
+                  <H4 color="white">2. Ubicación</H4>
+                  <Text color="rgba(255,255,255,0.7)">Dirección: <Text color="white" fontWeight="bold">{direccion}</Text></Text>
+                  <Text color="rgba(255,255,255,0.7)">Tipo: <Text color="white" fontWeight="bold">{tipoUbicacion}</Text></Text>
+                  {location && (
+                    <View style={{ height: 100, borderRadius: 8, overflow: 'hidden', marginTop: 8 }}>
+                      <MapView
+                        style={{ flex: 1 }}
+                        initialRegion={{ latitude: location.latitude, longitude: location.longitude, latitudeDelta: 0.005, longitudeDelta: 0.005 }}
+                        scrollEnabled={false}
+                        zoomEnabled={false}
+                      >
+                        <Marker coordinate={location} />
+                      </MapView>
+                    </View>
+                  )}
+                </Card>
+
+                <Card padding="$4" backgroundColor="rgba(255,255,255,0.05)" borderWidth={0} gap="$3">
+                  <H4 color="white">3. Fotos y Botánica</H4>
+                  <Text color="rgba(255,255,255,0.7)">Hábito: <Text color="white" fontWeight="bold">{datosBotanicos.habito}</Text></Text>
+                  <Text color="rgba(255,255,255,0.7)">Tipo de vida: <Text color="white" fontWeight="bold">{datosBotanicos.tipoVida}</Text></Text>
+                  <Text color="rgba(255,255,255,0.7)">Fotos cargadas: <Text color="white" fontWeight="bold">5/5</Text></Text>
+                </Card>
+
+                <Card padding="$4" backgroundColor="rgba(255,255,255,0.05)" borderWidth={0}>
+                  <YStack gap="$2">
+                    <Button 
+                      bg="#1FC451" 
+                      color="white" 
+                      onPress={handleFinalSubmit}
+                      disabled={isSubmitting} 
+                      opacity={isSubmitting ? 0.5 : 1}
+                      pressStyle={{ bg: '#15963c' }}
+                    >
+                      {isSubmitting ? "Enviando registro..." : (editId ? "Guardar Cambios" : "Confirmar y Enviar a Revisión")}
+                    </Button>
+                    <Button variant="outlined" borderColor="rgba(255,255,255,0.2)" color="white" onPress={prevStep} pressStyle={{ bg: 'rgba(255,255,255,0.05)' }}>
+                      Volver a editar
                     </Button>
                   </YStack>
                 </Card>

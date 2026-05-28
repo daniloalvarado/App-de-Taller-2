@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { client } from '@/lib/sanity'
 import type { Planta } from '@/types/planta'
+import { sendStatusEmail } from '@/lib/email-service'
 
 const PLANTAS_QUERY = `*[_type == "planta" && !(_id in path("drafts.**"))] | order(_createdAt desc) {
   _id, _createdAt,
@@ -47,5 +48,24 @@ export async function updatePlantaEstado(
   const patch: any = { estado_revision: estado }
   if (motivo) patch.motivo_observacion = motivo
   else patch.motivo_observacion = ''
-  return client.patch(id).set(patch).commit()
+  
+  const result = await client.patch(id).set(patch).commit()
+  
+  // Enviar email después de actualizar
+  try {
+    const doc = await client.fetch(`*[_id == $id][0]`, { id })
+    if (doc?.registrador_email) {
+      await sendStatusEmail(
+        doc.registrador_email,
+        doc.registrador_nombre || 'Registrador',
+        doc.nombre_cientifico || doc.nombres_comunes || 'Tu planta',
+        estado,
+        motivo
+      )
+    }
+  } catch (e) {
+    console.error('Error enviando email:', e)
+  }
+  
+  return result
 }
