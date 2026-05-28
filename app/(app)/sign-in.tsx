@@ -72,6 +72,8 @@ export default function Page() {
         errorMessage = "La contraseña es incorrecta. Por favor, inténtalo de nuevo.";
       } else if (errorCode === "form_identifier_not_found") {
         errorMessage = "No se encontró ninguna cuenta con este correo electrónico.";
+      } else if (errorCode === "form_param_nil" || originalMessage.toLowerCase().includes("enter email address")) {
+        errorMessage = "Por favor, ingresa tu correo electrónico.";
       } else if (clerkError?.errors[0]) {
         errorMessage = originalMessage; // Fallback to original message if not specifically handled
       }
@@ -117,7 +119,7 @@ export default function Page() {
                 color="rgba(255,255,255,0.7)"
                 style={{ textAlign: "center" }}
               >
-                Inicia sesión en Catálogo Flora para explorar
+                Inicia sesión en PLANT-OR para explorar
               </Paragraph>
             </YStack>
 

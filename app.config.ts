@@ -1,18 +1,18 @@
 export default {
   expo: {
-    name: "Catálogo Flora",
-    slug: "catalogo-flora",
+    name: "PLANT-OR",
+    slug: "plant-or",
     version: "1.0.0",
     orientation: "portrait",
     icon: "./assets/images/logo_unap.png",
-    scheme: "catalogofloraiquitos",
+    scheme: "plant-or",
     userInterfaceStyle: "automatic",
     newArchEnabled: true,
     ios: {
       supportsTablet: true,
     },
     android: {
-      package: "com.catalogoflora.app",
+      package: "com.plant-or.app",
       adaptiveIcon: {
         backgroundColor: "#E6F4FE",
         foregroundImage: "./assets/images/android-icon-foreground.png",

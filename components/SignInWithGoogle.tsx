@@ -43,7 +43,7 @@ export default function SignInWithGoogle() {
         // For native, you must pass a scheme, like AuthSession.makeRedirectUri({ scheme, path })
         // For more info, see https://docs.expo.dev/versions/latest/sdk/auth-session/#authsessionmakeredirecturioptions
         redirectUrl: AuthSession.makeRedirectUri({
-          scheme: "catalogofloraiquitos",
+          scheme: "plant-or",
           path: "sign-in",
         }),
       });

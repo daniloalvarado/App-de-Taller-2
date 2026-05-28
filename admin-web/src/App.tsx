@@ -1,5 +1,5 @@
 import React from 'react'
-import { ClerkProvider, SignedIn, SignedOut, SignIn } from '@clerk/clerk-react'
+import { ClerkProvider, SignedIn, SignedOut, SignIn, useUser, useAuth } from '@clerk/clerk-react'
 import { esES } from '@clerk/localizations'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Sidebar } from '@/components/Sidebar'
@@ -11,6 +11,37 @@ import FiltrosPage from '@/pages/FiltrosPage'
 import '@/index.css'
 
 const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
+
+function RoleCheck({ children }: { children: React.ReactNode }) {
+  const { user } = useUser();
+  const { signOut } = useAuth();
+  
+  if (!user) return null;
+  
+  const role = user.publicMetadata.role as string | undefined;
+  
+  if (role !== 'admin' && role !== 'profesor_validador') {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#000000] p-4 text-center">
+        <div className="w-16 h-16 bg-red-500/10 rounded-2xl flex items-center justify-center border border-red-500/20 mb-6">
+          <span className="text-3xl">⛔</span>
+        </div>
+        <h1 className="text-2xl font-bold text-white mb-2">Acceso Denegado</h1>
+        <p className="text-zinc-400 mb-8 max-w-md">
+          Tu cuenta ({user.primaryEmailAddress?.emailAddress}) no tiene permisos de administrador o validador para acceder a este panel.
+        </p>
+        <button
+          onClick={() => signOut()}
+          className="px-6 py-3 bg-[#1FC451] hover:bg-[#19a343] text-black font-bold rounded-lg transition-colors cursor-pointer"
+        >
+          Cerrar sesión y volver
+        </button>
+      </div>
+    );
+  }
+  
+  return <>{children}</>;
+}
 
 function App() {
   return (
@@ -24,47 +55,50 @@ function App() {
             ...esES.signIn?.start,
             title: 'Bienvenido',
             subtitle: 'Inicia sesión con tu Email o cuenta de Google',
-            actionText: '¿No tienes una cuenta?',
-            actionLink: 'Registrarse'
+            actionText: '',
+            actionLink: ''
           }
         }
       }}
     >
       <BrowserRouter>
         <SignedOut>
-          <div className="min-h-screen flex flex-col items-center justify-center bg-[#f4f4f5] p-4">
+          <div className="min-h-screen flex flex-col items-center justify-center bg-[#000000] p-4">
             {/* Custom Header matching the screenshot style */}
             <div className="flex items-center gap-3 mb-8">
-              <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
-                <span className="text-white text-lg leading-none">🌿</span>
+              <div className="w-10 h-10 bg-[#1FC451]/10 rounded-xl flex items-center justify-center border border-[#1FC451]/20">
+                <span className="text-xl leading-none">🌿</span>
               </div>
-              <span className="text-xl font-medium text-black">PLANT-OR</span>
+              <span className="text-2xl font-bold text-white tracking-tight">PLANT-OR <span className="text-[#1FC451]">Admin</span></span>
             </div>
             
             <SignIn 
               routing="hash" 
               appearance={{
                 variables: {
-                  colorPrimary: '#0a0a0a',
-                  colorBackground: '#ffffff',
-                  colorText: '#000000',
-                  colorInputBackground: '#ffffff',
-                  colorInputText: '#000000',
-                  borderRadius: '0.5rem',
+                  colorPrimary: '#1FC451',
+                  colorBackground: '#0a0a0a',
+                  colorText: '#ffffff',
+                  colorInputBackground: '#121212',
+                  colorInputText: '#ffffff',
+                  borderRadius: '0.75rem',
                 },
                 elements: {
-                  card: "shadow-sm border border-gray-200 w-full max-w-[400px] p-8",
+                  card: "shadow-2xl border border-zinc-800 w-full max-w-[400px] p-8 bg-[#0a0a0a]",
                   header: "hidden",
-                  headerTitle: "text-2xl font-bold text-center text-black",
-                  headerSubtitle: "text-center text-gray-500",
-                  socialButtonsBlockButton: "border border-gray-200 text-black font-medium py-2.5",
-                  formButtonPrimary: "bg-[#0a0a0a] hover:bg-black text-white shadow-none py-2.5",
-                  formFieldLabel: "text-black font-medium",
-                  formFieldInput: "bg-white border-gray-200 text-black py-2.5",
-                  footerActionText: "text-gray-600",
-                  footerActionLink: "text-black hover:underline font-medium",
-                  dividerLine: "bg-gray-200",
-                  dividerText: "text-gray-500"
+                  headerTitle: "text-2xl font-bold text-center text-white",
+                  headerSubtitle: "text-center text-zinc-400",
+                  socialButtonsBlockButton: "border border-zinc-700 text-white hover:bg-white/5 transition-colors font-medium py-2.5",
+                  socialButtonsBlockButtonText: "text-white",
+                  formButtonPrimary: "bg-[#1FC451] hover:bg-[#19a343] text-black font-bold shadow-none py-2.5 transition-colors",
+                  formFieldLabel: "text-zinc-300 font-medium",
+                  formFieldInput: "bg-black border-zinc-800 text-white focus:border-[#1FC451] py-2.5",
+                  footerAction: "hidden",
+                  dividerLine: "bg-zinc-800",
+                  dividerText: "text-zinc-500",
+                  identityPreviewText: "text-white",
+                  identityPreviewEditButtonIcon: "text-[#1FC451]",
+                  formFieldInputShowPasswordButton: "text-zinc-400 hover:text-white"
                 }
               }}
             />
@@ -72,9 +106,10 @@ function App() {
         </SignedOut>
 
         <SignedIn>
-          <div className="flex min-h-screen bg-background">
-            <Sidebar />
-            <main className="flex-1 overflow-y-auto">
+          <RoleCheck>
+            <div className="flex min-h-screen bg-background">
+              <Sidebar />
+              <main className="flex-1 overflow-y-auto">
               <div className="p-6 pt-20 md:p-8 md:pt-8 max-w-7xl mx-auto">
                 <Routes>
                   <Route path="/" element={<DashboardPage />} />
@@ -89,6 +124,7 @@ function App() {
               </div>
             </main>
           </div>
+          </RoleCheck>
         </SignedIn>
       </BrowserRouter>
     </ClerkProvider>
