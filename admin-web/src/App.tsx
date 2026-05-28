@@ -29,7 +29,7 @@ function RoleCheck({ children }: { children: React.ReactNode }) {
         </div>
         <h1 className="text-2xl font-bold text-white mb-2">Acceso Denegado</h1>
         <p className="text-zinc-400 mb-8 max-w-md">
-          Tu cuenta ({user.primaryEmailAddress?.emailAddress}) no tiene permisos de administrador o validador para acceder a este panel.
+          Tu cuenta ({user.primaryEmailAddress?.emailAddress}) no tiene permisos de administrador o profesor validador para acceder a este panel.
         </p>
         <button
           onClick={() => signOut()}
@@ -89,8 +89,8 @@ function App() {
                   header: "hidden",
                   headerTitle: "text-2xl font-bold text-center text-white",
                   headerSubtitle: "text-center text-zinc-400",
-                  socialButtonsBlockButton: "border border-zinc-700 bg-transparent text-white hover:bg-white/5 transition-colors font-medium py-2.5",
-                  socialButtonsBlockButtonText: "text-white font-medium",
+                  socialButtonsBlockButton: "border border-zinc-700 bg-transparent hover:bg-white/5 transition-colors py-2.5",
+                  socialButtonsBlockButtonText: "!text-white font-medium",
                   formButtonPrimary: "bg-[#1FC451] hover:bg-[#19a343] text-black font-bold shadow-none py-2.5 transition-colors",
                   formFieldLabel: "text-zinc-300 font-medium",
                   formFieldInput: "bg-black border-zinc-800 text-white focus:border-[#1FC451] py-2.5",
