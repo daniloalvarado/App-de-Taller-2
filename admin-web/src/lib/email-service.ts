@@ -17,11 +17,9 @@ export const sendStatusEmail = async (
   }
 
   const templateParams = {
-    to_email: email_destino,
-    to_name: nombre_registrador,
-    plant_name: nombre_planta || 'la planta',
-    new_status: estado_nuevo,
-    message: motivo_observacion ? `Motivo: ${motivo_observacion}` : '',
+    email: email_destino,
+    name: nombre_registrador,
+    message: `El estado de tu registro "${nombre_planta || 'la planta'}" ha cambiado a: ${estado_nuevo}.${motivo_observacion ? `\n\nMotivo:\n${motivo_observacion}` : ''}`,
   };
 
   try {

@@ -9,7 +9,8 @@ import { Modal, Pressable, RefreshControl, ScrollView, StyleSheet, TextInput } f
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { Avatar, Text, View } from "tamagui";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useRouter } from "expo-router";
+import { useRouter, useFocusEffect } from "expo-router";
+import { useCallback } from "react";
 
 export default function HomeScreen() {
   const { user } = useUser();
@@ -70,6 +71,12 @@ export default function HomeScreen() {
   useEffect(() => {
     fetchData();
   }, [user?.id]);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+    }, [user?.id])
+  );
 
   const onRefresh = async () => {
     setRefreshing(true);

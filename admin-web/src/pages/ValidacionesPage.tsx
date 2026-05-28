@@ -62,11 +62,12 @@ export default function ValidacionesPage({ filtroEstado }: ValidacionesPageProps
   }
 
   const handleRechazar = async () => {
-    if (!rechazarId) return
+    if (!rechazarId || !motivoTexto.trim()) return
     setLoadingAction(rechazarId + '-rechazar')
-    await updatePlantaEstado(rechazarId, 'Rechazado')
+    await updatePlantaEstado(rechazarId, 'Rechazado', motivoTexto.trim())
     await refetch()
     setRechazarId(null)
+    setMotivoTexto('')
     setLoadingAction(null)
   }
 
@@ -315,16 +316,23 @@ export default function ValidacionesPage({ filtroEstado }: ValidacionesPageProps
             <p className="text-sm text-zinc-400">
               Esta acción marcará la planta como rechazada. No se borrará de la base de datos, pero el estudiante sabrá que fue invalidada.
             </p>
+            <textarea
+              value={motivoTexto}
+              onChange={e => setMotivoTexto(e.target.value)}
+              placeholder="Motivo del rechazo (obligatorio)..."
+              rows={3}
+              className="w-full px-4 py-3 mt-4 bg-black border border-zinc-700 rounded-xl text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-red-500/50 resize-none transition-all text-left"
+            />
             <div className="flex gap-3 justify-center pt-4">
               <button
-                onClick={() => setRechazarId(null)}
+                onClick={() => { setRechazarId(null); setMotivoTexto('') }}
                 className="px-4 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors cursor-pointer"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleRechazar}
-                disabled={!!loadingAction}
+                disabled={!motivoTexto.trim() || !!loadingAction}
                 className="px-5 py-2 text-sm bg-red-500/80 hover:bg-red-500/90 text-white font-semibold rounded-lg transition-all disabled:opacity-50 cursor-pointer"
               >
                 Sí, Rechazar
