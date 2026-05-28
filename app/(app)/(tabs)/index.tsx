@@ -169,10 +169,9 @@ export default function HomeScreen() {
           />
           <Pressable
             onPress={() => setModalVisible(true)}
-            style={[styles.filterButton, { backgroundColor: selectedFiltros.length > 0 ? "#1FC451" : "rgba(255,255,255,0.1)", flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12 }]}
+            style={[styles.filterButton, { backgroundColor: selectedFiltros.length > 0 ? "#1FC451" : "rgba(255,255,255,0.1)", justifyContent: 'center', alignItems: 'center', width: 40, height: 40 }]}
           >
             <MaterialCommunityIcons name="filter-variant" size={20} color={selectedFiltros.length > 0 ? "#08130D" : theme.text} />
-            <Text style={{ color: selectedFiltros.length > 0 ? "#08130D" : theme.text, fontSize: 13, fontWeight: "bold" }}>Filtros</Text>
           </Pressable>
         </View>
 
@@ -235,7 +234,7 @@ export default function HomeScreen() {
         <View style={styles.modalOverlay}>
           <View style={[styles.modalContent, { backgroundColor: colorScheme === 'dark' ? '#12221A' : '#fff' }]}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 24 }}>
-              <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.text }}>Filtros Morfológicos</Text>
+              <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.text }}>Filtros</Text>
               <Pressable onPress={() => setModalVisible(false)} style={styles.closeModalButton}>
                 <MaterialCommunityIcons name="close" size={20} color={theme.text} />
               </Pressable>
@@ -247,7 +246,7 @@ export default function HomeScreen() {
                   <View key={categoria}>
                     <Text style={[styles.filterLabel, { color: theme.icon }]}>{categoria}</Text>
                     <View style={styles.filterChipContainer}>
-                      {groupedFiltros[categoria].map(filtro => {
+                      {groupedFiltros[categoria].map((filtro: any) => {
                         const isActive = selectedFiltros.includes(filtro.dato_tecnico);
                         return (
                           <Pressable

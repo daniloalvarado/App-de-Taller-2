@@ -132,7 +132,7 @@ export default function FiltrosPage() {
           </div>
           <button
             onClick={() => setShowForm(v => !v)}
-            className="flex items-center gap-2 px-4 py-2 bg-[#1FC451] text-[#080808] text-sm font-bold rounded-lg hover:bg-[#1FC451]/90 hover:scale-105 transition-all cursor-pointer"
+            className="flex items-center gap-2 px-4 py-2 bg-[#1FC451] text-white text-sm font-bold rounded-lg transition-colors cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             Nuevo filtro
@@ -228,14 +228,14 @@ export default function FiltrosPage() {
           <div className="flex gap-3 justify-end mt-4">
             <button
               onClick={() => { setShowForm(false); setForm(EMPTY_FORM); setFormError('') }}
-              className="px-4 py-2 text-sm font-medium bg-red-600 text-white rounded-lg hover:bg-red-500 transition-colors cursor-pointer"
+              className="px-4 py-2 text-sm font-medium bg-red-600 text-white rounded-lg transition-colors cursor-pointer"
             >
               Cancelar
             </button>
             <button
               onClick={handleCreate}
               disabled={saving}
-              className="px-6 py-2 text-sm bg-green-600 text-white font-bold rounded-lg hover:bg-green-500 transition-colors disabled:opacity-50 cursor-pointer"
+              className="px-6 py-2 text-sm bg-green-600 text-white font-bold rounded-lg transition-colors disabled:opacity-50 cursor-pointer"
             >
               {saving ? 'Guardando...' : 'Crear filtro'}
             </button>
@@ -252,7 +252,7 @@ export default function FiltrosPage() {
             className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-colors cursor-pointer ${
               categoriaSeleccionada === cat
                 ? 'bg-[#1FC451] text-[#080808] border-[#1FC451] font-bold'
-                : 'border-border text-muted-foreground hover:text-primary hover:bg-primary/10 hover:border-primary/30'
+                : 'border-border text-muted-foreground hover:text-white hover:bg-white/10 hover:border-white/30'
             }`}
           >
             {cat}
