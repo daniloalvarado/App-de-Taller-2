@@ -109,7 +109,7 @@ export default function Profile() {
     
     try {
       // 1. Check if certificate exists
-      const existingCert = await client.fetch(\`*[_type == "certificado" && usuario_id == $userId][0]\`, { userId: user.id });
+      const existingCert = await client.fetch(`*[_type == "certificado" && usuario_id == $userId][0]`, { userId: user.id });
       
       let certData;
       
@@ -119,7 +119,7 @@ export default function Profile() {
         // Create new certificate
         const randomStr = Math.random().toString(36).substring(2, 8).toUpperCase();
         const dateStr = new Date().toISOString().split('T')[0].replace(/-/g, '');
-        const newCode = \`CERT-\${dateStr}-\${randomStr}\`;
+        const newCode = `CERT-${dateStr}-${randomStr}`;
         
         const writeClient = client.withConfig({
           token: process.env.EXPO_PUBLIC_SANITY_TOKEN,

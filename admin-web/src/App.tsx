@@ -25,12 +25,9 @@ function RoleCheck({ children }: { children: React.ReactNode }) {
   if (role !== 'admin' && role !== 'profesor_validador') {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-[#000000] p-4 text-center">
-        <div className="w-16 h-16 bg-red-500/10 rounded-2xl flex items-center justify-center border border-red-500/20 mb-6">
-          <XCircle className="w-8 h-8 text-white" />
-        </div>
         <h1 className="text-2xl font-bold text-white mb-2">Acceso Denegado</h1>
         <p className="text-zinc-400 mb-8 max-w-md">
-          Tu cuenta ({user.primaryEmailAddress?.emailAddress}) no tiene permisos de administrador o profesor validador para acceder a este panel.
+          Tu cuenta "{user.primaryEmailAddress?.emailAddress}" no tiene permisos de administrador o profesor validador para acceder a este panel.
         </p>
         <button
           onClick={() => signOut()}
