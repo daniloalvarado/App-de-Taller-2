@@ -59,21 +59,22 @@ export async function updatePlantaEstado(
   const result = await client.patch(id).set(patch).commit()
   
   // Enviar email después de actualizar
+  let emailSent = false;
   try {
     const doc = await client.fetch(`*[_id == $id][0]`, { id })
     if (doc?.registrador_email) {
-      await sendStatusEmail(
+      emailSent = await sendStatusEmail(
         doc.registrador_email,
         doc.registrador_nombre || 'Registrador',
         doc.nombre_cientifico || doc.nombres_comunes || 'Tu planta',
         estado,
         motivo,
         docenteName
-      )
+      ) ?? false;
     }
   } catch (e) {
     console.error('Error enviando email:', e)
   }
   
-  return result
+  return { result, emailSent }
 }

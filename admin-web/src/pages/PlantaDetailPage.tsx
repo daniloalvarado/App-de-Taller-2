@@ -36,13 +36,17 @@ export default function PlantaDetailPage() {
   const handleAction = async (accion: 'Validado' | 'Observado' | 'Rechazado', motivo?: string) => {
     if (!planta) return
     setActionLoading(true)
-    await updatePlantaEstado(planta._id, accion, motivo, user?.fullName || 'Desconocido')
+    const { emailSent } = await updatePlantaEstado(planta._id, accion, motivo, user?.fullName || 'Desconocido')
     const updated = await client.fetch(`*[_id == $id][0]`, { id: planta._id })
     setPlanta(updated)
     setActionLoading(false)
     setObservarOpen(false)
     setRechazarOpen(false)
     setMotivoTexto('')
+    
+    if (emailSent === false) {
+      alert(`⚠️ Acción exitosa, pero no se pudo enviar el correo al estudiante (Error de red o falta de créditos en EmailJS).`);
+    }
   }
 
   if (loading) {

@@ -38,7 +38,9 @@ export const sendStatusEmail = async (
   try {
     await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY);
     console.log("Email enviado con éxito al estado:", estado_nuevo);
+    return true;
   } catch (error) {
     console.error("Error al enviar el email:", error);
+    return false;
   }
 };
