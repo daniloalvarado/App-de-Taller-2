@@ -21,7 +21,7 @@ export const sendStatusEmail = async (
   let border_color = '#1FC451';
 
   if (estado_nuevo === 'Validado') {
-    instructions = `¡Felicidades! Este registro ha sido verificado y aprobado por el docente ${docente_nombre || 'asignado'}.\n\nEstás un paso más cerca de alcanzar tu meta de registros y obtener tu certificado. ¡Sigue así!`;
+    instructions = `¡Felicidades! Este registro ha sido verificado y aprobado por el docente ${docente_nombre || 'asignado'}.\n\nGracias por tu excelente trabajo. Estás contribuyendo directamente a enriquecer nuestro catálogo botánico. ¡Sigue así!`;
     text_color = '#166534'; // Verde oscuro
     bg_color = '#f0fdf4'; // Verde claro
     border_color = '#1FC451'; // Verde brillante

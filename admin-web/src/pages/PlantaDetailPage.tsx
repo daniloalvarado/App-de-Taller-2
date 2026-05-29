@@ -319,7 +319,7 @@ export default function PlantaDetailPage() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
           <div className="bg-[#0A0A0A] border border-zinc-800 rounded-2xl p-6 w-full max-w-md space-y-4 shadow-2xl">
             <div>
-              <h3 className="text-xl font-bold text-[#1FC451]">Observar Registro</h3>
+              <h3 className="text-xl font-bold text-[#F97316]">Observar Registro</h3>
               <p className="text-sm text-zinc-400 mt-1">El estudiante verá este mensaje en su aplicación móvil para poder corregirlo.</p>
             </div>
             <textarea
@@ -327,14 +327,14 @@ export default function PlantaDetailPage() {
               onChange={e => setMotivoTexto(e.target.value)}
               placeholder="Describe lo que falta o debe corregirse (ej. 'La foto de la hoja está borrosa')..."
               rows={4}
-              className="w-full px-4 py-3 bg-black border border-zinc-800 rounded-xl text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-[#1FC451] focus:ring-1 focus:ring-[#1FC451] resize-none transition-all"
+              className="w-full px-4 py-3 bg-black border border-zinc-800 rounded-xl text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-[#F97316] focus:ring-1 focus:ring-[#F97316] resize-none transition-all"
             />
             <div className="flex gap-3 justify-end pt-2">
               <button onClick={() => setObservarOpen(false)} className="px-4 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors">Cancelar</button>
               <button
                 onClick={() => handleAction('Observado', motivoTexto)}
                 disabled={!motivoTexto.trim() || actionLoading}
-                className="px-5 py-2 text-sm bg-[#1FC451] text-white font-bold rounded-lg hover:bg-[#1FC451]/90 shadow-[0_0_15px_rgba(31,196,81,0.3)] transition-all disabled:opacity-50"
+                className="px-5 py-2 text-sm bg-[#ea580c] text-white font-bold rounded-lg hover:bg-[#c2410c] shadow-[0_0_15px_rgba(234,88,12,0.3)] transition-all disabled:opacity-50"
               >
                 {actionLoading ? 'Enviando...' : 'Enviar Observación'}
               </button>
@@ -348,7 +348,7 @@ export default function PlantaDetailPage() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
           <div className="bg-[#0A0A0A] border border-zinc-800 rounded-2xl p-6 w-full max-w-md space-y-4 shadow-2xl">
             <div>
-              <h3 className="text-xl font-bold text-red-500">¿Rechazar Registro?</h3>
+              <h3 className="text-xl font-bold text-red-600">¿Rechazar Registro?</h3>
               <p className="text-sm text-zinc-400 mt-1">El estudiante verá el motivo del rechazo en su aplicación móvil.</p>
             </div>
             <textarea
@@ -356,14 +356,14 @@ export default function PlantaDetailPage() {
               onChange={e => setMotivoTexto(e.target.value)}
               placeholder="Describe por qué se rechaza este registro de forma definitiva..."
               rows={4}
-              className="w-full px-4 py-3 bg-black border border-zinc-800 rounded-xl text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 resize-none transition-all"
+              className="w-full px-4 py-3 bg-black border border-zinc-800 rounded-xl text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-red-600 focus:ring-1 focus:ring-red-600 resize-none transition-all"
             />
             <div className="flex gap-3 justify-end pt-2">
               <button onClick={() => setRechazarOpen(false)} className="px-4 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors">Cancelar</button>
               <button
                 onClick={() => handleAction('Rechazado', motivoTexto)}
                 disabled={!motivoTexto.trim() || actionLoading}
-                className="px-5 py-2 text-sm bg-red-500 text-white font-bold rounded-lg hover:bg-red-600 shadow-[0_0_15px_rgba(239,68,68,0.3)] transition-all disabled:opacity-50"
+                className="px-5 py-2 text-sm bg-[#dc2626] text-white font-bold rounded-lg hover:bg-[#b91c1c] shadow-[0_0_15px_rgba(220,38,38,0.3)] transition-all disabled:opacity-50"
               >
                 {actionLoading ? 'Rechazando...' : 'Rechazar Registro'}
               </button>
