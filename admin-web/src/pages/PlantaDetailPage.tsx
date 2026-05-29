@@ -111,36 +111,42 @@ export default function PlantaDetailPage() {
         <button
           onClick={() => handleAction('Validado')}
           disabled={actionLoading || planta.estado_revision === 'Validado'}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm bg-[#1FC451]/10 text-[#1FC451] border border-[#1FC451]/20 hover:bg-[#1FC451]/20 transition-colors disabled:opacity-40"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm bg-[#1FC451]/20 text-white border border-[#1FC451]/30 hover:bg-[#1FC451]/30 transition-colors disabled:opacity-40"
         >
-          {actionLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4" />}
+          {actionLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4 text-[#1FC451]" />}
           Aprobar
         </button>
         <button
           onClick={() => setObservarOpen(true)}
           disabled={actionLoading}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm bg-orange-500/10 text-orange-400 border border-orange-500/20 hover:bg-orange-500/20 transition-colors disabled:opacity-40"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm bg-orange-500/20 text-white border border-orange-500/30 hover:bg-orange-500/30 transition-colors disabled:opacity-40"
         >
-          <AlertCircle className="w-4 h-4" />
+          <AlertCircle className="w-4 h-4 text-orange-400" />
           Observar
         </button>
         <button
           onClick={() => setRechazarOpen(true)}
           disabled={actionLoading || planta.estado_revision === 'Rechazado'}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20 transition-colors disabled:opacity-40"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm bg-red-500/20 text-white border border-red-500/30 hover:bg-red-500/30 transition-colors disabled:opacity-40"
         >
-          <XCircle className="w-4 h-4" />
+          <XCircle className="w-4 h-4 text-red-500" />
           Rechazar
         </button>
       </div>
 
-      {/* Observation notice */}
-      {planta.estado_revision === 'Observado' && planta.motivo_observacion && (
-        <div className="bg-orange-500/10 border border-orange-500/20 rounded-xl p-4">
+      {/* Observation or Rejection notice */}
+      {(planta.estado_revision === 'Observado' || planta.estado_revision === 'Rechazado') && planta.motivo_observacion && (
+        <div className={`border rounded-xl p-4 ${planta.estado_revision === 'Observado' ? 'bg-orange-500/10 border-orange-500/20' : 'bg-red-500/10 border-red-500/20'}`}>
           <div className="flex items-start gap-2">
-            <AlertCircle className="w-4 h-4 text-orange-400 mt-0.5 flex-shrink-0" />
+            {planta.estado_revision === 'Observado' ? (
+              <AlertCircle className="w-4 h-4 text-orange-400 mt-0.5 flex-shrink-0" />
+            ) : (
+              <XCircle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
+            )}
             <div>
-              <p className="text-sm font-medium text-orange-400">Motivo de observación enviado al estudiante:</p>
+              <p className={`text-sm font-medium ${planta.estado_revision === 'Observado' ? 'text-orange-400' : 'text-red-500'}`}>
+                Motivo de {planta.estado_revision.toLowerCase()} enviado al estudiante:
+              </p>
               <p className="text-sm text-foreground mt-1">{planta.motivo_observacion}</p>
             </div>
           </div>
@@ -306,21 +312,26 @@ export default function PlantaDetailPage() {
       {/* Rechazar Modal */}
       {rechazarOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-          <div className="bg-[#0A0A0A] border border-zinc-800 rounded-2xl p-6 w-full max-w-sm space-y-4 shadow-2xl text-center">
-            <h3 className="text-xl font-bold text-white">¿Rechazar Registro?</h3>
-            <p className="text-sm text-zinc-400">
-              Esta acción marcará la planta como rechazada. No se borrará de la base de datos, pero el estudiante sabrá que fue invalidada.
-            </p>
-            <div className="flex gap-3 justify-center pt-4">
-              <button onClick={() => setRechazarOpen(false)} className="px-4 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors">
-                Cancelar
-              </button>
+          <div className="bg-[#0A0A0A] border border-zinc-800 rounded-2xl p-6 w-full max-w-md space-y-4 shadow-2xl">
+            <div>
+              <h3 className="text-xl font-bold text-red-500">¿Rechazar Registro?</h3>
+              <p className="text-sm text-zinc-400 mt-1">El estudiante verá el motivo del rechazo en su aplicación móvil.</p>
+            </div>
+            <textarea
+              value={motivoTexto}
+              onChange={e => setMotivoTexto(e.target.value)}
+              placeholder="Describe por qué se rechaza este registro de forma definitiva..."
+              rows={4}
+              className="w-full px-4 py-3 bg-black border border-zinc-800 rounded-xl text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 resize-none transition-all"
+            />
+            <div className="flex gap-3 justify-end pt-2">
+              <button onClick={() => setRechazarOpen(false)} className="px-4 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors">Cancelar</button>
               <button
-                onClick={() => handleAction('Rechazado')}
-                disabled={actionLoading}
+                onClick={() => handleAction('Rechazado', motivoTexto)}
+                disabled={!motivoTexto.trim() || actionLoading}
                 className="px-5 py-2 text-sm bg-red-500 text-white font-bold rounded-lg hover:bg-red-600 shadow-[0_0_15px_rgba(239,68,68,0.3)] transition-all disabled:opacity-50"
               >
-                {actionLoading ? 'Rechazando...' : 'Sí, Rechazar'}
+                {actionLoading ? 'Rechazando...' : 'Rechazar Registro'}
               </button>
             </div>
           </div>
