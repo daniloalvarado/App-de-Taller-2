@@ -1016,7 +1016,7 @@ export default function RegistroScreen() {
 
             {/* -------------------- BLOQUE 5: RESUMEN -------------------- */}
             {step === 5 && (
-              <YStack gap="$4" animation="fade" enterStyle={{ opacity: 0, y: 10 }}>
+              <YStack gap="$4">
                 <YStack>
                   <Text color="#1FC451" fontSize={14} fontWeight="bold" textTransform="uppercase">Paso 5 de 5</Text>
                   <H2 color="white" mt="$1">Resumen del Registro</H2>
