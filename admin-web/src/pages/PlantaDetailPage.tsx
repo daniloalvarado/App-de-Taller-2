@@ -10,8 +10,10 @@ import {
 } from 'lucide-react'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
+import { useUser } from '@clerk/clerk-react'
 
 export default function PlantaDetailPage() {
+  const { user } = useUser()
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const [planta, setPlanta] = useState<Planta | null>(null)
@@ -34,7 +36,7 @@ export default function PlantaDetailPage() {
   const handleAction = async (accion: 'Validado' | 'Observado' | 'Rechazado', motivo?: string) => {
     if (!planta) return
     setActionLoading(true)
-    await updatePlantaEstado(planta._id, accion, motivo)
+    await updatePlantaEstado(planta._id, accion, motivo, user?.fullName || 'Desconocido')
     const updated = await client.fetch(`*[_id == $id][0]`, { id: planta._id })
     setPlanta(updated)
     setActionLoading(false)
@@ -149,6 +151,25 @@ export default function PlantaDetailPage() {
               </p>
               <p className="text-sm text-foreground mt-1">{planta.motivo_observacion}</p>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Validation Log */}
+      {planta.validador && (
+        <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 flex items-start gap-3">
+          <div className="bg-primary/10 p-2 rounded-lg">
+            <User className="w-4 h-4 text-primary" />
+          </div>
+          <div>
+            <p className="text-sm font-medium text-foreground">
+              Acción realizada por <span className="text-primary">{planta.validador}</span>
+            </p>
+            {planta.fecha_revision && (
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {format(new Date(planta.fecha_revision), "d 'de' MMMM, yyyy 'a las' HH:mm", { locale: es })}
+              </p>
+            )}
           </div>
         </div>
       )}

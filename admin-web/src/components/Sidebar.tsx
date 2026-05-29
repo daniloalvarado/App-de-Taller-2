@@ -77,17 +77,17 @@ export function Sidebar() {
       {/* User + Collapse */}
       <div className="border-t border-sidebar-border p-3 space-y-2">
         {!collapsed && user && (
-          <div className="flex items-center gap-2 px-2 py-1.5">
+          <Link to="/perfil" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 px-2 py-1.5 hover:bg-white/5 rounded-lg transition-colors cursor-pointer group">
             <img
               src={user.imageUrl}
               alt={user.fullName || ''}
-              className="w-7 h-7 rounded-full border border-sidebar-border"
+              className="w-7 h-7 rounded-full border border-sidebar-border group-hover:border-[#1FC451] transition-colors"
             />
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold text-foreground truncate">{user.fullName}</p>
+              <p className="text-xs font-semibold text-foreground truncate group-hover:text-[#1FC451] transition-colors">{user.fullName}</p>
               <p className="text-xs text-muted-foreground truncate">{user.primaryEmailAddress?.emailAddress}</p>
             </div>
-          </div>
+          </Link>
         )}
         <button
           onClick={() => setLogoutConfirmOpen(true)}

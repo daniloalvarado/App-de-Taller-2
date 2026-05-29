@@ -1,5 +1,5 @@
 import React from 'react'
-import { ClerkProvider, SignedIn, SignedOut, SignIn, useUser, useAuth } from '@clerk/clerk-react'
+import { ClerkProvider, SignedIn, SignedOut, SignIn, useUser, useAuth, UserProfile } from '@clerk/clerk-react'
 import { XCircle } from 'lucide-react'
 import { esES } from '@clerk/localizations'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
@@ -127,6 +127,7 @@ function App() {
                   <Route path="/mapa" element={<MapaPage />} />
                   <Route path="/filtros" element={<FiltrosPage />} />
                   <Route path="/planta/:id" element={<PlantaDetailPage />} />
+                  <Route path="/perfil" element={<div className="flex justify-center"><UserProfile appearance={{ elements: { card: 'bg-[#0a0a0a] border-zinc-800' } }} /></div>} />
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
               </div>
