@@ -321,7 +321,7 @@ export default function PlantaDetailPage() {
               <button
                 onClick={() => handleAction('Observado', motivoTexto)}
                 disabled={!motivoTexto.trim() || actionLoading}
-                className="px-5 py-2 text-sm bg-[#1FC451] text-black font-bold rounded-lg hover:bg-[#1FC451]/90 shadow-[0_0_15px_rgba(31,196,81,0.3)] transition-all disabled:opacity-50"
+                className="px-5 py-2 text-sm bg-[#1FC451] text-white font-bold rounded-lg hover:bg-[#1FC451]/90 shadow-[0_0_15px_rgba(31,196,81,0.3)] transition-all disabled:opacity-50"
               >
                 {actionLoading ? 'Enviando...' : 'Enviar Observación'}
               </button>

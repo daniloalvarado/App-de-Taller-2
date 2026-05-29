@@ -73,3 +73,21 @@ div[class*="cl-internal-"][style*="display: flex"][style*="align-items: center"]
 .cl-formFieldRow, .cl-dividerRow, .cl-formButtonPrimary {
   display: none !important;
 }
+
+/* Personalización de User Profile */
+/* Ocultar sección de contraseñas y seguridad */
+.cl-profileSection__password, .cl-navbarButton[aria-label="Security"], .cl-navbarButton:has(svg.cl-internal-2y42q2) {
+  display: none !important;
+}
+
+/* Ocultar botón de añadir correo */
+.cl-profileSection__emailAddresses .cl-profileSectionPrimaryButton {
+  display: none !important;
+}
+
+/* Botón de cargar imagen con texto y bordes blancos */
+.cl-avatarImageActionsUpload, .cl-fileDropAreaButtonPrimary {
+  color: white !important;
+  border: 1px solid white !important;
+  background-color: transparent !important;
+}
