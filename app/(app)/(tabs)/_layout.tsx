@@ -59,6 +59,16 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
+        name="sync"
+        options={{
+          title: "Pendientes",
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons size={28} name="cloud-sync" color={color} />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
         name="profile"
         options={{
           title: "Perfil",

@@ -29,6 +29,8 @@ import { FormCompartido } from '@/components/forms/FormCompartido';
 import { Modal } from 'react-native';
 import { useRouter, useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { client, urlFor } from '@/lib/sanity';
+import * as Network from 'expo-network';
+import { saveRegistroOffline, persistImage } from '@/lib/offline-storage';
 
 export default function RegistroScreen() {
   const { user } = useUser();
@@ -36,6 +38,7 @@ export default function RegistroScreen() {
   const { editId } = useLocalSearchParams();
   const [step, setStep] = useState(1);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [isOfflineSaved, setIsOfflineSaved] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingEdit, setIsLoadingEdit] = useState(false);
   const [rolRegistro, setRolRegistro] = useState<'estudiante' | 'ciudadano'>('estudiante');
@@ -277,6 +280,10 @@ export default function RegistroScreen() {
     setIsSubmitting(true);
 
     try {
+      // Check network status
+      const networkState = await Network.getNetworkStateAsync();
+      const isOffline = !networkState.isConnected;
+
       const writeClient = client.withConfig({
         token: process.env.EXPO_PUBLIC_SANITY_TOKEN,
       });
@@ -346,122 +353,46 @@ export default function RegistroScreen() {
         });
       };
 
-      // Subir las 5 fotos requeridas
-      const plantaRef = await uploadFoto(fotos.planta_completa);
-      const hojaRef = await uploadFoto(fotos.hoja);
-      const florRef = await uploadFoto(fotos.flor);
-      const frutoRef = await uploadFoto(fotos.fruto);
-      const semillaRef = await uploadFoto(fotos.semilla);
-
-      // Parsear números
-      const parseNumbers = (obj: any) => {
-        if (!obj) return {};
-        const result = { ...obj };
-        for (let key in result) {
-          if (['altura_total', 'cap', 'diametro_copa_paralelo', 'diametro_copa_perpendicular', 'altura_inicio_copa', 'numero_troncos', 'longitud_peciolo', 'diametro_peciolo', 'longitud_visible', 'cobertura', 'flor_tamano_largo', 'flor_tamano_ancho', 'fruto_tamano_largo', 'fruto_tamano_ancho', 'semilla_numero', 'semilla_tamano_largo', 'semilla_tamano_ancho', 'altura_inicio_ramificacion', 'altura_maxima', 'diametro_tallo', 'hoja_largo', 'hoja_ancho', 'peciolo_largo'].includes(key)) {
-            result[key] = Number(result[key]) || undefined;
-          }
-        }
-        return result;
-      };
-
-      // Crear el documento de la planta
-      const nuevoRegistro: any = {
-        _type: 'planta',
-        autor: user?.id,
-        nombre_cientifico: nombreCientifico || 'Por identificar',
-        nombres_comunes: nombresComunes || '',
-        familia: familia || '',
-        estado_revision: 'En revisión',
-        habito: datosBotanicos.habito,
-        tipo_vida: datosBotanicos.tipoVida,
-        
-        // Datos Personales
-        registrador_nombre: nombre,
-        registrador_dni: dni,
-        registrador_email: email,
-        registrador_curso: curso,
-        registrador_facultad: facultad,
-        registrador_escuela: escuela,
-        registrador_dia_clase: diaClase,
-
-        // Ubicación
-        latitud: location?.latitude,
-        longitud: location?.longitude,
-        direccion: direccion,
-        tipo_ubicacion_1: tipoUbicacion,
-        tipo_ubicacion_2: tipoUbicacion2,
-        numero_casa: numeroCasa,
-        ubicacion_planta: sustratoPlanta,
-        numero_planta: numeroPlantaAutogenerado.toString(),
-        
-        // Fotos principales en la galería
-        galeria: [plantaRef, hojaRef, florRef, frutoRef, semillaRef].filter(Boolean),
-        
-        // Reproductivo
-        reproductivo: parseNumbers(datosBotanicos.reproductivo || {}),
-
-        // Compartidos adicionales (Arrays)
-        estado_fenologico: datosBotanicos.compartido?.estado_fenologico || [],
-        estado_individuo: datosBotanicos.compartido?.estado_individuo || [],
-        valor_ornamental: datosBotanicos.compartido?.valor_ornamental || [],
-        impacto_urbano: datosBotanicos.compartido?.impacto_urbano || [],
-      };
-
-      // Bloques Específicos según el hábito
-      if (datosBotanicos.habito === 'Árbol') {
-        nuevoRegistro.arbol_datos = parseNumbers({
-          ...datosBotanicos.dasometria,
-          ...datosBotanicos.tronco,
-          exudado_presencia: datosBotanicos.exudado?.presencia,
-          exudado_tipo:      datosBotanicos.exudado?.tipo,
-          exudado_color:     datosBotanicos.exudado?.color,
-          ...datosBotanicos.copa,
-          ...datosBotanicos.hojas,
-        });
       }
 
-      if (datosBotanicos.habito === 'Palmera') {
-        nuevoRegistro.palmera_datos = parseNumbers({
-          ...datosBotanicos.dasometria,
-          tipo_palmera:    datosBotanicos.general?.tipo,
-          tallo:           datosBotanicos.tallo?.caracteristicas,
-          ...datosBotanicos.hojas,
-          ...datosBotanicos.espinas,
-          ...datosBotanicos.inflorescencia,
-        });
-      }
+      if (isOffline) {
+        // MODO OFFLINE: Persistir fotos localmente y guardar en la cola
+        const localPlanta = await persistImage(fotos.planta_completa || '');
+        const localHoja = await persistImage(fotos.hoja || '');
+        const localFlor = await persistImage(fotos.flor || '');
+        const localFruto = await persistImage(fotos.fruto || '');
+        const localSemilla = await persistImage(fotos.semilla || '');
 
-      if (datosBotanicos.habito === 'Arbusto') {
-        nuevoRegistro.arbusto_datos = parseNumbers({
-          ...datosBotanicos.dasometria,
-          ...datosBotanicos.tallo,
-          ...datosBotanicos.hojas,
+        await saveRegistroOffline({
+          id: Math.random().toString(36).substring(7) + Date.now().toString(),
+          timestamp: Date.now(),
+          data: nuevoRegistro,
+          photos: {
+            planta_completa: localPlanta,
+            hoja: localHoja,
+            flor: localFlor,
+            fruto: localFruto,
+            semilla: localSemilla
+          },
+          status: 'pending'
         });
-      }
 
-      if (datosBotanicos.habito === 'Liana') {
-        nuevoRegistro.liana_datos = parseNumbers({
-          ...datosBotanicos.dasometria,
-          ...datosBotanicos.crecimiento,
-          ...datosBotanicos.hojas,
-        });
-      }
-
-      if (datosBotanicos.habito === 'Hierba') {
-        nuevoRegistro.hierba_datos = parseNumbers({
-          ...datosBotanicos.dasometria,
-          ...datosBotanicos.crecimiento,
-          ...datosBotanicos.hojas,
-        });
-      }
-
-      if (editId) {
-        // En modo edición, usar patch
-        await writeClient.patch(editId as string).set(nuevoRegistro).commit();
+        setIsOfflineSaved(true);
       } else {
-        // En modo nuevo, usar create
-        await writeClient.create(nuevoRegistro);
+        // MODO ONLINE: Subir las 5 fotos requeridas
+        const plantaRef = await uploadFoto(fotos.planta_completa);
+        const hojaRef = await uploadFoto(fotos.hoja);
+        const florRef = await uploadFoto(fotos.flor);
+        const frutoRef = await uploadFoto(fotos.fruto);
+        const semillaRef = await uploadFoto(fotos.semilla);
+
+        nuevoRegistro.galeria = [plantaRef, hojaRef, florRef, frutoRef, semillaRef].filter(Boolean);
+
+        if (editId) {
+          await writeClient.patch(editId as string).set(nuevoRegistro).commit();
+        } else {
+          await writeClient.create(nuevoRegistro);
+        }
       }
       
       setShowSuccess(true);
@@ -475,6 +406,7 @@ export default function RegistroScreen() {
 
   const resetFormAndGoHome = () => {
     setShowSuccess(false);
+    setIsOfflineSaved(false);
     setStep(1);
     setEstadoRevision('');
     setMotivoObservacion('');
@@ -1055,12 +987,14 @@ export default function RegistroScreen() {
       <Modal visible={showSuccess} transparent animationType="fade">
         <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.85)', justifyContent: 'center', alignItems: 'center', padding: 24 }}>
           <View style={{ backgroundColor: '#12221A', borderWidth: 1, borderColor: '#1FC451', borderRadius: 20, padding: 32, width: '100%', alignItems: 'center', gap: 16 }}>
-            <MaterialCommunityIcons name="check-circle" size={90} color="#1FC451" />
+            <MaterialCommunityIcons name={isOfflineSaved ? "cloud-off-outline" : "check-circle"} size={90} color="#1FC451" />
             <H2 mt="$2" color="#1FC451" style={{ textAlign: 'center' }}>
-              ¡{editId ? 'Editado' : 'Registrado'} con Éxito!
+              {isOfflineSaved ? 'Guardado Localmente' : `¡${editId ? 'Editado' : 'Registrado'} con Éxito!`}
             </H2>
             <Paragraph style={{ textAlign: 'center', color: 'rgba(255,255,255,0.7)', fontSize: 14, lineHeight: 22 }}>
-              Tu planta ha sido {editId ? 'editada y devuelta a revisión' : 'enviada a revisión'}. Podrás verla en el mapa una vez que los docentes la validen.
+              {isOfflineSaved 
+                ? 'No tienes conexión a internet. El registro se ha guardado en tu dispositivo y se enviará automáticamente cuando recuperes la conexión.'
+                : `Tu planta ha sido ${editId ? 'editada y devuelta a revisión' : 'enviada a revisión'}. Podrás verla en el mapa una vez que los docentes la validen.`}
             </Paragraph>
             <Button
               mt="$4"
