@@ -9,6 +9,7 @@ import ValidacionesPage from '@/pages/ValidacionesPage'
 import PlantaDetailPage from '@/pages/PlantaDetailPage'
 import MapaPage from '@/pages/MapaPage'
 import FiltrosPage from '@/pages/FiltrosPage'
+import ValidarCertificadoPage from '@/pages/ValidarCertificadoPage'
 import '@/index.css'
 
 const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
@@ -42,6 +43,57 @@ function RoleCheck({ children }: { children: React.ReactNode }) {
   }
   
   return <>{children}</>;
+}
+
+function MainContent() {
+  return (
+    <>
+      <SignedOut>
+        <div className="min-h-screen flex flex-col items-center justify-center bg-[#000000] p-4">
+          <div className="flex items-center gap-3 mb-8">
+            <div className="w-10 h-10 bg-[#1FC451]/10 rounded-xl flex items-center justify-center border border-[#1FC451]/20">
+              <span className="text-xl leading-none">🌿</span>
+            </div>
+            <span className="text-2xl font-bold text-white tracking-tight">PLANT-OR</span>
+          </div>
+          
+          <SignIn 
+            routing="hash" 
+            appearance={{
+              elements: {
+                dividerRow: "hidden",
+                formFieldRow: "hidden",
+                formButtonPrimary: "hidden"
+              }
+            }}
+          />
+        </div>
+      </SignedOut>
+
+      <SignedIn>
+        <RoleCheck>
+          <div className="flex min-h-screen bg-background">
+            <Sidebar />
+            <main className="flex-1 overflow-y-auto">
+              <div className="p-6 pt-20 md:p-8 md:pt-8 max-w-7xl mx-auto">
+                <Routes>
+                  <Route path="/" element={<DashboardPage />} />
+                  <Route path="/validaciones" element={<ValidacionesPage key="pendientes" filtroEstado="En revisión" />} />
+                  <Route path="/aprobados" element={<ValidacionesPage key="aprobados" filtroEstado="Validado" />} />
+                  <Route path="/catalogo" element={<ValidacionesPage key="catalogo" />} />
+                  <Route path="/mapa" element={<MapaPage />} />
+                  <Route path="/filtros" element={<FiltrosPage />} />
+                  <Route path="/planta/:id" element={<PlantaDetailPage />} />
+                  <Route path="/perfil" element={<div className="flex justify-center"><UserProfile appearance={{ elements: { card: 'bg-[#0a0a0a] border-zinc-800' } }} /></div>} />
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+              </div>
+            </main>
+          </div>
+        </RoleCheck>
+      </SignedIn>
+    </>
+  );
 }
 
 function App() {
@@ -90,51 +142,10 @@ function App() {
       }}
     >
       <BrowserRouter>
-        <SignedOut>
-          <div className="min-h-screen flex flex-col items-center justify-center bg-[#000000] p-4">
-            {/* Custom Header matching the screenshot style */}
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-10 h-10 bg-[#1FC451]/10 rounded-xl flex items-center justify-center border border-[#1FC451]/20">
-                <span className="text-xl leading-none">🌿</span>
-              </div>
-              <span className="text-2xl font-bold text-white tracking-tight">PLANT-OR</span>
-            </div>
-            
-            <SignIn 
-              routing="hash" 
-              appearance={{
-                elements: {
-                  dividerRow: "hidden",
-                  formFieldRow: "hidden",
-                  formButtonPrimary: "hidden"
-                }
-              }}
-            />
-          </div>
-        </SignedOut>
-
-        <SignedIn>
-          <RoleCheck>
-            <div className="flex min-h-screen bg-background">
-              <Sidebar />
-              <main className="flex-1 overflow-y-auto">
-              <div className="p-6 pt-20 md:p-8 md:pt-8 max-w-7xl mx-auto">
-                <Routes>
-                  <Route path="/" element={<DashboardPage />} />
-                  <Route path="/validaciones" element={<ValidacionesPage key="pendientes" filtroEstado="En revisión" />} />
-                  <Route path="/aprobados" element={<ValidacionesPage key="aprobados" filtroEstado="Validado" />} />
-                  <Route path="/catalogo" element={<ValidacionesPage key="catalogo" />} />
-                  <Route path="/mapa" element={<MapaPage />} />
-                  <Route path="/filtros" element={<FiltrosPage />} />
-                  <Route path="/planta/:id" element={<PlantaDetailPage />} />
-                  <Route path="/perfil" element={<div className="flex justify-center"><UserProfile appearance={{ elements: { card: 'bg-[#0a0a0a] border-zinc-800' } }} /></div>} />
-                  <Route path="*" element={<Navigate to="/" replace />} />
-                </Routes>
-              </div>
-            </main>
-          </div>
-          </RoleCheck>
-        </SignedIn>
+        <Routes>
+          <Route path="/validar" element={<ValidarCertificadoPage />} />
+          <Route path="*" element={<MainContent />} />
+        </Routes>
       </BrowserRouter>
     </ClerkProvider>
   )

@@ -7,7 +7,9 @@ import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter, useFocusEffect } from "expo-router";
 import { useState, useCallback } from "react";
 import { client } from "@/lib/sanity";
-import { Image, Pressable, StyleSheet, Modal } from "react-native";
+import { Image, Pressable, StyleSheet, Modal, Alert } from "react-native";
+import * as Print from 'expo-print';
+import * as Sharing from 'expo-sharing';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   Card,
@@ -46,6 +48,119 @@ export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  
+  const [isGeneratingCert, setIsGeneratingCert] = useState(false);
+
+  const generateCertificateHTML = (name: string, date: string, code: string) => `
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <style>
+        body { font-family: 'Helvetica', 'Arial', sans-serif; margin: 0; padding: 0; background: white; color: #08130D; }
+        .container { width: 1000px; height: 700px; border: 15px solid #1FC451; padding: 40px; box-sizing: border-box; text-align: center; position: relative; }
+        .logo { font-size: 32px; font-weight: bold; color: #1FC451; margin-bottom: 20px; }
+        .title { font-size: 50px; font-weight: bold; margin: 20px 0; text-transform: uppercase; letter-spacing: 2px; }
+        .subtitle { font-size: 24px; color: #555; margin-bottom: 40px; }
+        .name { font-size: 45px; font-weight: bold; color: #15963c; border-bottom: 2px solid #1FC451; display: inline-block; padding: 0 40px 10px; margin-bottom: 40px; }
+        .text { font-size: 20px; color: #444; line-height: 1.6; max-w: 800px; margin: 0 auto 40px; }
+        .footer { position: absolute; bottom: 50px; width: calc(100% - 80px); display: flex; justify-content: space-between; align-items: flex-end; }
+        .signature { border-top: 1px solid #000; padding-top: 10px; width: 250px; text-align: center; font-size: 16px; }
+        .validation-box { text-align: right; font-size: 14px; color: #666; }
+        .code { font-weight: bold; font-family: monospace; font-size: 16px; color: #000; }
+        .bg-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.05; font-size: 400px; z-index: -1; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="bg-icon">🌿</div>
+        <div class="logo">🌿 PLANT-OR</div>
+        <div class="title">Certificado de Reconocimiento</div>
+        <div class="subtitle">Otorgado a</div>
+        
+        <div class="name">${name}</div>
+        
+        <div class="text">
+          Por haber completado exitosamente la meta de <strong>100 registros botánicos validados</strong> en la plataforma PLANT-OR, 
+          contribuyendo significativamente a la catalogación y conservación de nuestra flora urbana.
+        </div>
+        
+        <div class="footer">
+          <div class="signature">
+            <strong>Firma Autorizada</strong><br>
+            Proyecto PLANT-OR
+          </div>
+          
+          <div class="validation-box">
+            Emitido el: ${date}<br><br>
+            Verifique la autenticidad de este<br>
+            documento en nuestro portal web<br>
+            Código: <span class="code">${code}</span>
+          </div>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  const handleGenerateCertificate = async () => {
+    if (!user) return;
+    setIsGeneratingCert(true);
+    
+    try {
+      // 1. Check if certificate exists
+      const existingCert = await client.fetch(\`*[_type == "certificado" && usuario_id == $userId][0]\`, { userId: user.id });
+      
+      let certData;
+      
+      if (existingCert) {
+        certData = existingCert;
+      } else {
+        // Create new certificate
+        const randomStr = Math.random().toString(36).substring(2, 8).toUpperCase();
+        const dateStr = new Date().toISOString().split('T')[0].replace(/-/g, '');
+        const newCode = \`CERT-\${dateStr}-\${randomStr}\`;
+        
+        const writeClient = client.withConfig({
+          token: process.env.EXPO_PUBLIC_SANITY_TOKEN,
+        });
+        
+        certData = await writeClient.create({
+          _type: 'certificado',
+          codigo: newCode,
+          usuario_id: user.id,
+          usuario_nombre: getUserDisplayName(user),
+          fecha_emision: new Date().toISOString()
+        });
+      }
+      
+      // 2. Generate PDF
+      const dateStrFormatted = new Date(certData.fecha_emision).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+      const html = generateCertificateHTML(certData.usuario_nombre, dateStrFormatted, certData.codigo);
+      
+      const { uri } = await Print.printToFileAsync({
+        html,
+        base64: false
+      });
+      
+      // 3. Share / Save
+      if (await Sharing.isAvailableAsync()) {
+        await Sharing.shareAsync(uri, {
+          mimeType: 'application/pdf',
+          dialogTitle: 'Mi Certificado PLANT-OR',
+          UTI: 'com.adobe.pdf'
+        });
+      } else {
+        Alert.alert("Error", "La función de compartir no está disponible en este dispositivo.");
+      }
+      
+    } catch (error) {
+      console.error("Error generating certificate", error);
+      Alert.alert("Error", "No se pudo generar el certificado. Verifica tu conexión.");
+    } finally {
+      setIsGeneratingCert(false);
+    }
+  };
 
   const saveProfile = async () => {
     setErrorMsg('');
@@ -222,26 +337,44 @@ export default function Profile() {
               <XStack style={{ alignItems: 'center' }} gap="$2" mb="$1">
                 <MaterialCommunityIcons name="certificate" size={24} color="#1FC451" />
                 <H2 fontSize={18} fontWeight="700" color="#ffffff">
-                  Progreso para Certificado
+                  {validatedCount >= 100 ? '¡Certificado Desbloqueado!' : 'Progreso para Certificado'}
                 </H2>
               </XStack>
               
               <Text fontSize={14} color="rgba(255,255,255,0.7)">
-                Al alcanzar 100 registros validados obtendrás un Certificado Digital oficial del proyecto. (Aplica para estudiantes y ciudadanos).
+                {validatedCount >= 100 
+                  ? 'Has alcanzado los 100 registros validados. Ya puedes generar tu certificado oficial del proyecto.'
+                  : 'Al alcanzar 100 registros validados obtendrás un Certificado Digital oficial del proyecto. (Aplica para estudiantes y ciudadanos).'}
               </Text>
               
-              <View style={{ width: '100%', height: 12, backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: 6, overflow: 'hidden', marginTop: 10 }}>
-                <View style={{ width: `${Math.min((validatedCount / 100) * 100, 100)}%`, height: '100%', backgroundColor: '#1FC451', borderRadius: 6 }} />
-              </View>
-              
-              <XStack style={{ justifyContent: 'space-between' }} mt="$1">
-                <Text fontSize={12} color="#1FC451" fontWeight="bold">
-                  {validatedCount} validadas
-                </Text>
-                <Text fontSize={12} color="rgba(255,255,255,0.5)">
-                  Meta: 100
-                </Text>
-              </XStack>
+              {validatedCount >= 100 ? (
+                <Button
+                  mt="$2"
+                  bg="#1FC451"
+                  color="white"
+                  onPress={handleGenerateCertificate}
+                  disabled={isGeneratingCert}
+                  opacity={isGeneratingCert ? 0.7 : 1}
+                  icon={isGeneratingCert ? <Spinner color="white" /> : <MaterialCommunityIcons name="download" size={20} color="white" />}
+                >
+                  {isGeneratingCert ? 'Generando PDF...' : 'Generar Certificado Oficial'}
+                </Button>
+              ) : (
+                <>
+                  <View style={{ width: '100%', height: 12, backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: 6, overflow: 'hidden', marginTop: 10 }}>
+                    <View style={{ width: `${Math.min((validatedCount / 100) * 100, 100)}%`, height: '100%', backgroundColor: '#1FC451', borderRadius: 6 }} />
+                  </View>
+                  
+                  <XStack style={{ justifyContent: 'space-between' }} mt="$1">
+                    <Text fontSize={12} color="#1FC451" fontWeight="bold">
+                      {validatedCount} validadas
+                    </Text>
+                    <Text fontSize={12} color="rgba(255,255,255,0.5)">
+                      Meta: 100
+                    </Text>
+                  </XStack>
+                </>
+              )}
             </YStack>
           </Card>
 
