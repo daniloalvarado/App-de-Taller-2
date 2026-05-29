@@ -11,6 +11,8 @@ export interface Planta {
   estado_revision?: PlantaEstado
   motivo_observacion?: string
   autor?: string
+  validador?: string
+  fecha_revision?: string
   registrador_nombre?: string
   registrador_dni?: string
   registrador_email?: string

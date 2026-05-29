@@ -6,7 +6,7 @@ import { sendStatusEmail } from '@/lib/email-service'
 const PLANTAS_QUERY = `*[_type == "planta" && !(_id in path("drafts.**"))] | order(_createdAt desc) {
   _id, _createdAt,
   nombre_cientifico, nombres_comunes, familia, habito, tipo_vida,
-  estado_revision, motivo_observacion, autor,
+  estado_revision, motivo_observacion, autor, validador, fecha_revision,
   registrador_nombre, registrador_dni, registrador_email, registrador_curso,
   registrador_facultad, registrador_escuela, registrador_dia_clase,
   latitud, longitud, direccion, tipo_ubicacion_1, tipo_ubicacion_2,
