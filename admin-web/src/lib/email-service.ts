@@ -1,8 +1,6 @@
-import emailjs from '@emailjs/browser';
-
-const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID || '';
-const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || '';
-const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || '';
+const BREVO_API_KEY = import.meta.env.VITE_BREVO_API_KEY || '';
+const BREVO_SENDER_EMAIL = import.meta.env.VITE_BREVO_SENDER_EMAIL || '';
+const BREVO_SENDER_NAME = import.meta.env.VITE_BREVO_SENDER_NAME || 'PLANT-OR';
 
 export const sendStatusEmail = async (
   email_destino: string,
@@ -12,9 +10,9 @@ export const sendStatusEmail = async (
   motivo_observacion?: string,
   docente_nombre?: string
 ) => {
-  if (!SERVICE_ID || !TEMPLATE_ID || !PUBLIC_KEY) {
-    console.warn("Faltan configurar las credenciales de EmailJS en .env");
-    return;
+  if (!BREVO_API_KEY || !BREVO_SENDER_EMAIL) {
+    console.warn("Faltan configurar las credenciales de Brevo (VITE_BREVO_API_KEY y VITE_BREVO_SENDER_EMAIL) en .env");
+    return false;
   }
 
   let instructions = '';
@@ -41,18 +39,56 @@ export const sendStatusEmail = async (
     instructions = `El estado de tu registro ha cambiado a: ${estado_nuevo}.`;
   }
 
-  const templateParams = {
-    email: email_destino,
-    name: nombre_registrador,
-    planta: nombre_planta || 'la planta',
-    message: instructions,
-    text_color: text_color,
-    bg_color: bg_color,
-    border_color: border_color,
-  };
+  const htmlContent = `
+<div style="font-family: 'Inter', system-ui, sans-serif, Arial; font-size: 15px; color: #333; max-width: 600px; margin: 0 auto; background-color: #ffffff; border: 1px solid #eaeaea; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+  <div style="background-color: #0a0a0a; padding: 25px; text-align: center;">
+    <h2 style="color: #1FC451; margin: 0; font-size: 22px; font-weight: 700; letter-spacing: 1px;">PLANT-OR</h2>
+    <p style="color: #a1a1aa; margin: 5px 0 0 0; font-size: 13px;">Sistema de Monitoreo Botánico</p>
+  </div>
+  <div style="padding: 30px;">
+    <p style="margin-top: 0; font-size: 16px;">Hola <strong>${nombre_registrador}</strong>,</p>
+    <p style="color: #555;">Hay una actualización sobre tu registro botánico de la planta <strong>"${nombre_planta || 'la planta'}"</strong>.</p>
+    
+    <blockquote style="margin: 25px 0; padding: 18px 20px; background-color: ${bg_color}; border-left: 5px solid ${border_color}; color: ${text_color}; font-size: 15px; line-height: 1.5; white-space: pre-line;">
+      ${instructions}
+    </blockquote>
+  </div>
+  <div style="background-color: #fafafa; padding: 20px 30px; border-top: 1px solid #eaeaea; text-align: center; font-size: 12px; color: #888;">
+    <p style="margin: 0;">Este es un mensaje automático generado por <strong>PLANT-OR</strong>. No respondas a este correo.</p>
+  </div>
+</div>
+  `;
 
   try {
-    await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY);
+    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: {
+        'accept': 'application/json',
+        'api-key': BREVO_API_KEY,
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        sender: {
+          name: BREVO_SENDER_NAME,
+          email: BREVO_SENDER_EMAIL
+        },
+        to: [
+          {
+            email: email_destino,
+            name: nombre_registrador
+          }
+        ],
+        subject: `Actualización de Registro - PLANT-OR`,
+        htmlContent: htmlContent
+      })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("Error de Brevo API:", errorData);
+      return false;
+    }
+
     console.log("Email enviado con éxito al estado:", estado_nuevo);
     return true;
   } catch (error) {
