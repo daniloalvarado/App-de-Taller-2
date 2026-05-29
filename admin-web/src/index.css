@@ -72,16 +72,8 @@ div[class*="cl-internal-"][style*="display: flex"][style*="align-items: center"]
 
 
 /* Personalización de User Profile */
-/* Ocultar la barra de navegación lateral redundante ("Perfil") */
-.cl-navbar {
-  display: none !important;
-}
-.cl-navbarMobileMenuButton {
-  display: none !important;
-}
-
-/* Ocultar sección de seguridad extra (dejando cambiar contraseña visible) */
-.cl-navbarButton[aria-label="Security"], .cl-navbarButton:has(svg.cl-internal-2y42q2) {
+/* Ocultar el título grande de la sección (ej. "Perfil" o "Seguridad") porque es redundante con el menú */
+.cl-headerTitle, .cl-headerSubtitle {
   display: none !important;
 }
 
