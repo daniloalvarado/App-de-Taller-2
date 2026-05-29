@@ -69,10 +69,7 @@ div[class*="cl-internal-"][style*="display: flex"][style*="align-items: center"]
   display: none !important;
 }
 
-/* Force hide email login fields in Clerk only in SignIn/SignUp */
-.auth-container .cl-formFieldRow, .auth-container .cl-dividerRow, .auth-container .cl-formButtonPrimary {
-  display: none !important;
-}
+
 
 /* Personalización de User Profile */
 /* Ocultar sección de contraseñas y seguridad */
@@ -80,9 +77,14 @@ div[class*="cl-internal-"][style*="display: flex"][style*="align-items: center"]
   display: none !important;
 }
 
-/* Ocultar botón de añadir correo */
-.cl-profileSection__emailAddresses .cl-profileSectionPrimaryButton {
+/* Ocultar sección completa de correo */
+.cl-profileSection__emailAddresses {
   display: none !important;
+}
+
+/* Forzar borde blanco en el botón de Google */
+.cl-socialButtonsBlockButton {
+  border: 1px solid white !important;
 }
 
 /* Botón de cargar imagen con texto y bordes blancos */
