@@ -84,7 +84,7 @@ export function Sidebar() {
               className="w-7 h-7 rounded-full border border-sidebar-border group-hover:border-[#1FC451] transition-colors"
             />
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold text-foreground truncate group-hover:text-[#1FC451] transition-colors">{user.fullName}</p>
+              <p className="text-xs font-semibold text-foreground truncate transition-colors">{user.fullName}</p>
               <p className="text-xs text-muted-foreground truncate">{user.primaryEmailAddress?.emailAddress}</p>
             </div>
           </Link>
@@ -92,7 +92,7 @@ export function Sidebar() {
         <button
           onClick={() => setLogoutConfirmOpen(true)}
           className={cn(
-            "flex items-center rounded-lg text-sm text-muted-foreground hover:bg-red-500/10 hover:text-red-500 transition-colors cursor-pointer",
+            "flex items-center rounded-lg text-sm text-muted-foreground hover:bg-red-500 hover:text-white transition-colors cursor-pointer",
             collapsed ? "justify-center w-10 h-10 mx-auto" : "gap-2 px-3 py-2 w-full"
           )}
         >

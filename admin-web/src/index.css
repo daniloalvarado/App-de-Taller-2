@@ -110,3 +110,18 @@ div[class*="cl-internal-"][style*="display: flex"][style*="align-items: center"]
   color: white !important;
   fill: white !important;
 }
+
+/* Reordenar sección de perfil (Nombre primero, Imagen después) */
+.cl-profileSection__profile {
+  display: flex !important;
+  flex-direction: column !important;
+}
+.cl-profileSection__profile > :nth-child(1) {
+  /* La imagen es el primer hijo, la pasamos al final */
+  order: 2 !important;
+  margin-top: 1.5rem !important;
+}
+.cl-profileSection__profile > :nth-child(2) {
+  /* Los nombres son el segundo hijo, los pasamos arriba */
+  order: 1 !important;
+}

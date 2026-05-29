@@ -334,7 +334,7 @@ export default function PlantaDetailPage() {
               <button
                 onClick={() => handleAction('Observado', motivoTexto)}
                 disabled={!motivoTexto.trim() || actionLoading}
-                className="px-5 py-2 text-sm bg-[#ea580c] text-white font-bold rounded-lg hover:bg-[#c2410c] shadow-[0_0_15px_rgba(234,88,12,0.3)] transition-all disabled:opacity-50"
+                className="px-5 py-2 text-sm bg-[#c2410c] text-white font-bold rounded-lg hover:bg-[#9a3412] shadow-[0_0_15px_rgba(194,65,12,0.3)] transition-all disabled:opacity-50"
               >
                 {actionLoading ? 'Enviando...' : 'Enviar Observación'}
               </button>
@@ -363,7 +363,7 @@ export default function PlantaDetailPage() {
               <button
                 onClick={() => handleAction('Rechazado', motivoTexto)}
                 disabled={!motivoTexto.trim() || actionLoading}
-                className="px-5 py-2 text-sm bg-[#dc2626] text-white font-bold rounded-lg hover:bg-[#b91c1c] shadow-[0_0_15px_rgba(220,38,38,0.3)] transition-all disabled:opacity-50"
+                className="px-5 py-2 text-sm bg-[#991b1b] text-white font-bold rounded-lg hover:bg-[#7f1d1d] shadow-[0_0_15px_rgba(153,27,27,0.3)] transition-all disabled:opacity-50"
               >
                 {actionLoading ? 'Rechazando...' : 'Rechazar Registro'}
               </button>
