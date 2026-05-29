@@ -528,11 +528,44 @@ export default function RegistroScreen() {
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        <ScrollView
-          style={{ flex: 1 }}
-          contentContainerStyle={{ padding: 20, paddingBottom: 100 }}
-          keyboardShouldPersistTaps="handled"
-        >
+        {(!editId && rolRegistro === 'estudiante' && numeroPlantaAutogenerado >= 20) ? (
+          <ScrollView
+            style={{ flex: 1 }}
+            contentContainerStyle={{ padding: 20, flex: 1, justifyContent: 'center' }}
+            keyboardShouldPersistTaps="handled"
+          >
+            <YStack jc="center" ai="center" p="$4" gap="$4">
+              <MaterialCommunityIcons name="check-decagram" size={80} color="#1FC451" />
+              <H2 color="white" ta="center">¡Meta Cumplida!</H2>
+              <Paragraph color="rgba(255,255,255,0.7)" ta="center" size="$5">
+                Has alcanzado el límite de 20 registros botánicos requeridos como estudiante.
+              </Paragraph>
+              <Paragraph color="rgba(255,255,255,0.7)" ta="center">
+                Ya puedes generar tu certificado digital desde la pestaña de Perfil.
+              </Paragraph>
+              
+              <YStack mt="$6" width="100%" gap="$3">
+                <Paragraph color="rgba(255,255,255,0.5)" ta="center" size="$2">
+                  ¿Deseas seguir registrando plantas por hobby?
+                </Paragraph>
+                <Button 
+                  bg="rgba(255,255,255,0.1)" 
+                  color="white"
+                  borderWidth={1}
+                  borderColor="rgba(255,255,255,0.2)"
+                  onPress={() => setRolRegistro('ciudadano')}
+                >
+                  Continuar como Ciudadano
+                </Button>
+              </YStack>
+            </YStack>
+          </ScrollView>
+        ) : (
+          <ScrollView
+            style={{ flex: 1 }}
+            contentContainerStyle={{ padding: 20, paddingBottom: 100 }}
+            keyboardShouldPersistTaps="handled"
+          >
           <YStack gap="$4">
             <H2 color="#ffffff">Registro de Planta</H2>
             <Paragraph color="rgba(255,255,255,0.7)">
@@ -1080,7 +1113,8 @@ export default function RegistroScreen() {
             )}
 
           </YStack>
-        </ScrollView>
+          </ScrollView>
+        )}
       </KeyboardAvoidingView>
 
       {/* Modal de Éxito */}

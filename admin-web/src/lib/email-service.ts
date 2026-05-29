@@ -17,10 +17,22 @@ export const sendStatusEmail = async (
     return;
   }
 
+  let instructions = '';
+  if (estado_nuevo === 'Validado') {
+    instructions = `¡Felicidades! Este registro ha sido verificado y aprobado por el docente ${docente_nombre || 'asignado'}.\n\nEstás un paso más cerca de alcanzar tu meta de registros y obtener tu certificado. ¡Sigue así!`;
+  } else if (estado_nuevo === 'Observado') {
+    instructions = `El docente ${docente_nombre || 'asignado'} ha revisado tu registro y ha dejado una observación que debes corregir.\n\nMotivo/Comentario:\n"${motivo_observacion}"\n\nPor favor, abre la aplicación móvil, dirígete a la pestaña "Historial" y edita el registro para subsanar esta observación.`;
+  } else if (estado_nuevo === 'Rechazado') {
+    instructions = `Lamentablemente, el docente ${docente_nombre || 'asignado'} ha rechazado este registro y ha sido descartado de tu conteo oficial.\n\nMotivo/Comentario:\n"${motivo_observacion}"\n\nRecuerda revisar los criterios de la rúbrica antes de enviar un nuevo registro.`;
+  } else {
+    instructions = `El estado de tu registro ha cambiado a: ${estado_nuevo}.`;
+  }
+
   const templateParams = {
     email: email_destino,
     name: nombre_registrador,
-    message: `El estado de tu registro "${nombre_planta || 'la planta'}" ha sido actualizado a: ${estado_nuevo} por el docente ${docente_nombre || 'Validador'}.${motivo_observacion ? `\n\nMotivo/Comentario:\n${motivo_observacion}` : ''}`,
+    planta: nombre_planta || 'la planta',
+    message: instructions,
   };
 
   try {
