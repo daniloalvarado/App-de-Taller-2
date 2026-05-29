@@ -11,6 +11,7 @@ import {
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { useUser } from '@clerk/clerk-react'
+import { toast } from 'sonner'
 
 export default function PlantaDetailPage() {
   const { user } = useUser()
@@ -45,7 +46,15 @@ export default function PlantaDetailPage() {
     setMotivoTexto('')
     
     if (emailSent === false) {
-      alert(`⚠️ Acción exitosa, pero no se pudo enviar el correo al estudiante (Error de red o falta de créditos en EmailJS).`);
+      toast.error('Error al enviar correo', {
+        description: 'La acción fue exitosa, pero no se pudo enviar el correo al estudiante (Error de red o falta de créditos).',
+        duration: 5000,
+      });
+    } else {
+      toast.success('¡Acción completada!', {
+        description: `La planta fue marcada como ${accion.toLowerCase()} y el estudiante fue notificado.`,
+        duration: 4000,
+      });
     }
   }
 

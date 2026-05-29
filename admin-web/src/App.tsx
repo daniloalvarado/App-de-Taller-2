@@ -1,6 +1,7 @@
 import React from 'react'
 import { ClerkProvider, SignedIn, SignedOut, SignIn, useUser, useAuth, UserProfile } from '@clerk/clerk-react'
 import { XCircle } from 'lucide-react'
+import { Toaster } from 'sonner'
 import { esES } from '@clerk/localizations'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Sidebar } from '@/components/Sidebar'
@@ -122,6 +123,7 @@ function App() {
       }}
     >
       <BrowserRouter>
+        <Toaster richColors position="top-right" theme="dark" />
         <Routes>
           <Route path="/validar" element={<ValidarCertificadoPage />} />
           <Route path="*" element={<MainContent />} />
