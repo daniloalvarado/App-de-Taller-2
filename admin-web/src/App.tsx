@@ -50,23 +50,7 @@ function MainContent() {
     <>
       <SignedOut>
         <div className="auth-container min-h-screen flex flex-col items-center justify-center bg-[#000000] p-4">
-          <div className="flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 bg-[#1FC451]/10 rounded-xl flex items-center justify-center border border-[#1FC451]/20">
-              <span className="text-xl leading-none">🌿</span>
-            </div>
-            <span className="text-2xl font-bold text-white tracking-tight">PLANT-OR</span>
-          </div>
-          
-          <SignIn 
-            routing="hash" 
-            appearance={{
-              elements: {
-                dividerRow: "hidden",
-                formFieldRow: "hidden",
-                formButtonPrimary: "hidden"
-              }
-            }}
-          />
+          <SignIn routing="hash" />
         </div>
       </SignedOut>
 
@@ -106,7 +90,7 @@ function App() {
           ...esES.signIn,
           start: {
             ...esES.signIn?.start,
-            title: 'Bienvenido',
+            title: '🌿 PLANT-OR',
             subtitle: 'Inicia sesión con tu correo o cuenta de Google',
             actionText: '',
             actionLink: ''
@@ -124,8 +108,7 @@ function App() {
         },
         elements: {
           card: "shadow-2xl border border-zinc-800 w-full max-w-[400px] p-8 bg-[#0a0a0a]",
-          header: "hidden",
-          headerTitle: "text-2xl font-bold text-center text-white",
+          headerTitle: "text-2xl font-bold text-center text-[#1FC451]",
           headerSubtitle: "text-center text-zinc-400",
           socialButtonsBlockButton: "border-2 border-white bg-transparent hover:bg-white/10 transition-colors py-2.5",
           socialButtonsBlockButtonText: "!text-white font-medium",

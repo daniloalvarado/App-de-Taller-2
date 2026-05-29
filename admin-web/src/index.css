@@ -72,8 +72,8 @@ div[class*="cl-internal-"][style*="display: flex"][style*="align-items: center"]
 
 
 /* Personalización de User Profile */
-/* Ocultar sección de contraseñas y seguridad */
-.cl-profileSection__password, .cl-navbarButton[aria-label="Security"], .cl-navbarButton:has(svg.cl-internal-2y42q2) {
+/* Ocultar sección de seguridad extra (dejando cambiar contraseña visible) */
+.cl-navbarButton[aria-label="Security"], .cl-navbarButton:has(svg.cl-internal-2y42q2) {
   display: none !important;
 }
 
@@ -92,4 +92,21 @@ div[class*="cl-internal-"][style*="display: flex"][style*="align-items: center"]
   color: white !important;
   border: 1px solid white !important;
   background-color: transparent !important;
+}
+
+/* Ocultar "¿No tienes ninguno de estos? Consigue ayuda." */
+.cl-footerActionText, .cl-footerActionLink {
+  display: none !important;
+}
+
+/* Botón de "Enviar código a correo" */
+.cl-alternativeMethodsBlockButton {
+  color: white !important;
+  border: 1px solid white !important;
+}
+
+/* Ícono de ver contraseña en blanco */
+.cl-formFieldInputShowPasswordButton, .cl-formFieldInputShowPasswordButton svg {
+  color: white !important;
+  fill: white !important;
 }
