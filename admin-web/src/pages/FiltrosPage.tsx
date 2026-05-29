@@ -106,7 +106,7 @@ export default function FiltrosPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-start justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
             <SlidersHorizontal className="w-6 h-6 text-primary" />
@@ -117,7 +117,7 @@ export default function FiltrosPage() {
             Traduce datos técnicos a lenguaje simple.
           </p>
         </div>
-        <div className="flex items-center gap-2 flex-shrink-0">
+        <div className="flex items-center gap-2 flex-shrink-0 sm:mt-0 mt-2">
           <div className="relative group/tooltip">
             <button
               onClick={fetchFiltros}
