@@ -75,7 +75,7 @@ function App() {
           header: "hidden",
           headerTitle: "text-2xl font-bold text-center text-white",
           headerSubtitle: "text-center text-zinc-400",
-          socialButtonsBlockButton: "border border-zinc-700 bg-transparent hover:bg-white/5 transition-colors py-2.5",
+          socialButtonsBlockButton: "border-2 border-zinc-600 bg-transparent hover:bg-white/5 transition-colors py-2.5",
           socialButtonsBlockButtonText: "!text-white font-medium",
           formButtonPrimary: "bg-[#1FC451] hover:bg-[#19a343] text-black font-bold shadow-none py-2.5 transition-colors",
           formFieldLabel: "text-zinc-300 font-medium",
@@ -100,7 +100,16 @@ function App() {
               <span className="text-2xl font-bold text-white tracking-tight">PLANT-OR</span>
             </div>
             
-            <SignIn routing="hash" />
+            <SignIn 
+              routing="hash" 
+              appearance={{
+                elements: {
+                  dividerRow: "hidden",
+                  formFieldRow: "hidden",
+                  formButtonPrimary: "hidden"
+                }
+              }}
+            />
           </div>
         </SignedOut>
 
