@@ -49,7 +49,7 @@ function MainContent() {
   return (
     <>
       <SignedOut>
-        <div className="min-h-screen flex flex-col items-center justify-center bg-[#000000] p-4">
+        <div className="auth-container min-h-screen flex flex-col items-center justify-center bg-[#000000] p-4">
           <div className="flex items-center gap-3 mb-8">
             <div className="w-10 h-10 bg-[#1FC451]/10 rounded-xl flex items-center justify-center border border-[#1FC451]/20">
               <span className="text-xl leading-none">🌿</span>
@@ -127,7 +127,7 @@ function App() {
           header: "hidden",
           headerTitle: "text-2xl font-bold text-center text-white",
           headerSubtitle: "text-center text-zinc-400",
-          socialButtonsBlockButton: "border-2 border-zinc-600 bg-transparent hover:bg-white/5 transition-colors py-2.5",
+          socialButtonsBlockButton: "border-2 border-white bg-transparent hover:bg-white/10 transition-colors py-2.5",
           socialButtonsBlockButtonText: "!text-white font-medium",
           formButtonPrimary: "bg-[#1FC451] hover:bg-[#19a343] text-black font-bold shadow-none py-2.5 transition-colors",
           formFieldLabel: "text-zinc-300 font-medium",

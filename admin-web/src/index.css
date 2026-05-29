@@ -69,8 +69,8 @@ div[class*="cl-internal-"][style*="display: flex"][style*="align-items: center"]
   display: none !important;
 }
 
-/* Force hide email login fields in Clerk */
-.cl-formFieldRow, .cl-dividerRow, .cl-formButtonPrimary {
+/* Force hide email login fields in Clerk only in SignIn/SignUp */
+.auth-container .cl-formFieldRow, .auth-container .cl-dividerRow, .auth-container .cl-formButtonPrimary {
   display: none !important;
 }
 
